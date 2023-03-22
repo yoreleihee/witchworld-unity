@@ -1,0 +1,19 @@
+{
+    "name": "WitchCompany.Toolkit.Editor",
+    "rootNamespace": "WitchCompany.Toolkit.Editor",
+    "references": [
+        "UniTask.Editor",
+        "WitchCompany.Toolkit.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
