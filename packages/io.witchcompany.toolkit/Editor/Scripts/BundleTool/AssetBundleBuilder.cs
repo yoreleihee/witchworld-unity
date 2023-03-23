@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace WitchCompany.Toolkit.Editor.BundleTool
 {
@@ -21,6 +22,11 @@ namespace WitchCompany.Toolkit.Editor.BundleTool
             var manifest = BuildPipeline.BuildAssetBundles(directory, 
                 BuildAssetBundleOptions.ForceRebuildAssetBundle| BuildAssetBundleOptions.ChunkBasedCompression,
                 BuildTarget.StandaloneWindows64);
+            
+            foreach (var allDependency in manifest.GetAllDependencies("ryu"))
+            {
+                Debug.Log(allDependency);
+            }
             
             
             EditorUtility.DisplayDialog("에셋 번들 빌드", "빌드 성공", "닫기");
