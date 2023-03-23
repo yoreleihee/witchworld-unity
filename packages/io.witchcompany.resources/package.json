@@ -1,15 +1,13 @@
 {
   "name": "io.witchcompany.resources",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A common resources used by witch projects.",
-  "displayName": "Witch common resources",
+  "displayName": "Witch Common Resources",
   "unity": "2021.3",
   "author": {
     "name": "Witch Company",
     "email": "kmkim@witchcompany.io",
     "url": "https://witchwitch.io"
-  },
-  "dependencies": {
   },
   "keywords": [
     "witch",

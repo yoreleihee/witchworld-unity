@@ -13,21 +13,20 @@ namespace WitchCompany.Toolkit.Editor.BundleTool
         [MenuItem("WitchToolkit/Build")]
         private static void BuildAssetBundle()
         {
+            
             const string directory = AssetBundleConfig.BuildExportPath;
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-
             
             var manifest = BuildPipeline.BuildAssetBundles(directory, 
                 BuildAssetBundleOptions.ForceRebuildAssetBundle| BuildAssetBundleOptions.ChunkBasedCompression,
                 BuildTarget.StandaloneWindows64);
             
-            foreach (var allDependency in manifest.GetAllDependencies("ryu"))
-            {
-                Debug.Log(allDependency);
-            }
-            
+            // foreach (var allDependency in manifest.GetAllDependencies("ryu"))
+            // {
+            //     Debug.Log(allDependency);
+            // }
             
             EditorUtility.DisplayDialog("에셋 번들 빌드", "빌드 성공", "닫기");
         }
