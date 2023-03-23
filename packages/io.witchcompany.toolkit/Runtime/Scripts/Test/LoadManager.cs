@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class LoadManager : MonoBehaviour
 {
     public uint crc;
-    [TextArea] public string dependencyBundleKey;
     [TextArea] public string bundleKey;
     [TextArea] public string objectKey;
 
@@ -36,8 +35,6 @@ public class LoadManager : MonoBehaviour
 
     private async void Awake()
     {
-        await LoadBundle(dependencyBundleKey);
-        
         try
         {
             // 에셋 번들 다운로드 요청
