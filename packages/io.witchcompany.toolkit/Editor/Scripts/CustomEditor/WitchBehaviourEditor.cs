@@ -1,8 +1,10 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Module;
 
 namespace WitchCompany.Toolkit.Editor
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(WitchBehaviour), true)]
     public sealed class WitchBehaviourEditor : UnityEditor.Editor
     {
@@ -61,9 +63,9 @@ namespace WitchCompany.Toolkit.Editor
         public override void OnInspectorGUI()
         {
             Initialize();
+            serializedObject.Update();
             
             var editorTarget = target as WitchBehaviour;
-
             if (editorTarget != null)
             {
                 GUILayout.Space(4);
@@ -79,6 +81,8 @@ namespace WitchCompany.Toolkit.Editor
             
             //DrawDefaultInspector();
             DrawPropertiesExcluding(serializedObject, ExcludedProperties);
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
