@@ -1,6 +1,6 @@
 {
   "name": "io.witchcompany.resources",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A common resources used by witch projects.",
   "displayName": "Witch common resources",
   "unity": "2021.3",
