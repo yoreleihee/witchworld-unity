@@ -1,4 +1,4 @@
-Witchcompany.Core
+io.witchcompany.toolkit
 ===
 
 ### Dependencies

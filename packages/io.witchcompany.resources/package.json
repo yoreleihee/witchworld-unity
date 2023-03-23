@@ -1,0 +1,23 @@
+{
+  "name": "io.witchcompany.resources",
+  "version": "0.0.1",
+  "description": "A common resources used by witch projects.",
+  "displayName": "Witch common resources",
+  "unity": "2021.3",
+  "author": {
+    "name": "Witch Company",
+    "email": "kmkim@witchcompany.io",
+    "url": "https://witchwitch.io"
+  },
+  "dependencies": {
+  },
+  "keywords": [
+    "witch",
+    "witchcompany",
+    "resources"
+  ],
+  "repository": {
+    "url": "https://github.com/witchcompany/witchworld-unity.git?path=packages/io.witchcompany.resources",
+    "type": "git"
+  }
+}

@@ -18,7 +18,7 @@
     "toolkit"
   ],
   "repository": {
-    "url": "",
+    "url": "https://github.com/witchcompany/witchworld-unity.git?path=packages/io.witchcompany.toolkit",
     "type": "git"
   }
 }
