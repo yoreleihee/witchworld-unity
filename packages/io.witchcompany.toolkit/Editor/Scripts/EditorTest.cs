@@ -1,8 +1,5 @@
 ﻿using UnityEditor;
-using UnityEditor.PackageManager;
-using UnityEngine;
-using WitchCompany.Toolkit.Editor.BundleTool;
-using WitchCompany.Toolkit.Editor.EditorTool;
+using WitchCompany.Toolkit.Editor.Tool;
 
 namespace WitchCompany.Toolkit.Editor
 {
@@ -11,10 +8,7 @@ namespace WitchCompany.Toolkit.Editor
         [MenuItem("WitchToolkit/Test")]
         private static void Test()
         {
-            // 에셋 가져오기
-            var test = AssetImporter.GetAtPath(
-                "C:\\Workspace\\github.com\\witchcompany\\witchworld-unity\\packages\\io.witchcompany.resources\\Runtime\\MatPack");
-            
+            AssetBundleTool.ClearAllBundles();
         }
     }
 }

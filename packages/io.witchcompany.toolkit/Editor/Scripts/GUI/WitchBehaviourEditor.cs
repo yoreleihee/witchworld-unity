@@ -2,7 +2,7 @@
 using UnityEngine;
 using WitchCompany.Toolkit.Module;
 
-namespace WitchCompany.Toolkit.Editor
+namespace WitchCompany.Toolkit.Editor.GUI
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(WitchBehaviour), true)]
