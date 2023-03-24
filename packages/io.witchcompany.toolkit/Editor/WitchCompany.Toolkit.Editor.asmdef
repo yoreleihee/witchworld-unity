@@ -2,6 +2,7 @@
     "name": "WitchCompany.Toolkit.Editor",
     "rootNamespace": "WitchCompany.Toolkit.Editor",
     "references": [
+        "UniTask",
         "UniTask.Editor",
         "WitchCompany.Toolkit.Runtime"
     ],

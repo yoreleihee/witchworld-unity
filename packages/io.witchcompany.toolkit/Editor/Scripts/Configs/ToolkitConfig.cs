@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs.Enum;
+using WitchCompany.Toolkit.Editor.Tool;
 
 // ReSharper disable InconsistentNaming
 
@@ -38,5 +39,10 @@ namespace WitchCompany.Toolkit.Editor.Configs
 
         /// <summary>현재 유니티 버전</summary>
         public static string UnityVersion => Application.unityVersion;
+
+        public const string WitchToolkitPackageName = "io.witchcompany.toolkit"; 
+        
+        // TODO: 툴킷 패키지 버전 가져오기 
+        //public static string WitchToolkitVersion => PackageTool.GePackageInfo(WitchToolkitPackageName);
     }
 }
