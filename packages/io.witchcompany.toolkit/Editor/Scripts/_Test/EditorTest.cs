@@ -11,9 +11,17 @@ namespace WitchCompany.Toolkit.Editor
         [MenuItem("WitchToolkit/Test")]
         private static void Test()
         {
-            var option = AssetTool.GetSelectedAsset() as BlockOption;
+            // var option = AssetTool.GetSelectedAsset() as BlockOption;
 
-            Debug.Log(UploadRuleValidator.ValidateBundleSize(option));
+            // Debug.Log(UploadRuleValidator.ValidateBundleSize(option));
+            
+            Debug.Log(OptimizationValidator.ValidationCheck().result);
+            
+            foreach (var msg in OptimizationValidator.ValidationCheck().errMessages)
+            {
+                Debug.Log(msg);
+            }
+            
         }
     }
 }

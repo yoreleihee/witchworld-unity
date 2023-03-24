@@ -22,11 +22,14 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// </summary>
         public ValidationReport Append(string errMsg)
         {
-            if (!string.IsNullOrEmpty(errMsg)) result = Result.Failed;
+            if (!string.IsNullOrEmpty(errMsg))
+            {
+                result = Result.Failed;
+                
+                errMessages ??= new List<string>();
+                errMessages.Add(errMsg);
+            }
             
-            errMessages ??= new List<string>();
-            errMessages.Add(errMsg);
-
             return this;
         }
     }
