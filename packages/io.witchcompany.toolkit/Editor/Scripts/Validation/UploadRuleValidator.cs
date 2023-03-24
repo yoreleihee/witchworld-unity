@@ -1,14 +1,47 @@
-﻿namespace WitchCompany.Toolkit.Editor.Validation
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using UnityEngine;
+using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.Tool;
+
+namespace WitchCompany.Toolkit.Editor.Validation
 {
     public static class UploadRuleValidator
     {
-        public static ValidationReport ValidationCheck()
+        /// <summary>
+        /// 업로드 관련 유효성 검사
+        /// <para>-번들 매니페스트 검사</para>
+        /// <para>-번들 용량 검사</para>
+        /// </summary>
+        public static ValidationReport ValidationCheck(BlockOption option, AssetBundleManifest manifest)
         {
             return new ValidationReport()
-            {
-                result = ValidationReport.Result.Success,
-                errorMsg = null
-            };
+                .Append(ValidateBundleManifest(option, manifest));
+        }
+
+        public static string ValidateBundleManifest(BlockOption option, AssetBundleManifest manifest)
+        {
+            var bundles = manifest.GetAllAssetBundles();
+            
+            if (bundles.Length != 1) 
+                return $"잘못된 에셋번들: 번들 개수가 이상합니다.({bundles.Length})";
+            if (bundles[0] != option.NameEn)
+                return $"잘못된 에셋번들: 번들 이름이 이상합니다. 번들({bundles[0]}) 블록({option.NameEn})";
+
+            return null;
+        }
+
+        public static string ValidateBundleSize(BlockOption option)
+        {
+            var path = Path.Combine(AssetBundleConfig.BuildExportPath, option.NameEn);
+            var sizeByte = AssetTool.GetFileSizeByte(path);
+
+            if (sizeByte > AssetBundleConfig.MaxSizeByte)
+                return $"에셋 사이즈가 너무 큽니다. ({CommonTool.ByteToMb(sizeByte, 2)}mb/{CommonTool.ByteToMb(AssetBundleConfig.MaxSizeByte)}mb)";
+
+            return null;
         }
     }
 }

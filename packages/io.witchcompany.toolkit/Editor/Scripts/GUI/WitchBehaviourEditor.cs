@@ -56,8 +56,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     textColor = new Color(1, 1, 1, .75f)
                 }
             };
-            
-            Debug.Log("Style Rebuild");
         }
 
         public override void OnInspectorGUI()

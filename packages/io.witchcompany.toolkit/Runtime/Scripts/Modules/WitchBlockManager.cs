@@ -25,8 +25,6 @@ namespace WitchCompany.Toolkit.Module
             transform.position = Vector3.zero;
 
             FindWitchBehaviours();
-            
-            Debug.Log("Validate");
         }
 
         private void Reset()
