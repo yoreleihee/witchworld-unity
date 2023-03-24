@@ -17,7 +17,7 @@
             return new ValidationReport()
             {
                 result = ValidationReport.Result.Success,
-                errorMsg = null
+                errMessages = null
             };
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
@@ -15,13 +16,19 @@ namespace WitchCompany.Toolkit.Editor.Tool
         /// <param name="bundleName">번들 이름</param>
         public static void AssignAssetBundle(string assetPath, string bundleName)
         {
+            if (string.IsNullOrEmpty(assetPath))
+                throw new Exception("assetPath is null or empty");
+            if (string.IsNullOrEmpty(bundleName))
+                throw new Exception("bundleName is null or empty");
+            
             // 에셋 가져오기
             var assetImporter = AssetTool.GetAssetImporterAtPath(assetPath);
+            if (assetImporter == null)
+                throw new Exception($"{assetPath}에 에셋이 없습니다.");
 
             // 에셋 번들 중복 확인
             if (!string.IsNullOrEmpty(assetImporter.assetBundleName)) 
                 Debug.LogWarning($"에셋 번들을 덮어 씁니다. {assetImporter.assetBundleName} -> {bundleName}");
-            
             // 에셋 번들 쓰기
             assetImporter.assetBundleName = bundleName;
         }
@@ -31,6 +38,9 @@ namespace WitchCompany.Toolkit.Editor.Tool
         {
             // 모든 에셋 번들 이름 가져오기
             var allAssetBundleNames = AssetDatabase.GetAllAssetBundleNames();
+
+            if (allAssetBundleNames.Length <= 0)
+                return;
 
             // 각 에셋 번들 이름에 대해
             foreach (var assetBundleName in allAssetBundleNames)
