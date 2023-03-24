@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
+    /// <summary>
+    /// 에셋 관련 툴 모음
+    /// </summary>
     public static class AssetTool
     {
         /// <summary>현재 선택된 에셋 하나의 데이터를 가져온다.</summary>

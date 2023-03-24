@@ -5,6 +5,9 @@ using WitchCompany.Toolkit.Editor.Configs;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
+    /// <summary>
+    /// 에셋번들 관련 툴 모음
+    /// </summary>
     public static class AssetBundleTool
     {
         /// <summary>assetPath에 있는 에셋을 bundleName을 가진 에셋번들로 할당한다.</summary>

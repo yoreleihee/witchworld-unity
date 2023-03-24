@@ -14,13 +14,13 @@ namespace WitchCompany.Toolkit.Editor.Tool
             
             //// TODO: 검증 로직 작성
             // 최적화 검증
-            if(!OptimizationValidator.ValidationCheck())
+            if(OptimizationValidator.ValidationCheck().result != ValidationReport.Result.Success)
                 return;
             // 씬 구조 룰 검증
-            if(!WitchBehaviourValidator.ValidationCheck())
+            if(WitchBehaviourValidator.ValidationCheck().result != ValidationReport.Result.Success)
                 return;
             // 업로드 룰 검증
-            if(!UploadRuleValidator.ValidationCheck())
+            if(UploadRuleValidator.ValidationCheck().result != ValidationReport.Result.Success)
                 return;
             
             //// 

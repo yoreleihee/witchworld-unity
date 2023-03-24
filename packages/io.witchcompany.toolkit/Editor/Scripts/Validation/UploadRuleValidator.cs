@@ -2,9 +2,13 @@
 {
     public static class UploadRuleValidator
     {
-        public static bool ValidationCheck()
+        public static ValidationReport ValidationCheck()
         {
-            return true;
+            return new ValidationReport()
+            {
+                result = ValidationReport.Result.Success,
+                errorMsg = null
+            };
         }
     }
 }

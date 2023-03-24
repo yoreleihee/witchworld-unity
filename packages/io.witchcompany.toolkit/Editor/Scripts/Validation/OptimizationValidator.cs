@@ -11,9 +11,14 @@
         /// - 씬에서 사용된 텍스쳐 용량 검사
         /// - 씬에서 유니크 머테리얼 개수 검사 
         /// </summary>
-        public static bool ValidationCheck()
+        public static ValidationReport ValidationCheck()
         {
-            return true;
+            // TODO: 여기를 수정하세요
+            return new ValidationReport()
+            {
+                result = ValidationReport.Result.Success,
+                errorMsg = null
+            };
         }
     }
 }
