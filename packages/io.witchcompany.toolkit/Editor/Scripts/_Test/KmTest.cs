@@ -1,31 +1,31 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
-using WitchCompany.Toolkit.Editor.Configs;
-using WitchCompany.Toolkit.Editor.Configs.Enum;
+using WitchCompany.Toolkit.Editor.Tool.API;
 
 namespace WitchCompany.Toolkit.Editor
 {
     public static class KmTest
     {
-        private static LogLevel a = LogLevel.None;
-        private static LogLevel b = LogLevel.Validation;
-        private static LogLevel c = LogLevel.Tool;
-        private static LogLevel d = LogLevel.API;
-        private static LogLevel e = LogLevel.Tool | LogLevel.Validation | LogLevel.API;
-
-        [MenuItem("WitchToolkit/Test2")]
-        public static void Test2()
+        [MenuItem("WitchToolkit/Login")]
+        public static async void Login()
         {
-            Debug.Log(ToolkitConfig.UnityVersion);
-
-            //ToolkitConfig.CurrLogLevel = LogLevel.Validation | LogLevel.API;
+            var json = await WitchAPI.Login("kmkim@witchcompany.io", "1998Kimin!");
+            Debug.Log(JsonConvert.SerializeObject(json));
         }
         
-        private static void Log(LogLevel target)
+        [MenuItem("WitchToolkit/Refresh")]
+        public static async void Refresh()
         {
-            var i = (int) target;
-            Debug.Log($"{target} -> {Convert.ToString(i, 2)} -> {(LogLevel)i}");
+            var json = await WitchAPI.Refresh();
+            Debug.Log(JsonConvert.SerializeObject(json));
+        }
+        
+        [MenuItem("WitchToolkit/GetUserInfo")]
+        public static async void GetUserInfo()
+        {
+            var json = await WitchAPI.GetUserInfo();
+            Debug.Log(JsonConvert.SerializeObject(json));
         }
     }
 }

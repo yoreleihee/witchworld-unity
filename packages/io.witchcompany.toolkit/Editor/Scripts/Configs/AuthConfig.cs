@@ -15,7 +15,6 @@ namespace WitchCompany.Toolkit.Editor.Configs
         private const string Prefs_LoginTime = "auth_login_time";
         private const string Prefs_Auth = "auth_auth";
 
-
         public static string Email
         {
             get => EditorPrefs.GetString(Prefs_Email, "");
@@ -39,7 +38,7 @@ namespace WitchCompany.Toolkit.Editor.Configs
             get => EditorPrefs.GetString(Prefs_LoginTime, "");
             set => EditorPrefs.SetString(Prefs_LoginTime, value);
         }
-        
+
         public static JAuth Auth
         {
             get
