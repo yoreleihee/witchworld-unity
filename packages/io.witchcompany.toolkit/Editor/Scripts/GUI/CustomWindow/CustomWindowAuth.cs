@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
-using WebSocketSharp;
-using WitchCompany.API;
-using WitchCompany.GameSystem;
-using WitchCompany.Popup;
 using WitchCompany.Toolkit.Editor.Configs;
 
 
@@ -32,7 +26,7 @@ namespace WitchCompany.Toolkit.Editor
         public static async void ShowAuth()
         {
             // 로그인 토근이 없으면 로그인 화면, 있으면 로그인한 정보 띄움
-            if (AuthConfig.AccessToken.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(AuthConfig.AccessToken))
             {
                 DrawLogin();
             }

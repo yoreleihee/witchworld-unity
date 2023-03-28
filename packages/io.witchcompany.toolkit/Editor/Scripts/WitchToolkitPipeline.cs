@@ -32,7 +32,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 AssetBundleTool.ClearAllBundles();
                 // 번들 할당
                 var scenePath = AssetDatabase.GetAssetPath(option.TargetScene);
-                var bundleName = option.NameEn;
+                var bundleName = option.Key;
                 AssetBundleTool.AssignAssetBundle(scenePath, bundleName);
                 // 번들 빌드
                 var manifest = AssetBundleTool.BuildAssetBundle(BuildTarget.StandaloneWindows64);

@@ -27,15 +27,15 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             if (bundles.Length != 1) 
                 return $"잘못된 에셋번들: 번들 개수가 이상합니다.({bundles.Length})";
-            if (bundles[0] != option.NameEn)
-                return $"잘못된 에셋번들: 번들 이름이 이상합니다. 번들({bundles[0]}) 블록({option.NameEn})";
+            if (bundles[0] != option.Key)
+                return $"잘못된 에셋번들: 번들 이름이 이상합니다. 번들({bundles[0]}) 블록({option.Key})";
 
             return null;
         }
 
         public static string ValidateBundleSize(BlockPublishOption option)
         {
-            var path = Path.Combine(AssetBundleConfig.BuildExportPath, option.NameEn);
+            var path = Path.Combine(AssetBundleConfig.BuildExportPath, option.Key);
             var sizeByte = AssetTool.GetFileSizeByte(path);
 
             if (sizeByte > AssetBundleConfig.MaxSizeByte)

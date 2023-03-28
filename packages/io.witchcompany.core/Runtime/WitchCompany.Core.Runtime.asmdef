@@ -1,16 +1,11 @@
 {
-    "name": "WitchCompany.Toolkit.Editor",
-    "rootNamespace": "WitchCompany.Toolkit.Editor",
+    "name": "WitchCompany.Core.Runtime",
+    "rootNamespace": "WitchCompany.Core",
     "references": [
         "UniTask",
-        "UniTask.Editor",
-        "WitchCompany.Toolkit.Runtime",
-        "WitchCompany.Core.Runtime",
         "WitchCompany.Core.Plugins"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
