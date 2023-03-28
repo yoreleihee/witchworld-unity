@@ -18,6 +18,8 @@ namespace WitchCompany.Toolkit.Editor
         public static void Test2()
         {
             Debug.Log(ToolkitConfig.UnityVersion);
+
+            //ToolkitConfig.CurrLogLevel = LogLevel.Validation | LogLevel.API;
         }
         
         private static void Log(LogLevel target)

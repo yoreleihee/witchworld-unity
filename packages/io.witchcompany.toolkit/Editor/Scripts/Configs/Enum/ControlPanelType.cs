@@ -10,7 +10,7 @@
         // 유효성 검증 패널
         Validate = 1,
         // 빌드 패널
-        Build = 2,
+        Publish = 2,
         // 설정 패널
         Config = 3
     }
