@@ -15,13 +15,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// <para>-번들 매니페스트 검사</para>
         /// <para>-번들 용량 검사</para>
         /// </summary>
-        public static ValidationReport ValidationCheck(BlockOption option, AssetBundleManifest manifest)
+        public static ValidationReport ValidationCheck(BlockPublishOption option, AssetBundleManifest manifest)
         {
             return new ValidationReport()
                 .Append(ValidateBundleManifest(option, manifest));
         }
 
-        public static string ValidateBundleManifest(BlockOption option, AssetBundleManifest manifest)
+        public static string ValidateBundleManifest(BlockPublishOption option, AssetBundleManifest manifest)
         {
             var bundles = manifest.GetAllAssetBundles();
             
@@ -33,7 +33,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return null;
         }
 
-        public static string ValidateBundleSize(BlockOption option)
+        public static string ValidateBundleSize(BlockPublishOption option)
         {
             var path = Path.Combine(AssetBundleConfig.BuildExportPath, option.NameEn);
             var sizeByte = AssetTool.GetFileSizeByte(path);

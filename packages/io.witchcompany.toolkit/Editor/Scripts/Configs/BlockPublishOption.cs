@@ -5,7 +5,7 @@ using UnityEngine;
 namespace WitchCompany.Toolkit.Editor.Configs
 {
     [CreateAssetMenu(fileName = "BlockOption", menuName = "WitchToolkit/BlockOption", order = 0)]
-    public class BlockOption : ScriptableObject
+    public class BlockPublishOption : ScriptableObject
     {
         [field:SerializeField] public string NameEn { get; private set; }
         [field:SerializeField] public string NameKr { get; private set; }

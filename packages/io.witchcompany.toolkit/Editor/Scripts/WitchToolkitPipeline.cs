@@ -10,7 +10,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
 {
     public static class WitchToolkitPipeline
     {
-        public static void UploadWithValidation(BlockOption option)
+        public static void UploadWithValidation(BlockPublishOption option)
         {
             try
             {
