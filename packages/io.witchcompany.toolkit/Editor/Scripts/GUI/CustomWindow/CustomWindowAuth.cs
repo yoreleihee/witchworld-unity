@@ -26,7 +26,7 @@ namespace WitchCompany.Toolkit.Editor
         public static async void ShowAuth()
         {
             // 로그인 토근이 없으면 로그인 화면, 있으면 로그인한 정보 띄움
-            if (string.IsNullOrEmpty(AuthConfig.AccessToken))
+            if (string.IsNullOrEmpty(AuthConfig.Auth.accessToken))
             {
                 DrawLogin();
             }

@@ -13,9 +13,9 @@ namespace WitchCompany.Toolkit.Editor.Configs
     /// </summary>
     public static class ToolkitConfig
     {
-        private const string Prefs_CurrentControlPanelType = "current_control_panel_type";
-        private const string Prefs_LogOption = "log_option";
-        private const string Prefs_ValidateLevel = "validate_level";
+        private const string Prefs_CurrentControlPanelType = "toolkit_current_control_panel_type";
+        private const string Prefs_LogOption = "toolkit_log_option";
+        private const string Prefs_ValidateLevel = "toolkit_validate_level";
 
         /// <summary>현재 컨트롤 패널 타입</summary>
         public static ControlPanelType CurrControlPanelType
