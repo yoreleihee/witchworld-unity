@@ -4,7 +4,8 @@
     "references": [
         "UniTask",
         "UniTask.Editor",
-        "WitchCompany.Toolkit.Runtime"
+        "WitchCompany.Toolkit.Runtime",
+        "WitchCompany"
     ],
     "includePlatforms": [
         "Editor"
