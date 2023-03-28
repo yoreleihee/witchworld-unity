@@ -4,8 +4,8 @@ using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEditor;
-using WitchCompany.API;
-using WitchCompany.GameSystem;
+// using WitchCompany.API;
+// using WitchCompany.GameSystem;
 
 public class TestAPIWindow : EditorWindow
 {
@@ -65,13 +65,13 @@ public class TestAPIWindow : EditorWindow
         {
             Debug.Log("login click!!!");
             //var auth = await AuthAPI.EmailLogin(eMail,password);
-            var auth = await AuthAPI.EmailLogin(Game.Setting.email,Game.Setting.password);
-            eMail = Game.Setting.email;
-            password = Game.Setting.password;
-            acToken = auth.accessToken;
-            rfToken = auth.refreshToken;
+            //var auth = await AuthAPI.EmailLogin(Game.Setting.email,Game.Setting.password);
+            //eMail = Game.Setting.email;
+            //password = Game.Setting.password;
+            //acToken = auth.accessToken;
+            //rfToken = auth.refreshToken;
             
-            Debug.Log(JsonConvert.SerializeObject(auth));
+            //Debug.Log(JsonConvert.SerializeObject(auth));
             return;
         }
     }
