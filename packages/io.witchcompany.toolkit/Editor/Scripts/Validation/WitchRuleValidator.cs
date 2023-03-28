@@ -11,14 +11,14 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// - 블록매니저가 최상위 오브젝트인지 검증
         /// - 각 WitchBehaviour 별 유효성 검증
         /// </summary>
-        public static ValidationReport ValidationCheck(BlockOption option)
+        public static ValidationReport ValidationCheck(BlockPublishOption option)
         {
             return new ValidationReport()
                 .Append(ValidateBlockOption(option));
         }
 
         // 블록 옵션 체크
-        private static string ValidateBlockOption(BlockOption option)
+        private static string ValidateBlockOption(BlockPublishOption option)
         {
             const string prefix = "잘못된 블록 옵션: ";
             
