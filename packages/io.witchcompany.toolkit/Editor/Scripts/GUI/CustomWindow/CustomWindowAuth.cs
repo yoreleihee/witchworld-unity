@@ -52,8 +52,8 @@ namespace WitchCompany.Toolkit.Editor
             AuthConfig.Password = EditorGUILayout.TextField("Password", AuthConfig.Password);
             GUILayout.Space(5);
 
-            EditorGUILayout.LabelField("Access Token", AuthConfig.AccessToken);
-            EditorGUILayout.LabelField("Refresh Token", AuthConfig.RefreshToken);
+            // EditorGUILayout.LabelField("Access Token", AuthConfig.AccessToken);
+            // EditorGUILayout.LabelField("Refresh Token", AuthConfig.RefreshToken);
             
             GUILayout.Space(10);
 
@@ -92,8 +92,8 @@ namespace WitchCompany.Toolkit.Editor
             // nickName = response.profile.nickname;
 
             // 임시
-            AuthConfig.AccessToken = "temp_access_token";
-            AuthConfig.RefreshToken = "";
+            // AuthConfig.AccessToken = "temp_access_token";
+            // AuthConfig.RefreshToken = "";
             AuthConfig.NickName = "temp_nickname";
             AuthConfig.LoginTime = DateTime.Now.ToString();
         
@@ -103,8 +103,8 @@ namespace WitchCompany.Toolkit.Editor
         {
             AuthConfig.Email = null;
             AuthConfig.Password = null;
-            AuthConfig.AccessToken = null;
-            AuthConfig.RefreshToken = null;
+            // AuthConfig.AccessToken = null;
+            // AuthConfig.RefreshToken = null;
             AuthConfig.NickName = null;
             AuthConfig.LoginTime = null;
             

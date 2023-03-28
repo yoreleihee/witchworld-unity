@@ -29,20 +29,12 @@ namespace WitchCompany.Toolkit.Editor
         public static List<string> Tags { get; set; }
 
 
-        [SerializeField] private static Object blockPulishOption;
+        private static BlockPublishOption blockPublishOption;
         private static BuildPlayerOptions buildPlayerOptions;
         
-        // 빌드 설정
-        // - Scriptable Object 적용 칸
-        // - 빌드 버튼
-        //
-        // 빌드 결과
-        // - 빌드파일 아웃풋 경로 (./WitchToolkit/Bundles)
-        // - 최종 빌드파일 용량
-        // - 방금 빌드 결과(성공/취소/실패)
-        // - 빌드 종료 시간
-
         private static bool isSucceeded;
+        
+        
         public static void ShowPublish()
         {
             // 빌드 정보
@@ -51,8 +43,9 @@ namespace WitchCompany.Toolkit.Editor
             
             GUILayout.Space(10);
             
-            if(blockPulishOption && isSucceeded)
+            if(blockPublishOption && isSucceeded)
                 DrawReport();
+            
             
         }
 
@@ -66,22 +59,28 @@ namespace WitchCompany.Toolkit.Editor
             GUILayout.Label("Setting", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
-            blockPulishOption = EditorGUILayout.ObjectField(blockPulishOption, typeof(Object), true);
+            blockPublishOption = EditorGUILayout.ObjectField("Block Publish Option", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;  
+
 
             if (GUILayout.Button("Publish"))
             {
                 Debug.Log("Publish Click!");
                 
+                
                 // Todo : 빌드 다됬을 때 빌드 결과 화면 띄우기
-                // buildPlayerOptions = new BuildPlayerOptions();
-                //
-                // buildPlayerOptions.scenes = new[] { "Assets/_WorkSpace/KJH/0_Scenes"};
-                // buildPlayerOptions.locationPathName = "Builds/ToolTest";
-                // buildPlayerOptions.target = BuildTarget.WebGL;
-                // buildPlayerOptions.options = BuildOptions.None;
-                // DrawReport();
-                if(blockPulishOption)
-                    isSucceeded = true; 
+                buildPlayerOptions = new BuildPlayerOptions();
+                
+                // blockPublish과 scene이 null이 아닐 때 빌드
+                if (blockPublishOption && blockPublishOption.TargetScene)
+                {
+                   
+                    buildPlayerOptions.scenes = new[] { AssetDatabase.GetAssetPath(blockPublishOption.TargetScene) };
+                    buildPlayerOptions.locationPathName = "./WitchToolkit/Bundles";
+                    // buildPlayerOptions.target = BuildTarget.WebGL;
+                    // buildPlayerOptions.options = BuildOptions.None;
+                    DrawReport();
+                    
+                }
             }
             
             EditorGUILayout.EndVertical();
@@ -98,35 +97,35 @@ namespace WitchCompany.Toolkit.Editor
         private static void DrawReport()
         {
 
-            // BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-            // BuildSummary summary = report.summary;
+            BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+            BuildSummary summary = report.summary;
 
             GUILayout.Label("Result", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
             
-            // if (summary.result == BuildResult.Succeeded)
-            // {
-            //     Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-            //     
-            //     EditorGUILayout.LabelField("Path", summary.outputPath);
-            //     EditorGUILayout.LabelField("Size", summary.totalSize + "bytes");
-            //     EditorGUILayout.LabelField("Result", summary.result.ToString());
-            //     EditorGUILayout.LabelField("End Time", summary.buildEndedAt.ToString());
-            //     
-            // }
-            // if (summary.result == BuildResult.Failed)
-            // {
-            //     EditorGUILayout.LabelField("Result", summary.totalErrors.ToString());
-            //     
-            //     Debug.Log(summary.totalErrors.ToString());
-            //     Debug.Log("Build failed");
-            //     
-            // }
+            if (summary.result == BuildResult.Succeeded)
+            {
+                Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
+                
+                EditorGUILayout.LabelField("Path", summary.outputPath);
+                EditorGUILayout.LabelField("Size", summary.totalSize + "bytes");
+                EditorGUILayout.LabelField("Result", summary.result.ToString());
+                EditorGUILayout.LabelField("End Time", summary.buildEndedAt.ToString());
+                
+            }
+            if (summary.result == BuildResult.Failed)
+            {
+                EditorGUILayout.LabelField("Result", summary.totalErrors.ToString());
+                
+                Debug.Log(summary.totalErrors.ToString());
+                Debug.Log("Build failed");
+                
+            }
             
-            EditorGUILayout.LabelField("Path", "outputPath");
-            EditorGUILayout.LabelField("Size", "totalSize");
-            EditorGUILayout.LabelField("Result", "result");
-            EditorGUILayout.LabelField("End Time", "buildEndedAt");
+            // EditorGUILayout.LabelField("Path", "outputPath");
+            // EditorGUILayout.LabelField("Size", "totalSize");
+            // EditorGUILayout.LabelField("Result", "result");
+            // EditorGUILayout.LabelField("End Time", "buildEndedAt");
             
             EditorGUILayout.EndVertical();
         }
