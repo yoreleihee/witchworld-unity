@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace WitchCompany.Toolkit.Editor
 {
-    public static class CustomWindowBuild
+    public static class CustomWindowPublish
     {
         private static string _name;
         private static string _version;
@@ -24,6 +24,18 @@ namespace WitchCompany.Toolkit.Editor
         public static string ReleaseStatus { get; set; }
         public static List<string> Tags { get; set; }
         
+        public static void ShowPublish()
+        {
+            // 빌드 정보
+            EditorGUILayout.BeginVertical("box");
+            
+            // CustomWindowBuild.DrawContentInfo(PlayerSettings.productName, Application.version, "description", "capacity", "releaseStatus",
+            //     new List<string>() { "tag1", "tag2" });
+            
+            DrawContentInfo();
+            
+            EditorGUILayout.EndVertical();
+        }
         
         // Build 정보
         public static void DrawContentInfo(string name, string version, string description, string capacity,
@@ -56,7 +68,6 @@ namespace WitchCompany.Toolkit.Editor
             
             // var platformPath = Path.Combine(BasePath, "Builds", EditorUserBuildSettings.activeBuildTarget.ToString());
             // var buildPath = Path.Combine(platformPath, version);
-            
         }
     }
 }
