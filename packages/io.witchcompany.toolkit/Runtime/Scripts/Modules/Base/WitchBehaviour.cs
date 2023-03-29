@@ -14,6 +14,8 @@ namespace WitchCompany.Toolkit.Module
         public abstract string Description { get; }
         public abstract string DocumentURL { get; }
 
-        //public abstract bool ValidationCheck();
+       // #if UNITY_EDITOR
+       // public abstract bool ValidationCheck();
+       // #endif
     }
 }

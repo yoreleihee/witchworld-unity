@@ -13,5 +13,7 @@ namespace WitchCompany.Toolkit.Module
         private Renderer mediaRenderer;
         [Header("유저 클릭에 반응할 콜라이더"), SerializeField]
         private Collider interactionCollider;
+        
+        //#if UNI
     }
 }
