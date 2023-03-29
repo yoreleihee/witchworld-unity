@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using UnityEditor.SceneManagement;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.Configs;
@@ -20,7 +20,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             return new ValidationReport()
                 .Append(ValidateBlockOption(option))
-                .Append(ValidateHierarchy(option));
+                .Append(ValidateHierarchy())
+                .Append(ValidateComponents());
         }
 
         // 블록 옵션 체크
@@ -39,7 +40,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return null;
         }
 
-        private static string ValidateHierarchy(BlockPublishOption option)
+        private static string ValidateHierarchy()
         {
             const string prefix = "잘못된 계층 구조: ";
 
@@ -53,7 +54,46 @@ namespace WitchCompany.Toolkit.Editor.Validation
             if (!rootObjects[0].TryGetComponent<WitchBlockManager>(out _))
                 return prefix + "최상위 오브젝트는 WitchBlockManager 가 부착되어야 합니다.";
 
+            var comps = rootObjects[0].GetComponents<Component>();
+            foreach (var comp in comps)
+            {
+                if(comp.GetType() == typeof(Transform)) continue;
+                if(comp.GetType() == typeof(WitchBlockManager)) continue;
+                
+                return prefix + "최상위 오브젝트에는 오직 WitchBlockManager만 있어야 합니다.";
+            }
+
             return null;
+        }
+
+        private static string ValidateComponents()
+        {
+            const string prefix = "잘못된 컴포넌트 포함: ";
+            
+            var scene = SceneManager.GetActiveScene();
+            var rootObject = scene.GetRootGameObjects()[0].transform;
+            var children = HierarchyTool.GetAllChildren(rootObject);
+
+            var counter = new Counter();
+            
+            foreach (var tr in children)
+            {
+                if(tr.TryGetComponent(out Camera cam))
+                    return prefix + $"카메라를 포함할 수 없습니다({cam.name})";
+                if (tr.TryGetComponent(out WitchSpawnPoint spawnPoint))
+                    counter.spawnPoint++;
+            }
+
+            if (counter.spawnPoint != 1)
+                return prefix + $"최소 하나의 스폰 포인트가 있어야 합니다.(현재:{counter.spawnPoint})";
+            
+            return null;
+        }
+
+        [System.Serializable]
+        private class Counter
+        {
+            public int spawnPoint;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Editor
 {
     public static class EditorTest
     {
-        [MenuItem("WitchToolkit/Test")]
+        // [MenuItem("WitchToolkit/Test")]
         private static void Test()
         {
             // var option = AssetTool.GetSelectedAsset() as BlockOption;
