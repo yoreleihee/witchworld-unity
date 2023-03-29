@@ -67,9 +67,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
             if(validationReport.errMessages.Count > 0)
                 validationReport.result = ValidationReport.Result.Failed;
 
-            Debug.Log(failedObjects.Count);
-            // failedObjects.Clear();
-            
             return validationReport;
         }
 
