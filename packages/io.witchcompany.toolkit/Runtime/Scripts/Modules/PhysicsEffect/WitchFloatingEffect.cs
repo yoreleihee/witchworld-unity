@@ -10,11 +10,11 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 
         public override string DocumentURL => throw new System.NotImplementedException();
         
-        [Header("둥실둥실 높이")] [SerializeField] [Range(0.01f, 200f)]
-        private float amplitude = 0.5f;
-        [Header("둥실둥실 빠르기")] [SerializeField] [Range(-10f, 10f)]
-        private float frequency = 1f;
-        [Header("둥실둥실 오프셋")] [SerializeField] [Range(0f, 1f)]
-        private float offset = 0.5f;
+        [Header("둥실둥실 높이")] [Range(0.01f, 200f)]
+        public float amplitude = 0.5f;
+        [Header("둥실둥실 빠르기")] [Range(-10f, 10f)]
+        public float frequency = 1f;
+        [Header("둥실둥실 오프셋")] [Range(0f, 1f)]
+        public float offset = 0.5f;
     }
 }

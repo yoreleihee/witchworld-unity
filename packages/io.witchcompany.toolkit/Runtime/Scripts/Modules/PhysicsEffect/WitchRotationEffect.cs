@@ -11,8 +11,8 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public override string DocumentURL => throw new System.NotImplementedException();
         
         [Header("회전 속도")] 
-        [SerializeField, Range(-100, 100f)] private float speedX = 0f;
-        [SerializeField, Range(-100, 100f)] private float speedY = 0.5f;
-        [SerializeField, Range(-100, 100f)] private float speedZ = 0;
+        [Range(-100, 100f)] public float speedX = 0f;
+        [Range(-100, 100f)] public float speedY = 0.5f;
+        [Range(-100, 100f)] public float speedZ = 0;
     }
 }
