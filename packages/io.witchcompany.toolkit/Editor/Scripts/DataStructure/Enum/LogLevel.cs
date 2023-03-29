@@ -9,6 +9,7 @@ namespace WitchCompany.Toolkit.Editor.Configs.Enum
         None = 0,
         API = 1 << 0,
         Validation = 1 << 1,
-        Tool = 1 << 2
+        Tool = 1 << 2,
+        Pipeline = 1 << 3
     }
 }
