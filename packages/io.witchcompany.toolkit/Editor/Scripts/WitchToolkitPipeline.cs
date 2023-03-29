@@ -73,6 +73,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 Debug.LogException(e);
                 Debug.LogError(validationReport.ErrorMsg);
             }
+
+            return buildReport;
         }
 
         private static void Log(string msg)
