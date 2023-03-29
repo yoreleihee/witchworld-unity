@@ -37,7 +37,7 @@ namespace WitchCompany.Toolkit.Editor
         public static async void BuildBundle()
         {
             var option = AssetTool.GetSelectedAsset() as BlockPublishOption;
-            WitchToolkitPipeline.UploadWithValidation(option);
+            WitchToolkitPipeline.PublishWithValidation(option);
             
         }
         

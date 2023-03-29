@@ -12,9 +12,15 @@ namespace WitchCompany.Toolkit.Editor.Tool
 {
     public static class WitchToolkitPipeline
     {
-        public static void UploadWithValidation(BlockPublishOption option)
+        public static void PublishWithValidation(BlockPublishOption option)
         {
             var report = new ValidationReport();
+
+            if (option == null || option.TargetScene == null)
+            {
+                Debug.LogError("잘못된 option 입니다.");
+                return;
+            }
             
             try
             {
