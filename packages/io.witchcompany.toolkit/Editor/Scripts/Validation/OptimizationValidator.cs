@@ -25,6 +25,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// </summary>
         public static ValidationReport ValidationCheck()
         {
+            failedObjects.Clear();
+            
             // 유효성 검사 객체 생성
             var validationReport = new ValidationReport();
 
@@ -39,7 +41,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 foreach (var obj in failedObjects)
                 {
-                    validationReport.Append($"해당 Mesh Vertex 개수가 너무 많습니다.\n- Path : {obj.Item1} \n- Vertex: {obj.Item2}");
+                    validationReport.Append($"해당 Mesh의 Vertex 개수가 최대값 이상입니다.\n- Path : {obj.Item1} \n- Vertex: {obj.Item2}");
                 }
             }
 
@@ -65,7 +67,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             if(validationReport.errMessages.Count > 0)
                 validationReport.result = ValidationReport.Result.Failed;
 
-            failedObjects.Clear();
+            Debug.Log(failedObjects.Count);
+            // failedObjects.Clear();
             
             return validationReport;
         }

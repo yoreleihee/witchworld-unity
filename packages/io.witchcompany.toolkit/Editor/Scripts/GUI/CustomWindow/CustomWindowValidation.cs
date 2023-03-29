@@ -16,9 +16,9 @@ namespace WitchCompany.Toolkit.Editor
             GUILayout.Label("  - 최적화 검사");
             GUILayout.Label("  - 씬 규칙 검사");
             GUILayout.Label("  - 업로드 규칙 검사");
-
-            DrawValidation();
-            GUILayout.Space(10);
+            
+            
+            GUILayout.Space(30);
             DrawSceneVital();
             GUILayout.Space(10);
 
@@ -26,21 +26,10 @@ namespace WitchCompany.Toolkit.Editor
                 DrawReport();
         }
 
-        private static void DrawValidation()
-        {
-            GUILayout.Label("Validation", EditorStyles.boldLabel);
-
-            if (GUILayout.Button("Validation Check"))
-            {
-                Debug.Log("Validation Click!");
-                validationReport = OptimizationValidator.ValidationCheck();
-                errMsgs = validationReport.errMessages;
-            }
-        }
-        
         private static void DrawSceneVital()
         {
-            GUILayout.Label("Vital", EditorStyles.boldLabel);
+
+            GUILayout.Label("Scene Vital", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.LabelField("Vertex", OptimizationValidator.GetMeshVertex().ToString());
             EditorGUILayout.LabelField("Unique Material", OptimizationValidator.GetUniqueMaterialCount().ToString());
@@ -48,7 +37,15 @@ namespace WitchCompany.Toolkit.Editor
             EditorGUILayout.LabelField("Light Map", OptimizationValidator.GetLightMapMB()+ " MB");
 
             EditorGUILayout.EndVertical();
+            
+            
+            if (GUILayout.Button("Validation Check"))
+            {
+                validationReport = OptimizationValidator.ValidationCheck();
+                errMsgs = validationReport.errMessages;
+            }
         }
+        
         
         private static void DrawReport()
         {
@@ -57,21 +54,22 @@ namespace WitchCompany.Toolkit.Editor
             EditorGUILayout.LabelField("Result", validationReport.result.ToString());
             EditorGUILayout.EndVertical();
             
-            GUILayout.Space(5);
-            GUILayout.Label("Message", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("box");
-            
-            
             if (validationReport.result == ValidationReport.Result.Failed)
             {
-                // foreach (var err in validationReport.errMessages)
-                // {
-                    GUILayout.Label(validationReport.errMessages.Count.ToString());
+                GUILayout.Space(5);
+                GUILayout.Label("Message", EditorStyles.boldLabel);
+                EditorGUILayout.BeginVertical("box");
+            
+            
+                foreach (var err in validationReport.errMessages)
+                {
+                    // GUILayout.Label(validationReport.errMessages.Count.ToString());
+                    GUILayout.Label(err);
                     GUILayout.Space(5);
-                // }
+                }
+                EditorGUILayout.EndVertical();
             }
             
-            EditorGUILayout.EndVertical();
         }
     }
 }

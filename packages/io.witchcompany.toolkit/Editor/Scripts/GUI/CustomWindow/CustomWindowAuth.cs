@@ -69,7 +69,8 @@ namespace WitchCompany.Toolkit.Editor
             // AuthConfig.Email = EditorGUILayout.TextField("E-Mail", AuthConfig.Email);
             // AuthConfig.Password = EditorGUILayout.PasswordField("Password", AuthConfig.Password);
 
-            GUILayout.Space(10);
+            // GUILayout.Space(10);
+            EditorGUILayout.EndVertical();
 
             if (GUILayout.Button("Login"))
             {
@@ -78,7 +79,6 @@ namespace WitchCompany.Toolkit.Editor
                 Login();
             }
             
-            EditorGUILayout.EndVertical();
         }
         
         // 로그인 상태 (로그인 정보 띄우기)
@@ -91,12 +91,12 @@ namespace WitchCompany.Toolkit.Editor
             EditorGUILayout.LabelField("Nick Name", AuthConfig.NickName);
             EditorGUILayout.LabelField("Login Time", AuthConfig.LoginTime);
             
+            EditorGUILayout.EndVertical();
             if (GUILayout.Button("Logout"))
             {
                 Logout();
             }
             
-            EditorGUILayout.EndVertical();
         }
         
         private static async void Login()

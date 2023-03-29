@@ -19,7 +19,7 @@ namespace WitchCompany.Toolkit.Editor
         public static void ShowPublish()
         {
             // 빌드 정보
-            DrawSetting();
+            DrawConfig();
             
             GUILayout.Space(10);
             
@@ -32,18 +32,18 @@ namespace WitchCompany.Toolkit.Editor
         /// - Scriptable Object 적용 칸
         /// - 빌드 버튼
         /// </summary>
-        private static void DrawSetting()
+        private static void DrawConfig()
         {
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
             blockPublishOption = EditorGUILayout.ObjectField("Block Publish Option", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;
+            EditorGUILayout.EndVertical();
 
             if (GUILayout.Button("Publish"))
             {
                 buildReport = WitchToolkitPipeline.PublishWithValidation(blockPublishOption);
             }
-            EditorGUILayout.EndVertical();
         }
         
         /// <summary>
