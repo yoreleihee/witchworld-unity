@@ -6,6 +6,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.Tool;
 
 namespace WitchCompany.Toolkit.Editor
 {
@@ -30,7 +31,7 @@ namespace WitchCompany.Toolkit.Editor
 
 
         private static BlockPublishOption blockPublishOption;
-        private static BuildPlayerOptions buildPlayerOptions;
+        // private static BuildPlayerOptions buildPlayerOptions;
         
         private static bool isSucceeded;
         
@@ -68,19 +69,22 @@ namespace WitchCompany.Toolkit.Editor
                 
                 
                 // Todo : 빌드 다됬을 때 빌드 결과 화면 띄우기
-                buildPlayerOptions = new BuildPlayerOptions();
-                
-                // blockPublish과 scene이 null이 아닐 때 빌드
-                if (blockPublishOption && blockPublishOption.TargetScene)
-                {
-                   
-                    buildPlayerOptions.scenes = new[] { AssetDatabase.GetAssetPath(blockPublishOption.TargetScene) };
-                    buildPlayerOptions.locationPathName = "./WitchToolkit/Bundles";
-                    // buildPlayerOptions.target = BuildTarget.WebGL;
-                    // buildPlayerOptions.options = BuildOptions.None;
-                    DrawReport();
-                    
-                }
+                // buildPlayerOptions = new BuildPlayerOptions();
+                //
+                // // blockPublish과 scene이 null이 아닐 때 빌드
+                // if (blockPublishOption && blockPublishOption.TargetScene)
+                // {
+                //    
+                //     buildPlayerOptions.scenes = new[] { AssetDatabase.GetAssetPath(blockPublishOption.TargetScene) };
+                //     buildPlayerOptions.locationPathName = "./WitchToolkit/Bundles";
+                //     // buildPlayerOptions.target = BuildTarget.WebGL;
+                //     // buildPlayerOptions.options = BuildOptions.None;
+                //     DrawReport();
+                //     
+                // }
+                WitchToolkitPipeline.PublishWithValidation(blockPublishOption);
+
+
             }
             EditorGUILayout.EndVertical();
         }
@@ -95,38 +99,38 @@ namespace WitchCompany.Toolkit.Editor
         /// </summary>
         private static void DrawReport()
         {
-
-            BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-            BuildSummary summary = report.summary;
-
-            GUILayout.Label("Result", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("box");
-            
-            if (summary.result == BuildResult.Succeeded)
-            {
-                Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-                
-                EditorGUILayout.LabelField("Path", summary.outputPath);
-                EditorGUILayout.LabelField("Size", summary.totalSize + "bytes");
-                EditorGUILayout.LabelField("Result", summary.result.ToString());
-                EditorGUILayout.LabelField("End Time", summary.buildEndedAt.ToString());
-                
-            }
-            if (summary.result == BuildResult.Failed)
-            {
-                EditorGUILayout.LabelField("Result", summary.totalErrors.ToString());
-                
-                Debug.Log(summary.totalErrors.ToString());
-                Debug.Log("Build failed");
-                
-            }
+            Debug.Log("publish 됨");
+            // BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+            // BuildSummary summary = report.summary;
+            //
+            // GUILayout.Label("Result", EditorStyles.boldLabel);
+            // EditorGUILayout.BeginVertical("box");
+            //
+            // if (summary.result == BuildResult.Succeeded)
+            // {
+            //     Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
+            //     
+            //     EditorGUILayout.LabelField("Path", summary.outputPath);
+            //     EditorGUILayout.LabelField("Size", summary.totalSize + "bytes");
+            //     EditorGUILayout.LabelField("Result", summary.result.ToString());
+            //     EditorGUILayout.LabelField("End Time", summary.buildEndedAt.ToString());
+            //     
+            // }
+            // if (summary.result == BuildResult.Failed)
+            // {
+            //     EditorGUILayout.LabelField("Result", summary.totalErrors.ToString());
+            //     
+            //     Debug.Log(summary.totalErrors.ToString());
+            //     Debug.Log("Build failed");
+            //     
+            // }
             
             // EditorGUILayout.LabelField("Path", "outputPath");
             // EditorGUILayout.LabelField("Size", "totalSize");
             // EditorGUILayout.LabelField("Result", "result");
             // EditorGUILayout.LabelField("End Time", "buildEndedAt");
             
-            EditorGUILayout.EndVertical();
+            // EditorGUILayout.EndVertical();
         }
 
 

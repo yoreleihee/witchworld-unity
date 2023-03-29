@@ -31,13 +31,7 @@ namespace WitchCompany.Toolkit.Editor
         {
             // Tool bar
             toolbarIdx = GUILayout.Toolbar(toolbarIdx, toolbarLabels);
-            // 이전 툴바 저장
-            if (preToolbarIdx != toolbarIdx)
-            {
-                preToolbarIdx = toolbarIdx;
-            }
-
-
+            
             // 선택한 메뉴에 따라 다른 함수 호출
             switch (toolbarIdx)
             {
@@ -54,6 +48,12 @@ namespace WitchCompany.Toolkit.Editor
                     CustomWindowSetting.ShowSetting();
                     break;
                 default: break;
+            }
+            
+            // 이전 툴바 저장
+            if (preToolbarIdx != toolbarIdx)
+            {
+                preToolbarIdx = toolbarIdx;
             }
         }
     }
