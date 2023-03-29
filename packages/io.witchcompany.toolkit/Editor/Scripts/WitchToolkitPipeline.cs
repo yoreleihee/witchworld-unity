@@ -69,7 +69,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 Log("업로드 유효성 검사 성공!");
                 
                 // 업로드 진행
-                Debug.Log("블록 생성 성공!");
+                Log("블록 생성 성공!");
 
                 buildReport.result = JBuildReport.Result.Success;
                 buildReport.exportPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);

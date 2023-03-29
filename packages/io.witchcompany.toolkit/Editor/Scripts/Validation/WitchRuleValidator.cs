@@ -22,22 +22,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             const string prefix = "잘못된 블록 옵션: ";
             
-            // 블록 이름이 없으면 실패
-            // if (string.IsNullOrEmpty(option.Name.kr))
-            //     return prefix + "빈 한글 이름";
-            // if (string.IsNullOrEmpty(option.Name.en))
-            //     return prefix + "잘못된 블록 옵션: 빈 영어 이름";
+            // 타겟 씬이 없으면 실패
+            if (option.TargetScene == null) 
+                return prefix + "타겟 씬이 없음";
             
             // 블록 이름 유효성 검사
             if (!Regex.IsMatch(option.Key, AssetBundleConfig.ValidNameRegex)) 
                 return prefix + $"블록 이름 규칙 위반({option.Key}) -> 소문자로 시작하는, 소문자/숫자/언더바로 구성된 12자 이내의 문자열만 가능합니다.";
-
-            // 타겟 씬이 없으면 실패
-            if (option.TargetScene == null) 
-                return prefix + "타겟 씬이 없음";
-            // 씬 이름과 블록이름(영문) 이 다르면 실패 
-            if (option.TargetScene.name != option.Key) 
-                return prefix + $"씬 이름이 블록 이름과 다름. 씬({option.TargetScene.name}) 블록({option.Key})";
 
             return null;
         }

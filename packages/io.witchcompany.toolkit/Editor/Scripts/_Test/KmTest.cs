@@ -39,8 +39,6 @@ namespace WitchCompany.Toolkit.Editor
             
             Debug.Log("유저 정보 요청---------------");
             var json = await WitchAPI.GetUserInfo();
-            Debug.Log(JsonConvert.SerializeObject(json));
-            
             
             Debug.Log("다음 AUTH---------------");
             auth = AuthConfig.Auth;
@@ -61,9 +59,7 @@ namespace WitchCompany.Toolkit.Editor
         public static async void Test_KM()
         {
             var option = AssetTool.GetSelectedAsset() as BlockPublishOption;
-            var path = AssetTool.GetAssetPath(option.TargetScene);
-            Debug.Log(path);
-            EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+            Debug.Log(option.Key);
         }
     }
 }

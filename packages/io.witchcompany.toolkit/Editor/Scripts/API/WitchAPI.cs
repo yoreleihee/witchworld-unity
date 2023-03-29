@@ -31,10 +31,7 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
                 ContentType = ApiConfig.ContentType.Json
             });
 
-            if (!response.success) return null;
-            
-            AuthConfig.Auth = response.payload;
-            return response.payload;
+            return !response.success ? null : response.payload;
         }
         
         public static void Logout()
@@ -59,6 +56,8 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
 
         public static async UniTask<JAuth> Refresh()
         {
+            Log("토큰 리프래쉬 요청");
+            
             var auth = AuthConfig.Auth;
             
             if (string.IsNullOrEmpty(auth.refreshToken))
@@ -140,6 +139,7 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
                     AuthConfig.Auth = auth;
                     
                     // 요청 재시도
+                    helper.Headers = ApiConfig.TokenHeader(auth.accessToken);
                     res = await Request<T>(helper);
                 }
             }
