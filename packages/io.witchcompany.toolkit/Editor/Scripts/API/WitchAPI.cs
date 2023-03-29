@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using Proyecto26;
 using UnityEngine;
 using UnityEngine.Networking;
-using WitchCompany.Core.Runtime;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Configs.Enum;
 using WitchCompany.Toolkit.Editor.DataStructure;
@@ -152,37 +151,50 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
         {
             using var request = new UnityWebRequest();
             
-            request.method = helper.Method;
-            request.url = helper.Uri;
-            foreach (var (key, value) in helper.Headers) 
-                request.SetRequestHeader(key, value);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            if (!string.IsNullOrEmpty(helper.BodyString))
+            try
             {
-                var bytes = Encoding.UTF8.GetBytes(helper.BodyString.ToCharArray());
-                request.uploadHandler = new UploadHandlerRaw(bytes);
+                // 리퀘스트 생성
+                request.method = helper.Method;
+                request.url = helper.Uri;
+                foreach (var (key, value) in helper.Headers)
+                    request.SetRequestHeader(key, value);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                if (!string.IsNullOrEmpty(helper.BodyString))
+                {
+                    var bytes = Encoding.UTF8.GetBytes(helper.BodyString.ToCharArray());
+                    request.uploadHandler = new UploadHandlerRaw(bytes);
 
-                var contentType = string.IsNullOrEmpty(helper.ContentType)
-                    ? ApiConfig.ContentType.Json
-                    : helper.ContentType; 
-                request.uploadHandler.contentType = contentType;
-            }
+                    var contentType = string.IsNullOrEmpty(helper.ContentType)
+                        ? ApiConfig.ContentType.Json
+                        : helper.ContentType;
+                    request.uploadHandler.contentType = contentType;
+                }
 
-            var baseRequestLog = $"{helper.Method} Request ({helper.Uri})\n";
-            
-            Log( baseRequestLog + $"{helper.BodyString}");
+                // 로그
+                Log($"{helper.Method} Request ({helper.Uri})\n" + $"{helper.BodyString}");
 
-            await request.SendWebRequest();
-            
-            if(request.result == UnityWebRequest.Result.Success)
-                Log(baseRequestLog + $"{request.downloadHandler?.text}");
-            else
-                LogErr(baseRequestLog + $"Failed: {request.error}");
+                // 웹 리퀘스트 전송
+                await request.SendWebRequest();
 
-            if (request.result == UnityWebRequest.Result.Success && !string.IsNullOrEmpty(request.downloadHandler?.text))
+                // 예외처리
+                if (request.result != UnityWebRequest.Result.Success || string.IsNullOrEmpty(request.downloadHandler?.text)) 
+                    throw new UnityWebRequestException(request);
+               
+                // 성공
+                Log($"{helper.Method} Response ({helper.Uri})\n" + $"{request.downloadHandler?.text}");
                 return JsonConvert.DeserializeObject<JResponse<T>>(request.downloadHandler.text);
-            else
-                return null;
+            }
+            catch (Exception)
+            {
+                LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
+                
+                return new JResponse<T>
+                {
+                    message = request.error,
+                    statusCode = (int)request.responseCode,
+                    success = false
+                };
+            }
         }
 
         private static void Log(string msg)

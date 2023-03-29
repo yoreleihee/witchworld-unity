@@ -3,10 +3,7 @@
     "rootNamespace": "WitchCompany.Toolkit.Editor",
     "references": [
         "UniTask",
-        "UniTask.Editor",
-        "WitchCompany.Toolkit.Runtime",
-        "WitchCompany.Core.Runtime",
-        "WitchCompany.Core.Plugins"
+        "WitchCompany.Toolkit.Runtime"
     ],
     "includePlatforms": [
         "Editor"
