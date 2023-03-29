@@ -33,7 +33,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
         public static string ValidateBundleSize(BlockPublishOption option)
         {
-            var path = Path.Combine(AssetBundleConfig.BuildExportPath, option.BundleKey);
+            var path = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
             var sizeByte = AssetTool.GetFileSizeByte(path);
 
             if (sizeByte > AssetBundleConfig.MaxSizeByte)

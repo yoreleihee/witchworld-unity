@@ -68,7 +68,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
         public static AssetBundleManifest BuildAssetBundle(BuildTarget target)
         {
             // 디렉토리
-            var directory = AssetBundleConfig.BuildExportPath;
+            var directory = AssetBundleConfig.BundleExportPath;
 
             // 디렉토리가 없으면 새로 만든다.
             if (!Directory.Exists(directory))
