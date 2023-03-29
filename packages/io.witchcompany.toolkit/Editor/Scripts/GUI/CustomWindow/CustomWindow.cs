@@ -14,7 +14,6 @@ namespace WitchCompany.Toolkit.Editor
             EditorWindow wnd = GetWindow(typeof(CustomWindow));
             wnd.titleContent = new GUIContent("Witch Control Panel");
             wnd.minSize = new Vector2(640, 480);
-
         }
         
         int toolbarIdx = 0;

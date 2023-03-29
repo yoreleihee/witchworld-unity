@@ -3,37 +3,54 @@ using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.Tool.API;
 
 
 namespace WitchCompany.Toolkit.Editor
 {
     public static class CustomWindowAuth
     {
-        // private static int testInt;
-        // private static bool isLogin;
-        //
-        // private static string eMail;
-        // private static string password;
-        // private static string acToken;
-        // private static string rfToken;
-        // private static string nickName;
-        // private static string loginTime;
-        
         
         private static GUIStyle style = new GUIStyle();
-        
-        
-        public static async void ShowAuth()
+
+        private enum LoginState
         {
-            // 로그인 토근이 없으면 로그인 화면, 있으면 로그인한 정보 띄움
-            if (string.IsNullOrEmpty(AuthConfig.Auth.accessToken))
+            None,
+            Wait,
+            Login,
+            Logout
+        }
+
+        private static LoginState loginState = LoginState.Logout;
+        
+        public static void ShowAuth()
+        {
+            switch (loginState)
             {
-                DrawLogin();
+                // case LoginState.None:
+                //     DrawLogin();
+                //     break;
+                case LoginState.Wait:
+                    DrawWait();
+                    break;
+                case LoginState.Login:
+                    DrawAuthInfo();
+                    break;
+                case LoginState.Logout:
+                    DrawLogin();
+                    break;
             }
-            else
-            {
-                DrawAuthInfo();
-            }
+            
+            Debug.Log(loginState);
+        }
+        
+        
+        private static void DrawWait()
+        {
+            GUILayout.Label("Account", EditorStyles.boldLabel);
+            
+            GUILayout.Label("로그인 중...");
+            
         }
 
 
@@ -42,30 +59,36 @@ namespace WitchCompany.Toolkit.Editor
         {
             // ChangeGUIStyle();
             GUILayout.Label("Account", EditorStyles.boldLabel);
-            GUILayout.Space(10);
             
-            // password = EditorGUILayout.TextField("Password", password);
-            // acToken = EditorGUILayout.TextField("Access Token", acToken);
-            // rfToken = EditorGUILayout.TextField("Refresh Token", rfToken);
+            EditorGUILayout.BeginVertical("box");
+            
             
             AuthConfig.Email = EditorGUILayout.TextField("E-Mail", AuthConfig.Email);
             AuthConfig.Password = EditorGUILayout.TextField("Password", AuthConfig.Password);
-            GUILayout.Space(5);
 
-            // EditorGUILayout.LabelField("Access Token", AuthConfig.AccessToken);
-            // EditorGUILayout.LabelField("Refresh Token", AuthConfig.RefreshToken);
-            
             GUILayout.Space(10);
 
             if (GUILayout.Button("Login"))
             {
+                // 로그인 대기 상태로 변경
+                if (loginState == LoginState.None || loginState == LoginState.Logout )
+                {
+                    loginState = LoginState.Wait;
+                }
+                
                 Login();
+                
             }
+            
+            EditorGUILayout.EndVertical();
         }
         
         // 로그인 상태 (로그인 정보 띄우기)
         private static void DrawAuthInfo()
         {
+            GUILayout.Label("Account", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("box");
+            
             EditorGUILayout.LabelField("E-Mail", AuthConfig.Email);
             EditorGUILayout.LabelField("Nick Name", AuthConfig.NickName);
             EditorGUILayout.LabelField("Login Time", AuthConfig.LoginTime);
@@ -74,42 +97,45 @@ namespace WitchCompany.Toolkit.Editor
             {
                 Logout();
             }
+            
+            EditorGUILayout.EndVertical();
         }
         
         private static async void Login()
         {
-            Debug.Log("login click!");
-            //var auth = await AuthAPI.EmailLogin(eMail,password);
+            loginState = LoginState.Wait;
+            
+            var auth = await WitchAPI.Login(AuthConfig.Email, AuthConfig.Password);
+            AuthConfig.Auth.accessToken = auth.accessToken;
+            AuthConfig.Auth.refreshToken = auth.refreshToken;
+                
+            // 닉네임
+            var response = await WitchAPI.GetUserInfo();
 
-            // var auth = await AuthAPI.EmailLogin(eMail, password);
-            // acToken = auth.accessToken;
-            // rfToken = auth.refreshToken;
-            //
-            // Debug.Log(JsonConvert.SerializeObject(auth));
-            //     
-            // // 닉네임
-            // var response = await UserAPI.GetUser(acToken);
-            // nickName = response.profile.nickname;
-
-            // 임시
-            // AuthConfig.AccessToken = "temp_access_token";
-            // AuthConfig.RefreshToken = "";
-            AuthConfig.NickName = "temp_nickname";
-            AuthConfig.LoginTime = DateTime.Now.ToString();
-        
+            // 로그인 상태로 변경
+            if (response != null)
+            {
+                AuthConfig.NickName = response.profile.nickname;
+                AuthConfig.LoginTime = DateTime.Now.ToString();
+                
+                loginState = LoginState.Login;
+            }
+            else
+            {
+                loginState = LoginState.Logout;
+            }
         }
 
-        private static async void Logout()
+        private static void Logout()
         {
-            AuthConfig.Email = null;
-            AuthConfig.Password = null;
-            // AuthConfig.AccessToken = null;
-            // AuthConfig.RefreshToken = null;
-            AuthConfig.NickName = null;
-            AuthConfig.LoginTime = null;
+            WitchAPI.Logout();
             
-            Debug.Log("logout click!");
-            
+            // 로그인 상태로 변경
+            if (loginState == LoginState.Login)
+            {
+                loginState = LoginState.Logout;
+            }
+
         }
         
         

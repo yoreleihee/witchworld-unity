@@ -82,7 +82,6 @@ namespace WitchCompany.Toolkit.Editor
                     
                 }
             }
-            
             EditorGUILayout.EndVertical();
         }
 
