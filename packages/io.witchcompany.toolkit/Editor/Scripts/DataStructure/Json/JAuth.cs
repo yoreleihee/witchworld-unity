@@ -5,9 +5,9 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     [System.Serializable]
     public class JAuth
     {
-         public string accessToken;
-        public int accessExpire;
+        public string accessToken;
+        public long accessExpire;
         public string refreshToken;
-        public int refreshExpire;
+        public long refreshExpire;
     }
 }

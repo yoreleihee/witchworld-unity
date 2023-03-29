@@ -17,8 +17,10 @@ namespace WitchCompany.Toolkit.Editor
         {
             var json = await WitchAPI.Login("kmkim@witchcompany.io", "1998Kimin!");
             Debug.Log(JsonConvert.SerializeObject(json));
+            Debug.Log(CommonTool.TimeStampToDateTime(json.accessExpire).ToString("u"));
+            Debug.Log(CommonTool.TimeStampToDateTime(json.refreshExpire).ToString("u"));
         }
-        
+
         [MenuItem("WitchToolkit/Test_Refresh")]
         public static async void Refresh()
         {
@@ -29,8 +31,22 @@ namespace WitchCompany.Toolkit.Editor
         [MenuItem("WitchToolkit/Test_GetUserInfo")]
         public static async void GetUserInfo()
         {
+            var auth = AuthConfig.Auth;
+            Debug.Log("처음 AUTH---------------");
+            Debug.Log(JsonConvert.SerializeObject(auth));
+            Debug.Log(CommonTool.TimeStampToDateTime(auth.accessExpire).ToString("u"));
+            Debug.Log(CommonTool.TimeStampToDateTime(auth.refreshExpire).ToString("u"));
+            
+            Debug.Log("유저 정보 요청---------------");
             var json = await WitchAPI.GetUserInfo();
             Debug.Log(JsonConvert.SerializeObject(json));
+            
+            
+            Debug.Log("다음 AUTH---------------");
+            auth = AuthConfig.Auth;
+            Debug.Log(JsonConvert.SerializeObject(auth));
+            Debug.Log(CommonTool.TimeStampToDateTime(auth.accessExpire).ToString("u"));
+            Debug.Log(CommonTool.TimeStampToDateTime(auth.refreshExpire).ToString("u"));
         }
         
         [MenuItem("WitchToolkit/Test_BuildBundle")]

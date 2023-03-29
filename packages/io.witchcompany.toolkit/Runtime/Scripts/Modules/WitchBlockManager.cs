@@ -14,7 +14,7 @@ namespace WitchCompany.Toolkit.Module
         [SerializeReference] private List<WitchBehaviour> behaviours;
         
 #if UNITY_EDITOR
-        public void FindWitchBehaviours()
+        private void FindWitchBehaviours()
         {
             behaviours = transform.GetComponentsInChildren<WitchBehaviour>(true).ToList();
             behaviours.Remove(this);

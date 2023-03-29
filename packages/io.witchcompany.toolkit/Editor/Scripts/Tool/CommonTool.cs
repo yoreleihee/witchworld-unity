@@ -17,5 +17,25 @@ namespace WitchCompany.Toolkit.Editor.Tool
             var multiplier = (float)Math.Pow(10, decimalPlaces);
             return (float)Math.Round(value * multiplier) / multiplier;
         }
+        
+        /// <summary>현재 Timestamp를 반환한다.</summary>
+        public static long GetCurrentTimeStamp()
+        {
+            var now = DateTime.Now;
+            return ((DateTimeOffset)now).ToUnixTimeSeconds();
+        }
+
+        /// <summary>주어진 Datetime을 Timestamp로 반환한다.</summary>
+        public static long DateTimeToTimeStamp(DateTime value)
+        {
+            return ((DateTimeOffset)value).ToUnixTimeSeconds();
+        }
+        
+        /// <summary>주어진 Timestamp를 DateTime으로 변환한다.</summary>
+        public static DateTime TimeStampToDateTime(long value)
+        {
+            var dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            return dt.AddSeconds(value).ToLocalTime();
+        }
     }
 }
