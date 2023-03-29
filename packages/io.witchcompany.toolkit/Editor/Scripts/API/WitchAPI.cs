@@ -85,8 +85,8 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return false;
             
-            var bundlePath = Path.Combine(AssetBundleConfig.BuildExportPath, option.BundleKey);
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BuildExportPath, option.ThumbnailKey);
+            var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
             
             var bundleData = await File.ReadAllBytesAsync(bundlePath);
             var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);

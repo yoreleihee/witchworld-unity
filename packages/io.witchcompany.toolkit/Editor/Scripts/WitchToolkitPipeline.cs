@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
 using UnityEditor.PackageManager;
 using UnityEditor.SceneManagement;
 using UnityEditor.UIElements;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Validation;
 using LogLevel = WitchCompany.Toolkit.Editor.Configs.Enum.LogLevel;
 
@@ -12,14 +14,16 @@ namespace WitchCompany.Toolkit.Editor.Tool
 {
     public static class WitchToolkitPipeline
     {
-        public static void PublishWithValidation(BlockPublishOption option)
+        public static JBuildReport PublishWithValidation(BlockPublishOption option)
         {
-            var report = new ValidationReport();
+            var validationReport = new ValidationReport();
+            var buildReport = new JBuildReport();
 
             if (option == null || option.TargetScene == null)
             {
                 Debug.LogError("잘못된 option 입니다.");
-                return;
+                buildReport.result = JBuildReport.Result.Failed;
+                return buildReport;
             }
             
             try
@@ -35,12 +39,12 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
                 // TODO: 검증 로직 작성
                 //최적화 검증
-                if (report.Append(OptimizationValidator.ValidationCheck()).result != ValidationReport.Result.Success)
+                if (validationReport.Append(OptimizationValidator.ValidationCheck()).result != ValidationReport.Result.Success)
                     throw new Exception("최적화 유효성 검사 실패");
                 Log("최적화 유효성 검사 성공!");
                 
                 // 씬 구조 룰 검증
-                if (report.Append(WitchRuleValidator.ValidationCheck(option)).result != ValidationReport.Result.Success)
+                if (validationReport.Append(WitchRuleValidator.ValidationCheck(option)).result != ValidationReport.Result.Success)
                     throw new Exception("씬 구조 유효성 검사 실패");
                 Log("씬 구조 유효성 검사 성공!");
 
@@ -57,7 +61,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 Log("번들 빌드 성공!");
 
                 // 업로드 룰 검증
-                if (report.Append(UploadRuleValidator.ValidationCheck(option, manifest)).result != ValidationReport.Result.Success)
+                if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, manifest)).result != ValidationReport.Result.Success)
                     throw new Exception("업로드 유효성 검사 실패");
                 Log("업로드 유효성 검사 성공!");
                 
@@ -67,8 +71,10 @@ namespace WitchCompany.Toolkit.Editor.Tool
             catch (Exception e)
             {
                 Debug.LogException(e);
-                Debug.LogError(report.ErrorMsg);
+                Debug.LogError(validationReport.ErrorMsg);
             }
+
+            return buildReport;
         }
 
         private static void Log(string msg)
