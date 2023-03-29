@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
@@ -31,6 +33,36 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             
             return this;
+        }
+
+        public ValidationReport Append(ValidationReport other)
+        {
+            if (other.result != Result.Success)
+            {
+                result = other.result;
+                if (other.errMessages is {Count: > 0})
+                {
+                    errMessages ??= new List<string>();
+                    errMessages.AddRange(other.errMessages);
+                }
+            }
+
+            return this;
+        }
+        
+        public string ErrorMsg {
+            get
+            {
+                var builder = new StringBuilder();
+                for (var i = 0; i < errMessages.Count; i++)
+                {
+                    builder.Append(errMessages[i]);
+                    if (i < errMessages.Count - 1)
+                        builder.Append("\n");
+                }
+
+                return builder.ToString();
+            }
         }
     }
 }

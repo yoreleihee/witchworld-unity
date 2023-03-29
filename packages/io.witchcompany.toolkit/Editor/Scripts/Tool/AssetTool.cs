@@ -22,7 +22,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
         public static AssetImporter GetAssetImporterAtPath(string assetPath)
         {
             // 예외처리
-            if (string.IsNullOrEmpty(assetPath) || !assetPath.StartsWith("Assets/"))
+            if (string.IsNullOrEmpty(assetPath) || !assetPath.StartsWith("Assets"))
             {
                 Debug.LogError("잘못된 assetPath입니다: " + assetPath);
                 return null;
@@ -38,6 +38,9 @@ namespace WitchCompany.Toolkit.Editor.Tool
             return assetImporter;
         }
 
+        /// <summary>해당 오브젝트의 에셋 경로를 가져온다.</summary>
+        public static string GetAssetPath(Object asset) => AssetDatabase.GetAssetPath(asset);
+
         /// <summary>해당 경로 파일의 사이즈를 구한다.</summary>
         public static long GetFileSizeByte(string filePath)
         {
@@ -49,6 +52,16 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
             Debug.LogError("파일을 찾을 수 없습니다: " + filePath);
             return -1;
+        }
+
+        public static void RenameBundleFileName(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Move(filePath, filePath + ".bundle");
+            }
+
+            Debug.LogError("파일을 찾을 수 없습니다: " + filePath);
         }
     }
 }

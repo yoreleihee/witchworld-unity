@@ -68,14 +68,14 @@ namespace WitchCompany.Toolkit.Editor.Tool
         public static AssetBundleManifest BuildAssetBundle(BuildTarget target)
         {
             // 디렉토리
-            const string directory = AssetBundleConfig.BuildExportPath;
+            var directory = AssetBundleConfig.BuildExportPath;
 
             // 디렉토리가 없으면 새로 만든다.
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
             
             // 빌드 시작
-            return  BuildPipeline.BuildAssetBundles(directory, 
+            return BuildPipeline.BuildAssetBundles(directory, 
                 BuildAssetBundleOptions.ForceRebuildAssetBundle| BuildAssetBundleOptions.ChunkBasedCompression, 
                 target);
         }

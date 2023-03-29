@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
@@ -78,6 +79,40 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
 
             return response.success ? response.payload : null;
         }
+
+        public static async UniTask<bool> UploadBlock(BlockPublishOption option, JManifest manifest)
+        {
+            var auth = AuthConfig.Auth;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return false;
+            
+            var bundlePath = Path.Combine(AssetBundleConfig.BuildExportPath, option.BundleKey);
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BuildExportPath, option.ThumbnailKey);
+            
+            var bundleData = await File.ReadAllBytesAsync(bundlePath);
+            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
+            var form = new List<IMultipartFormSection>
+            {
+                //new MultipartFormDataSection("json", body, "application/json"),
+                new MultipartFormFileSection("file1", bundleData, option.BundleKey, "application/octet-stream"),
+                new MultipartFormFileSection("file2", thumbnailData, option.ThumbnailKey, "image/jpg")
+            };
+            //
+            // var response = await Request<JAuth>(new RequestHelper
+            // {
+            //     Method = "POST",
+            //     Uri = ApiConfig.URL("toolkit/create"),
+            //     Headers = ApiConfig.TokenHeader(auth.refreshToken),
+            //     BodyString = JsonConvert.SerializeObject(new Dictionary<string, string>
+            //     {
+            //         ["accessAt"] = "world"
+            //     }),
+            //     ContentType = ApiConfig.ContentType.Json
+            // });
+            //
+            //return response.success ? response.payload : null;
+
+            return false;
+        }
     }
     
     public static partial class WitchAPI
@@ -94,13 +129,13 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
                 // 실패
                 if (auth == null)
                 {
-                    Debug.Log("토큰 리프래쉬 실패");
+                    LogErr("토큰 리프래쉬 실패");
                     return res;
                 }
                 // 성공
                 else
                 {
-                    Debug.Log("토큰 리프래쉬 성공");
+                    Log("토큰 리프래쉬 성공");
                     
                     // 토큰 저장
                     AuthConfig.Auth = auth;
@@ -135,23 +170,31 @@ namespace WitchCompany.Toolkit.Editor.Tool.API
 
             var baseRequestLog = $"{helper.Method} Request ({helper.Uri})\n";
             
-            if(ToolkitConfig.CurrLogLevel.HasFlag(LogLevel.API))
-                Debug.Log( baseRequestLog + $"{helper.BodyString}");
+            Log( baseRequestLog + $"{helper.BodyString}");
 
             await request.SendWebRequest();
             
-            if (ToolkitConfig.CurrLogLevel.HasFlag(LogLevel.API))
-            {
-                if(request.result == UnityWebRequest.Result.Success)
-                    Debug.Log(baseRequestLog + $"{request.downloadHandler?.text}");
-                else
-                    Debug.LogError(baseRequestLog + $"Failed: {request.error}");
-            }
+            if(request.result == UnityWebRequest.Result.Success)
+                Log(baseRequestLog + $"{request.downloadHandler?.text}");
+            else
+                LogErr(baseRequestLog + $"Failed: {request.error}");
 
-            if (request.result == UnityWebRequest.Result.Success)
+            if (request.result == UnityWebRequest.Result.Success && !string.IsNullOrEmpty(request.downloadHandler?.text))
                 return JsonConvert.DeserializeObject<JResponse<T>>(request.downloadHandler.text);
             else
                 return null;
+        }
+
+        private static void Log(string msg)
+        {
+            if(ToolkitConfig.CurrLogLevel.HasFlag(LogLevel.API))
+                Debug.Log(msg);
+        }
+        
+        private static void LogErr(string msg)
+        {
+            if(ToolkitConfig.CurrLogLevel.HasFlag(LogLevel.API))
+                Debug.LogError(msg);
         }
     }
 }

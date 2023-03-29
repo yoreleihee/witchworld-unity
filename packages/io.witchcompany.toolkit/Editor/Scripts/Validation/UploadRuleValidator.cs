@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.IO;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Tool;
@@ -18,7 +15,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         public static ValidationReport ValidationCheck(BlockPublishOption option, AssetBundleManifest manifest)
         {
             return new ValidationReport()
-                .Append(ValidateBundleManifest(option, manifest));
+                .Append(ValidateBundleManifest(option, manifest))
+                .Append(ValidateBundleSize(option));
         }
 
         public static string ValidateBundleManifest(BlockPublishOption option, AssetBundleManifest manifest)
@@ -27,15 +25,15 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             if (bundles.Length != 1) 
                 return $"잘못된 에셋번들: 번들 개수가 이상합니다.({bundles.Length})";
-            if (bundles[0] != option.Key)
-                return $"잘못된 에셋번들: 번들 이름이 이상합니다. 번들({bundles[0]}) 블록({option.Key})";
+            if (bundles[0] != option.BundleKey)
+                return $"잘못된 에셋번들: 번들 이름이 일치하지 않습니다. 번들({bundles[0]}) 블록({option.BundleKey})";
 
             return null;
         }
 
         public static string ValidateBundleSize(BlockPublishOption option)
         {
-            var path = Path.Combine(AssetBundleConfig.BuildExportPath, option.Key);
+            var path = Path.Combine(AssetBundleConfig.BuildExportPath, option.BundleKey);
             var sizeByte = AssetTool.GetFileSizeByte(path);
 
             if (sizeByte > AssetBundleConfig.MaxSizeByte)
