@@ -1,17 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.Configs.Enum;
 
 namespace WitchCompany.Toolkit.Editor
 {
     public class CustomWindow : EditorWindow
     {
-        private int toolbarIdx = 0;
-        private int preToolbarIdx = 0;
-        
-
         [MenuItem ("WitchToolkit/Witch Control Panel")]
         public static void  ShowControlPanel () {
             EditorWindow wnd = GetWindow(typeof(CustomWindow));
@@ -27,34 +25,37 @@ namespace WitchCompany.Toolkit.Editor
             new GUIContent("Settings")
         };
         
-        void OnGUI()
+        private void OnGUI()
         {
-            // Tool bar
-            toolbarIdx = GUILayout.Toolbar(toolbarIdx, toolbarLabels);
+            ToolkitConfig.CurrControlPanelType = (ControlPanelType)GUILayout.Toolbar((int)ToolkitConfig.CurrControlPanelType, toolbarLabels);
             
             // 선택한 메뉴에 따라 다른 함수 호출
-            switch (toolbarIdx)
+            switch (ToolkitConfig.CurrControlPanelType)
             {
-                case 0 : 
+                case ControlPanelType.Auth: 
                     CustomWindowAuth.ShowAuth();
                     break;
-                case 1 :
+                case ControlPanelType.Validate :
                     CustomWindowValidation.ShowValidation();
                     break;
-                case 2 : 
+                case ControlPanelType.Publish : 
                     CustomWindowPublish.ShowPublish();
                     break;
-                case 3 : 
+                case ControlPanelType.Config : 
                     CustomWindowSetting.ShowSetting();
                     break;
                 default: break;
             }
+
+        }
+        
+        /// <summary> Editor Window가 닫힐 때 호출 </summary>
+        private void OnDestroy()
+        {
+            // input field 값 초기화
+            CustomWindowAuth.email = "";
+            CustomWindowAuth.password = "";
             
-            // 이전 툴바 저장
-            if (preToolbarIdx != toolbarIdx)
-            {
-                preToolbarIdx = toolbarIdx;
-            }
         }
     }
 }

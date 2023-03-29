@@ -40,8 +40,6 @@ namespace WitchCompany.Toolkit.Editor
                     DrawLogin();
                     break;
             }
-            
-            Debug.Log(loginState);
         }
         
         
@@ -53,6 +51,9 @@ namespace WitchCompany.Toolkit.Editor
             
         }
 
+        public static string email;
+        public static string password;
+        
 
         // 로그아웃 상태 (로그인 진행)
         private static void DrawLogin()
@@ -62,22 +63,19 @@ namespace WitchCompany.Toolkit.Editor
             
             EditorGUILayout.BeginVertical("box");
             
+            email = EditorGUILayout.TextField("E-Mail", email);
+            password = EditorGUILayout.PasswordField("Password",password);
             
-            AuthConfig.Email = EditorGUILayout.TextField("E-Mail", AuthConfig.Email);
-            AuthConfig.Password = EditorGUILayout.TextField("Password", AuthConfig.Password);
+            // AuthConfig.Email = EditorGUILayout.TextField("E-Mail", AuthConfig.Email);
+            // AuthConfig.Password = EditorGUILayout.PasswordField("Password", AuthConfig.Password);
 
             GUILayout.Space(10);
 
             if (GUILayout.Button("Login"))
             {
-                // // 로그인 대기 상태로 변경
-                // if (loginState == LoginState.None || loginState == LoginState.Logout )
-                // {
-                //     loginState = LoginState.Wait;
-                // }
-                
+                AuthConfig.Email = email;
+                AuthConfig.Password = password;
                 Login();
-                
             }
             
             EditorGUILayout.EndVertical();
@@ -106,26 +104,26 @@ namespace WitchCompany.Toolkit.Editor
             loginState = LoginState.Wait;
             
             var auth = await WitchAPI.Login(AuthConfig.Email, AuthConfig.Password);
+            
+            if (auth == null)
+            {
+                Debug.Log("회원 정보가 없습니다.");
+                loginState = LoginState.Logout;
+                return;
+            }
+            // 토큰
+            AuthConfig.Auth = auth;
+
             var response = await WitchAPI.GetUserInfo();
 
-            // 로그인 상태로 변경
-            if (auth != null && response != null)
-            {
-                // 토큰
-                AuthConfig.Auth.accessToken = auth.accessToken;
-                AuthConfig.Auth.refreshToken = auth.refreshToken;
-                
-                // 닉네임
-                AuthConfig.NickName = response.profile.nickname;
-                // 로그인 시간
-                AuthConfig.LoginTime = DateTime.Now.ToString();
-                
-                loginState = LoginState.Login;
-            }
-            else
+            if (response == null)
             {
                 loginState = LoginState.Logout;
+                return;
             }
+            AuthConfig.NickName = response.profile.nickname;
+            AuthConfig.LoginTime = DateTime.Now.ToString();
+            loginState = LoginState.Login;
             
             EditorWindow.focusedWindow.Repaint();
         }
@@ -139,7 +137,6 @@ namespace WitchCompany.Toolkit.Editor
             {
                 loginState = LoginState.Logout;
             }
-
         }
         
         

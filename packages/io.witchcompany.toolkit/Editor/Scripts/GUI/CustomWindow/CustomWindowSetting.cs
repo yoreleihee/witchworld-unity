@@ -58,7 +58,7 @@ namespace WitchCompany.Toolkit.Editor
         {
             EditorGUILayout.LabelField("Document", EditorStyles.boldLabel);
             
-            if (GUILayout.Button(Texture2D.normalTexture, GUILayout.Width(50), GUILayout.Height(20)))
+            if (GUILayout.Button("README", GUILayout.Width(100), GUILayout.Height(20)))
             {
                 Application.OpenURL(ToolkitConfig.WitchToolkitDocumentUrl);
             }

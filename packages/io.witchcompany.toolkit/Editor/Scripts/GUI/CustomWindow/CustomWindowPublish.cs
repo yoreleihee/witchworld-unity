@@ -6,6 +6,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
 
 namespace WitchCompany.Toolkit.Editor
@@ -31,10 +32,7 @@ namespace WitchCompany.Toolkit.Editor
 
 
         private static BlockPublishOption blockPublishOption;
-        // private static BuildPlayerOptions buildPlayerOptions;
-        
-        private static bool isSucceeded;
-        
+        public static JBuildReport buildReport;
         
         public static void ShowPublish()
         {
@@ -44,10 +42,8 @@ namespace WitchCompany.Toolkit.Editor
             
             GUILayout.Space(10);
             
-            if(blockPublishOption && isSucceeded)
+            if(buildReport != null)
                 DrawReport();
-            
-            
         }
 
         /// <summary>
@@ -57,7 +53,7 @@ namespace WitchCompany.Toolkit.Editor
         /// </summary>
         private static void DrawSetting()
         {
-            GUILayout.Label("Setting", EditorStyles.boldLabel);
+            GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
             blockPublishOption = EditorGUILayout.ObjectField("Block Publish Option", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;  
@@ -66,25 +62,7 @@ namespace WitchCompany.Toolkit.Editor
             if (GUILayout.Button("Publish"))
             {
                 Debug.Log("Publish Click!");
-                
-                
-                // Todo : 빌드 다됬을 때 빌드 결과 화면 띄우기
-                // buildPlayerOptions = new BuildPlayerOptions();
-                //
-                // // blockPublish과 scene이 null이 아닐 때 빌드
-                // if (blockPublishOption && blockPublishOption.TargetScene)
-                // {
-                //    
-                //     buildPlayerOptions.scenes = new[] { AssetDatabase.GetAssetPath(blockPublishOption.TargetScene) };
-                //     buildPlayerOptions.locationPathName = "./WitchToolkit/Bundles";
-                //     // buildPlayerOptions.target = BuildTarget.WebGL;
-                //     // buildPlayerOptions.options = BuildOptions.None;
-                //     DrawReport();
-                //     
-                // }
-                WitchToolkitPipeline.PublishWithValidation(blockPublishOption);
-
-
+                buildReport = WitchToolkitPipeline.PublishWithValidation(blockPublishOption);
             }
             EditorGUILayout.EndVertical();
         }
@@ -92,48 +70,29 @@ namespace WitchCompany.Toolkit.Editor
         
         /// <summary>
         /// 빌드 결과
+        /// - 방금 빌드 결과(성공/취소/실패)
         /// - 빌드파일 아웃풋 경로 (./WitchToolkit/Bundles)
         /// - 최종 빌드파일 용량
-        /// - 방금 빌드 결과(성공/취소/실패)
         /// - 빌드 종료 시간
         /// </summary>
         private static void DrawReport()
         {
-            Debug.Log("publish 됨");
-            // BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-            // BuildSummary summary = report.summary;
-            //
-            // GUILayout.Label("Result", EditorStyles.boldLabel);
-            // EditorGUILayout.BeginVertical("box");
-            //
-            // if (summary.result == BuildResult.Succeeded)
-            // {
-            //     Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-            //     
-            //     EditorGUILayout.LabelField("Path", summary.outputPath);
-            //     EditorGUILayout.LabelField("Size", summary.totalSize + "bytes");
-            //     EditorGUILayout.LabelField("Result", summary.result.ToString());
-            //     EditorGUILayout.LabelField("End Time", summary.buildEndedAt.ToString());
-            //     
-            // }
-            // if (summary.result == BuildResult.Failed)
-            // {
-            //     EditorGUILayout.LabelField("Result", summary.totalErrors.ToString());
-            //     
-            //     Debug.Log(summary.totalErrors.ToString());
-            //     Debug.Log("Build failed");
-            //     
-            // }
+            GUILayout.Label("Result", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("box");
             
-            // EditorGUILayout.LabelField("Path", "outputPath");
-            // EditorGUILayout.LabelField("Size", "totalSize");
-            // EditorGUILayout.LabelField("Result", "result");
-            // EditorGUILayout.LabelField("End Time", "buildEndedAt");
+            EditorGUILayout.LabelField("Result", buildReport.result.ToString());
             
-            // EditorGUILayout.EndVertical();
+            if (buildReport.result == JBuildReport.Result.Success)
+            {
+                EditorGUILayout.LabelField("ExportPath", buildReport.exportPath);
+                EditorGUILayout.LabelField("totalSize", CommonTool.ByteToMb(buildReport.totalSizeByte, 2)+" MB");
+                EditorGUILayout.LabelField("BuildEndedAt", buildReport.BuildEndedAt.ToString());
+            }
+            
+            EditorGUILayout.EndVertical();
         }
 
-
+        
 
         // Build 정보
         public static void DrawContentInfo(string name, string version, string description, string capacity,

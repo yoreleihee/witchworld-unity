@@ -50,7 +50,7 @@ namespace WitchCompany.Toolkit.Editor.Configs
 
         
         /// <summary> 문서 url </summary>
-        public const string WitchToolkitDocumentUrl = "https://witchworld.io/";
+        public const string WitchToolkitDocumentUrl = "https://github.com/witchcompany/witchworld-unity/tree/main/packages/io.witchcompany.toolkit";
         
         
         /// <summary> 개발자 모드 </summary>
