@@ -70,11 +70,11 @@ namespace WitchCompany.Toolkit.Editor
 
             if (GUILayout.Button("Login"))
             {
-                // 로그인 대기 상태로 변경
-                if (loginState == LoginState.None || loginState == LoginState.Logout )
-                {
-                    loginState = LoginState.Wait;
-                }
+                // // 로그인 대기 상태로 변경
+                // if (loginState == LoginState.None || loginState == LoginState.Logout )
+                // {
+                //     loginState = LoginState.Wait;
+                // }
                 
                 Login();
                 
@@ -106,16 +106,18 @@ namespace WitchCompany.Toolkit.Editor
             loginState = LoginState.Wait;
             
             var auth = await WitchAPI.Login(AuthConfig.Email, AuthConfig.Password);
-            AuthConfig.Auth.accessToken = auth.accessToken;
-            AuthConfig.Auth.refreshToken = auth.refreshToken;
-                
-            // 닉네임
             var response = await WitchAPI.GetUserInfo();
 
             // 로그인 상태로 변경
-            if (response != null)
+            if (auth != null && response != null)
             {
+                // 토큰
+                AuthConfig.Auth.accessToken = auth.accessToken;
+                AuthConfig.Auth.refreshToken = auth.refreshToken;
+                
+                // 닉네임
                 AuthConfig.NickName = response.profile.nickname;
+                // 로그인 시간
                 AuthConfig.LoginTime = DateTime.Now.ToString();
                 
                 loginState = LoginState.Login;
@@ -124,6 +126,8 @@ namespace WitchCompany.Toolkit.Editor
             {
                 loginState = LoginState.Logout;
             }
+            
+            EditorWindow.focusedWindow.Repaint();
         }
 
         private static void Logout()

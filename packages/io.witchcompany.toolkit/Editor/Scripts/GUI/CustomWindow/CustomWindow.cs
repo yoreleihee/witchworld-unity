@@ -8,6 +8,9 @@ namespace WitchCompany.Toolkit.Editor
 {
     public class CustomWindow : EditorWindow
     {
+        private int toolbarIdx = 0;
+        private int preToolbarIdx = 0;
+        
 
         [MenuItem ("WitchToolkit/Witch Control Panel")]
         public static void  ShowControlPanel () {
@@ -16,7 +19,6 @@ namespace WitchCompany.Toolkit.Editor
             wnd.minSize = new Vector2(640, 480);
         }
         
-        int toolbarIdx = 0;
         private readonly GUIContent[] toolbarLabels = new GUIContent[4]
         {
             new GUIContent("Authentication"),
@@ -29,7 +31,13 @@ namespace WitchCompany.Toolkit.Editor
         {
             // Tool bar
             toolbarIdx = GUILayout.Toolbar(toolbarIdx, toolbarLabels);
-            
+            // 이전 툴바 저장
+            if (preToolbarIdx != toolbarIdx)
+            {
+                preToolbarIdx = toolbarIdx;
+            }
+
+
             // 선택한 메뉴에 따라 다른 함수 호출
             switch (toolbarIdx)
             {
