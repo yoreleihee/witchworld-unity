@@ -13,7 +13,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
 {
     public static class OptimizationValidator
     {
-        public static List<Tuple<string, int>> failedObjects = new();
+        private static List<Tuple<string, int>> failedObjects = new();
         /// <summary>
         /// 최적화 관련 유효성 검사 -> 개별 함수 작성 필요
         /// - 씬에 배치된 오브젝트 전체 가져오기 v
@@ -21,7 +21,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// - 씬에 배치된 전체 메쉬 버텍스 개수 검사 v
         /// - 씬에서 사용된 라이트맵 용량 검사 v
         /// - 씬에서 사용된 텍스쳐 용량 검사 v
-        /// - 씬에서 유니크 머테리얼 개수 검사 v
+        /// - 씬에서 유니크 머테리얼 개수 검사 v 
         /// </summary>
         public static ValidationReport ValidationCheck()
         {
@@ -31,7 +31,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             // 전체 버텍스 검사
             if (GetMeshVertex() > OptimizationConfig.MAX_VERTS)
             {
-                validationReport.Append("Vertex 최대 개수 이상입니다.");
+                validationReport.Append("모든 Mesh의 Vertex 개수가 최대값 이상입니다.");
             }
             
             // 개별 버텍스 검사
@@ -39,7 +39,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 foreach (var obj in failedObjects)
                 {
-                    validationReport.Append($"Vertex가 최대 이상입니다.\nPath : {obj.Item1} \n Vertex: {obj.Item2}");
+                    validationReport.Append($"해당 Mesh Vertex 개수가 너무 많습니다.\n- Path : {obj.Item1} \n- Vertex: {obj.Item2}");
                 }
             }
 
@@ -66,6 +66,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 validationReport.result = ValidationReport.Result.Failed;
 
             failedObjects.Clear();
+            
             return validationReport;
         }
 
@@ -155,7 +156,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             // 찾은 mesh 중 중복 제거
             IEnumerable<Mesh> uniqueMeshes = foundMeshes.Distinct();
-            failedObjects.AddRange(uniqueMeshes.Select(m => new Tuple<string, int>(AssetDatabase.GetAssetPath(m), m.vertexCount)).Where(m => m.Item2 > OptimizationConfig.MAX_INDIVIDUAL_VERTS));
+
+            failedObjects.AddRange(uniqueMeshes.Select(m => new Tuple<string, int>(AssetDatabase.GetAssetPath(m)+$"/{m.name}", m.vertexCount)).Where(m => m.Item2 > OptimizationConfig.MAX_INDIVIDUAL_VERTS));
 
             return totalVertexCount;
         }

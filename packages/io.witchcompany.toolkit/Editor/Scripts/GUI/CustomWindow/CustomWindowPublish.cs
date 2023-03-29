@@ -13,31 +13,12 @@ namespace WitchCompany.Toolkit.Editor
 {
     public static class CustomWindowPublish
     {
-        private static string _name;
-        private static string _version;
-        private static string _description;
-        private static string _capacity;
-        private static string _releaseStatus;
-        private static List<string> _tags;
-
-        public static string Name {
-            get => _name;
-            set => _name = value;
-        }
-        public static string Version { get; set; }
-        public static string Desciption { get; set; }
-        public static string Capacity { get; set; }
-        public static string ReleaseStatus { get; set; }
-        public static List<string> Tags { get; set; }
-
-
         private static BlockPublishOption blockPublishOption;
         public static JBuildReport buildReport;
         
         public static void ShowPublish()
         {
             // 빌드 정보
-
             DrawSetting();
             
             GUILayout.Space(10);
@@ -56,17 +37,14 @@ namespace WitchCompany.Toolkit.Editor
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
-            blockPublishOption = EditorGUILayout.ObjectField("Block Publish Option", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;  
-
+            blockPublishOption = EditorGUILayout.ObjectField("Block Publish Option", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;
 
             if (GUILayout.Button("Publish"))
             {
-                Debug.Log("Publish Click!");
                 buildReport = WitchToolkitPipeline.PublishWithValidation(blockPublishOption);
             }
             EditorGUILayout.EndVertical();
         }
-
         
         /// <summary>
         /// 빌드 결과
@@ -77,7 +55,7 @@ namespace WitchCompany.Toolkit.Editor
         /// </summary>
         private static void DrawReport()
         {
-            GUILayout.Label("Result", EditorStyles.boldLabel);
+            GUILayout.Label("Report", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
             
             EditorGUILayout.LabelField("Result", buildReport.result.ToString());
@@ -90,41 +68,6 @@ namespace WitchCompany.Toolkit.Editor
             }
             
             EditorGUILayout.EndVertical();
-        }
-
-        
-
-        // Build 정보
-        public static void DrawContentInfo(string name, string version, string description, string capacity,
-            string releaseStatus, List<string> tags)
-        {
-            EditorGUILayout.LabelField("Name: " + name);
-            EditorGUILayout.LabelField("Version: " + version.ToString());
-            EditorGUILayout.LabelField("Platform: " + EditorUserBuildSettings.activeBuildTarget);
-            EditorGUILayout.LabelField("Description: " + description);
-            if (capacity != null)
-                EditorGUILayout.LabelField("Capacity: " + capacity);
-            EditorGUILayout.LabelField("Release: " + releaseStatus);
-            if (tags != null)
-            {
-                string tagString = "";
-                for (int i = 0; i < tags.Count; i++)
-                {
-                    if (i != 0) tagString += ", ";
-                    tagString += tags[i];
-                }
-                EditorGUILayout.LabelField("Tags: " + tagString);
-            }
-        }
-        
-        public static void DrawContentInfo()
-        {
-            EditorGUILayout.LabelField("Name: " + PlayerSettings.productName);
-            EditorGUILayout.LabelField("Version: " + Application.version);
-            EditorGUILayout.LabelField("Platform: " + EditorUserBuildSettings.activeBuildTarget);
-            
-            // var platformPath = Path.Combine(BasePath, "Builds", EditorUserBuildSettings.activeBuildTarget.ToString());
-            // var buildPath = Path.Combine(platformPath, version);
         }
     }
 }
