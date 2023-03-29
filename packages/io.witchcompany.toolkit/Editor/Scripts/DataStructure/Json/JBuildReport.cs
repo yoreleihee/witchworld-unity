@@ -7,9 +7,9 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     public class JBuildReport
     {
         public string exportPath;
-        public int totalSizeByte;
-        public Result result;
-        public DateTime buildEndedAt;
+        public long totalSizeByte = 0;
+        public Result result = Result.Failed;
+        public DateTime BuildEndedAt = DateTime.MinValue;
         
         public enum Result
         {

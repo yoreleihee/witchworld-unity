@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEditor.PackageManager;
@@ -17,12 +18,14 @@ namespace WitchCompany.Toolkit.Editor.Tool
         public static JBuildReport PublishWithValidation(BlockPublishOption option)
         {
             var validationReport = new ValidationReport();
-            var buildReport = new JBuildReport();
+            var buildReport = new JBuildReport
+            {
+                result = JBuildReport.Result.Failed
+            };
 
             if (option == null || option.TargetScene == null)
             {
                 Debug.LogError("잘못된 option 입니다.");
-                buildReport.result = JBuildReport.Result.Failed;
                 return buildReport;
             }
             
@@ -67,6 +70,11 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 
                 // 업로드 진행
                 Debug.Log("블록 생성 성공!");
+
+                buildReport.result = JBuildReport.Result.Success;
+                buildReport.exportPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
+                buildReport.totalSizeByte = AssetTool.GetFileSizeByte(buildReport.exportPath);
+                buildReport.BuildEndedAt = DateTime.Now;
             }
             catch (Exception e)
             {
