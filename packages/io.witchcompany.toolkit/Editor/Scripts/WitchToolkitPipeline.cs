@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
 using UnityEditor;
-using UnityEditor.Build.Reporting;
-using UnityEditor.PackageManager;
 using UnityEditor.SceneManagement;
-using UnityEditor.UIElements;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
@@ -17,6 +14,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
     {
         public static JBuildReport PublishWithValidation(BlockPublishOption option)
         {
+            Log("블록 퍼블리쉬 시작!");
+            
             var validationReport = new ValidationReport();
             var buildReport = new JBuildReport
             {
@@ -69,7 +68,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 Log("업로드 유효성 검사 성공!");
                 
                 // 업로드 진행
-                Log("블록 생성 성공!");
+                Log("블록 퍼블리쉬 성공!");
 
                 buildReport.result = JBuildReport.Result.Success;
                 buildReport.exportPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
