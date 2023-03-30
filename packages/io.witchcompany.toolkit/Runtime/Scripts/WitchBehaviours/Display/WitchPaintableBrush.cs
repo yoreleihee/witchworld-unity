@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace WitchCompany.Toolkit.Module
 {
-    public class WitchPaintableBrushChanger : WitchBehaviour
+    [Obsolete("사용 금지!! 미완성 에셋입니다.", true)]
+    public class WitchPaintableBrush : WitchBehaviour
     {
         public override string BehaviourName => "페인트 브러쉬";
 
