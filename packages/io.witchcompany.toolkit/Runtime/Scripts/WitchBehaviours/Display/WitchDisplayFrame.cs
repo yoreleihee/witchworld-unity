@@ -24,12 +24,12 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (mediaRenderer == null) return ScriptError($"{name}의 {nameof(mediaRenderer)}를 설정해주세요.");
-            if (interactionCollider == null) return ScriptError($"{name}의 {nameof(interactionCollider)}를 설정해주세요.");
+            if (mediaRenderer == null) return NullError(nameof(mediaRenderer));
+            if (interactionCollider == null) return NullError(nameof(mediaRenderer));
 
-            if (!transform.HasChild(mediaRenderer)) return ScriptError($"{name}의 {nameof(mediaRenderer)}는 자식 오브젝트여야 합니다.");
-            if (!transform.HasChild(interactionCollider)) return ScriptError($"{name}의 {nameof(interactionCollider)}는 자식 오브젝트여야 합니다.");
-
+            if (!transform.HasChild(mediaRenderer)) return ChildError(nameof(mediaRenderer));
+            if (!transform.HasChild(interactionCollider)) return ChildError(nameof(interactionCollider));
+            
             return null;
         }
 #endif

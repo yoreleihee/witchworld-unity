@@ -12,6 +12,8 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 
         public override string DocumentURL => "";
 
+        public override int MaximumCount => 64;
+
         [Header("점프 파워"), SerializeField, Range(0.01f,100f)] 
         private float jumpForce;
 

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using WitchCompany.Toolkit.Validation;
+using Object = System.Object;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -22,7 +23,9 @@ namespace WitchCompany.Toolkit.Module
         /// <summary>유효성 검사</summary>
         public virtual ValidationError ValidationCheck() => null;
 
-        protected ValidationError ScriptError(string msg) => new(msg, ValidationTag.Script, this);
+        protected ValidationError Error(string msg) => new(msg, ValidationTag.Script, this);
+        protected ValidationError NullError(string scriptName) => Error($"{name}의 {scriptName}를 설정해주세요.");
+        protected ValidationError ChildError(string scriptName) => Error($"{name}의 {scriptName}는 자식 오브젝트여야 합니다.");
 #endif
     }
 }

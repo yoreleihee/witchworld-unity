@@ -1,5 +1,8 @@
-﻿namespace WitchCompany.Toolkit.Module
+﻿using System;
+
+namespace WitchCompany.Toolkit.Module
 {
+    [Obsolete("사용 불가!!", true)]
     public class WitchPostItWall : WitchBehaviour
     {
         public override string BehaviourName => "포스트잇 벽";

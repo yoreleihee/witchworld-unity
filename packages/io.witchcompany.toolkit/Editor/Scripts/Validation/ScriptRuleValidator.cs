@@ -100,6 +100,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             // 리포트 생성
             var report = new ValidationReport();
+            
+            // 개별 요소 검증
+            foreach (var behaviour in manager.Behaviours) 
+                report.Append(behaviour.ValidationCheck());
 
             // 최소 포함요소 검증
             if (!manager.BehaviourCounter.ContainsKey(typeof(WitchSpawnPoint)))
@@ -107,11 +111,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             // 요소 개수 검증
             foreach (var (obj, count) in manager.BehaviourCounter.Values)
-            {
-                if (obj.MaximumCount < count)
+                if (obj.MaximumCount > 0 && obj.MaximumCount < count)
                     report.Append($"[{obj.BehaviourName}]를 너무 많이 배치했습니다. (현재:{count}개, 최대:{obj.MaximumCount}개)", ValidationTag.Script, manager);
-            }
-            
+
             return report;
         }
     }

@@ -25,13 +25,13 @@ namespace WitchCompany.Toolkit.Module
         public Collider ClickCollider => clickCollider;
         
 #if UNITY_EDITOR
-        // public override ValidationError ValidationCheck()
-        // {
-        //     if (clickCollider == null) return false;
-        //     if (!transform.HasChild(clickCollider)) return false;
-        //     
-        //     return true;
-        // }
+        public override ValidationError ValidationCheck()
+        {
+            if (clickCollider == null) return NullError(nameof(clickCollider));
+            if (!transform.HasChild(clickCollider)) return ChildError(nameof(clickCollider));
+            
+            return null;
+        }
 #endif
     }
 }

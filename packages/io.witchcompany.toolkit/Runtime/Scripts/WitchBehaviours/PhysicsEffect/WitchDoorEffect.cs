@@ -10,7 +10,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public override string BehaviourName => "물리효과: 열리는 문";
         public override string Description => "플레이어가 특정 구역에 들어서면, 문이 열립니다.";
         public override string DocumentURL => "";
-        public override int MaximumCount => 32;
+        public override int MaximumCount => 16;
 
         [Header("플레이어를 인지할 Trigger"), SerializeField]
         private Collider playerEnterTrigger;
