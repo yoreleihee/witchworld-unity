@@ -1,4 +1,4 @@
-﻿namespace WitchCompany.Toolkit.Editor.Configs.Enum
+﻿namespace WitchCompany.Toolkit.Editor.DataStructure
 {
     /// <summary>컨트롤 패널 타입</summary>
     public enum ControlPanelType

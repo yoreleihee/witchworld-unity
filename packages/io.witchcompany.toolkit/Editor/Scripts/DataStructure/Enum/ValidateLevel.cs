@@ -1,4 +1,4 @@
-﻿namespace WitchCompany.Toolkit.Editor.Configs.Enum
+﻿namespace WitchCompany.Toolkit.Editor.DataStructure
 {
     /// <summary>유효성 검사 수준</summary>
     public enum ValidateLevel

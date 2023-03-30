@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
-using WitchCompany.Toolkit.Editor.Configs.Enum;
+using WitchCompany.Toolkit.Editor.DataStructure;
 
-namespace WitchCompany.Toolkit.Editor
+namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowSetting
     {

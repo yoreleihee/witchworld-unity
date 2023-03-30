@@ -1,18 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Validation;
+using WitchCompany.Toolkit.Validation;
 
-namespace WitchCompany.Toolkit.Editor
+namespace WitchCompany.Toolkit.Editor.GUI
 {
-    public class CustomWindowValidation
+    public static class CustomWindowValidation
     {
         private static ValidationReport validationReport;
-        private static List<string> errMsgs = new();
+        // TODO: 주석추가
+        //private static List<string> errMsgs = new();
+        
         public static void ShowValidation()
         {
             GUILayout.Label("현재 유효성 검사는 빌드 진행시 자동으로 진행됩니다.");
@@ -47,7 +45,8 @@ namespace WitchCompany.Toolkit.Editor
             if (GUILayout.Button("Validation Check"))
             {
                 validationReport = OptimizationValidator.ValidationCheck();
-                errMsgs = validationReport.errMessages;
+                // TODO: 주석추가
+               //errMsgs = validationReport.errMessages;
             }
         }
         
@@ -72,11 +71,12 @@ namespace WitchCompany.Toolkit.Editor
                     // scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
                 
                 
-                    foreach (var err in validationReport.errMessages)
-                    {
-                        // GUILayout.Label(validationReport.errMessages.Count.ToString());
-                        GUILayout.Label(err);
-                    }
+                    // TODO: 주석추가
+                    // foreach (var err in validationReport.errMessages)
+                    // {
+                    //     // GUILayout.Label(validationReport.errMessages.Count.ToString());
+                    //     GUILayout.Label(err);
+                    // }
                     
                     foreach (var errObj in OptimizationValidator.meshColObjs)
                     {

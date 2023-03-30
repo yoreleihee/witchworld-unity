@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
@@ -17,12 +18,12 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public float JumpForce => jumpForce;
         
 #if UNITY_EDITOR
-        public override bool ValidationCheck()
-        {
-            return 
-                TryGetComponent<Collider>(out var col) && 
-                col.isTrigger;
-        }
+        // public override ValidationError ValidationCheck()
+        // {
+        //     return 
+        //         TryGetComponent<Collider>(out var col) && 
+        //         col.isTrigger;
+        // }
 #endif
     }
 }

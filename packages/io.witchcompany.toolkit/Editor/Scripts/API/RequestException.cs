@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WitchCompany.Toolkit.Editor.Tool.API
+namespace WitchCompany.Toolkit.Editor.API
 {
     public class RequestException : Exception
     {

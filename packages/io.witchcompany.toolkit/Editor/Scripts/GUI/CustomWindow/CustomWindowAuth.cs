@@ -3,10 +3,9 @@ using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
-using WitchCompany.Toolkit.Editor.Tool.API;
+using WitchCompany.Toolkit.Editor.API;
 
-
-namespace WitchCompany.Toolkit.Editor
+namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowAuth
     {

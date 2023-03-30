@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace WitchCompany.Toolkit.Editor.Tool.API
+namespace WitchCompany.Toolkit.Editor.API
 {
     public partial class RequestHelper
     {

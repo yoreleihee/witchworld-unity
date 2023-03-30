@@ -6,7 +6,8 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Tool;
-using WitchCompany.Toolkit.Editor.Tool.API;
+using WitchCompany.Toolkit.Editor.API;
+using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Validation;
 using Object = UnityEngine.Object;
 
@@ -61,7 +62,6 @@ namespace WitchCompany.Toolkit.Editor
         public static async void Test_KM()
         {
             var option = AssetTool.GetSelectedAsset() as BlockPublishOption;
-            Debug.Log(WitchRuleValidator.ValidationCheck(option).ErrorMsg);
         }
     }
 }

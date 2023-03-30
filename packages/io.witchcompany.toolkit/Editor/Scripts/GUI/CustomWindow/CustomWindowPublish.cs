@@ -1,15 +1,9 @@
-using System.Collections.Generic;
-using System.IO;
-using PlasticPipe.PlasticProtocol.Messages;
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
-using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
 
-namespace WitchCompany.Toolkit.Editor
+namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowPublish
     {

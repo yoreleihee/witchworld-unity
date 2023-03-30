@@ -11,7 +11,6 @@ namespace WitchCompany.Toolkit.Editor
         static string username = "username";
         static string pwd = "a pwd";
         
-        [MenuItem("WitchToolkit/Test")]
         static void Test()
         {
 

@@ -1,4 +1,4 @@
-﻿namespace WitchCompany.Toolkit.Editor.Configs.Enum
+﻿namespace WitchCompany.Toolkit.Editor.DataStructure
 {
     public enum BlockTheme
     {

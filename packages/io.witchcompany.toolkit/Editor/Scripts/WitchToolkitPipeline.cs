@@ -3,10 +3,12 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Validation;
-using LogLevel = WitchCompany.Toolkit.Editor.Configs.Enum.LogLevel;
+using WitchCompany.Toolkit.Validation;
+using LogLevel = WitchCompany.Toolkit.Editor.DataStructure.LogLevel;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
@@ -35,7 +37,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 
                 // 빌드할 대상 씬으로 전환
                 var scnPath = AssetTool.GetAssetPath(option.TargetScene);
-                EditorSceneManager.OpenScene(scnPath, OpenSceneMode.Single);
+                if(SceneManager.GetActiveScene().path != scnPath)
+                    EditorSceneManager.OpenScene(scnPath, OpenSceneMode.Single);
                 
                 // TODO: Witch Toolkit 최신버전 체크
 
@@ -46,10 +49,12 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 Log("최적화 유효성 검사 성공!");
                 
                 // 씬 구조 룰 검증
-                if (validationReport.Append(WitchRuleValidator.ValidationCheck(option)).result != ValidationReport.Result.Success)
+                if (validationReport.Append(ScriptRuleValidator.ValidationCheck(option)).result != ValidationReport.Result.Success)
                     throw new Exception("씬 구조 유효성 검사 실패");
                 Log("씬 구조 유효성 검사 성공!");
 
+                //return buildReport;
+                
                 //// 에셋번들 빌드
                 // 번들 전부 지우기
                 AssetBundleTool.ClearAllBundles();
@@ -75,10 +80,12 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 buildReport.totalSizeByte = AssetTool.GetFileSizeByte(buildReport.exportPath);
                 buildReport.BuildEndedAt = DateTime.Now;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.LogException(e);
-                Debug.LogError(validationReport.ErrorMsg);
+                foreach (var err in validationReport.errors)
+                {
+                    Debug.LogError(err.message, err.context);
+                }
             }
 
             return buildReport;

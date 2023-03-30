@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
-using WitchCompany.Toolkit.Editor.Configs.Enum;
+using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
 
 // ReSharper disable InconsistentNaming

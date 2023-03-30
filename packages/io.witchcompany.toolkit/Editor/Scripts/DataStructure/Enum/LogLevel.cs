@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WitchCompany.Toolkit.Editor.Configs.Enum
+namespace WitchCompany.Toolkit.Editor.DataStructure
 {
     /// <summary>어디까지 로그를 표시할지 여부</summary>
     [Flags]

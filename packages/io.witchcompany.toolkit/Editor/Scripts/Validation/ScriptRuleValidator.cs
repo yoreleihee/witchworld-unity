@@ -1,30 +1,40 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Module;
+using WitchCompany.Toolkit.Validation;
+using Object = UnityEngine.Object;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
-    public static class WitchRuleValidator
+    public static class ScriptRuleValidator
     {
         /// <summary>
-        /// 위치월드 블록 룰 관련 유효성 검사
-        /// - 블록 옵션 확인
-        /// - 블록매니저가 최상위 오브젝트인지 확인
-        /// - 각 WitchBehaviour 별 유효성 검증
+        /// 위치월드 스크립트 룰 관련 유효성 검사
+        /// - 블록 옵션 검증
+        /// - 블록매니저가 최상위 오브젝트인지 검증
+        /// - 유니티 스크립트중 블랙리스트 스크립트 제외
+        /// - 개별 WitchBehaviour 검증
         /// </summary>
         public static ValidationReport ValidationCheck(BlockPublishOption option)
         {
+            var scene = SceneManager.GetActiveScene();
+
             return new ValidationReport()
                 .Append(ValidateBlockOption(option))
-                .Append(ValidateHierarchy())
-                .Append(ValidateComponents());
+                .Append(ValidateHierarchy(scene))
+                .Append(ValidateBlacklist(scene))
+                .Append(ValidateWitchBehaviours());
         }
 
-        // 블록 옵션 체크
         private static string ValidateBlockOption(BlockPublishOption option)
         {
             const string prefix = "잘못된 블록 옵션: ";
@@ -40,11 +50,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return null;
         }
 
-        private static string ValidateHierarchy()
+        private static string ValidateHierarchy(Scene scene)
         {
             const string prefix = "잘못된 계층 구조: ";
 
-            var scene = SceneManager.GetActiveScene();
             var rootObjects = scene.GetRootGameObjects();
 
             if (rootObjects.Length <= 0)
@@ -66,34 +75,44 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return null;
         }
 
-        private static string ValidateComponents()
+        private static string ValidateBlacklist(Scene scene)
         {
             const string prefix = "잘못된 컴포넌트 포함: ";
             
-            var scene = SceneManager.GetActiveScene();
             var rootObject = scene.GetRootGameObjects()[0].transform;
             var children = HierarchyTool.GetAllChildren(rootObject);
 
-            var counter = new Counter();
-            
             foreach (var tr in children)
             {
                 if(tr.TryGetComponent(out Camera cam))
                     return prefix + $"카메라를 포함할 수 없습니다({cam.name})";
-                if (tr.TryGetComponent(out WitchSpawnPoint spawnPoint))
-                    counter.spawnPoint++;
             }
 
-            if (counter.spawnPoint != 1)
-                return prefix + $"최소 하나의 스폰 포인트가 있어야 합니다.(현재:{counter.spawnPoint})";
-            
             return null;
         }
 
-        [System.Serializable]
-        private class Counter
+        private static ValidationReport ValidateWitchBehaviours()
         {
-            public int spawnPoint;
+            // 블록 매니저를 찾고, WitchBehaviours 찾아서 저장
+            var manager = Object.FindObjectOfType<WitchBlockManager>();
+            manager.FindWitchBehaviours();
+            EditorSceneManager.SaveOpenScenes();
+            
+            // 리포트 생성
+            var report = new ValidationReport();
+
+            // 최소 포함요소 검증
+            if (!manager.BehaviourCounter.ContainsKey(typeof(WitchSpawnPoint)))
+                report.Append("최소 하나 이상의 SpawnPoint를 포함해야 합니다.", ValidationTag.Script, manager);
+            
+            // 요소 개수 검증
+            foreach (var (obj, count) in manager.BehaviourCounter.Values)
+            {
+                if (obj.MaximumCount < count)
+                    report.Append($"[{obj.BehaviourName}]를 너무 많이 배치했습니다. (현재:{count}개, 최대:{obj.MaximumCount}개)", ValidationTag.Script, manager);
+            }
+            
+            return report;
         }
     }
 }

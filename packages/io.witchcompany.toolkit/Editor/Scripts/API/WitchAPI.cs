@@ -7,10 +7,9 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 using WitchCompany.Toolkit.Editor.Configs;
-using WitchCompany.Toolkit.Editor.Configs.Enum;
 using WitchCompany.Toolkit.Editor.DataStructure;
 
-namespace WitchCompany.Toolkit.Editor.Tool.API
+namespace WitchCompany.Toolkit.Editor.API
 {
     public static partial class WitchAPI
     {

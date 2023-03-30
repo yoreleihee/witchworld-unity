@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using WitchCompany.Toolkit.Extension;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
@@ -7,10 +8,9 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
     public class WitchDoorEffect : WitchPhysicsEffectBase
     {
         public override string BehaviourName => "물리효과: 열리는 문";
-
         public override string Description => "플레이어가 특정 구역에 들어서면, 문이 열립니다.";
-
         public override string DocumentURL => "";
+        public override int MaximumCount => 32;
 
         [Header("플레이어를 인지할 Trigger"), SerializeField]
         private Collider playerEnterTrigger;
@@ -27,16 +27,18 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public float DurationSec => durationSec;
         
 #if UNITY_EDITOR
-        public override bool ValidationCheck()
-        {
-            if (playerEnterTrigger == null) return false;
-            if (targetDoor == null) return false;
-            
-            if (!transform.HasChild(playerEnterTrigger)) return false;
-            if (!transform.HasChild(targetDoor)) return false;
-            
-            return true;
-        }
+        // public override ValidationError ValidationCheck()
+        // {
+        //     if (playerEnterTrigger == null) return false;
+        //     if (targetDoor == null) return false;
+        //     
+        //     if (!transform.HasChild(playerEnterTrigger)) return false;
+        //     if (!transform.HasChild(targetDoor)) return false;
+        //
+        //     if (targetDoor.gameObject.isStatic) return false;
+        //
+        //     return true;
+        // }
 #endif
     }
 }

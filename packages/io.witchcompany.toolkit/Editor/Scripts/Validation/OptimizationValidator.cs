@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using WitchCompany.Toolkit.Editor.Configs;
-using WitchCompany.Toolkit.Editor.Tool;
-using Object = System.Object;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
@@ -88,8 +85,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
 
             // 리포트 오류 메시지가 있으면 Failed 
-            if(validationReport.errMessages.Count > 0)
-                validationReport.result = ValidationReport.Result.Failed;
+            // TODO: 주석추가
+            // if(validationReport.errMessages.Count > 0)
+            //     validationReport.result = ValidationReport.Result.Failed;
 
             
             // if (CheckKoreanName())

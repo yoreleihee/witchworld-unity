@@ -1,11 +1,8 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-using WitchCompany.Toolkit.Editor.Configs.Enum;
 
-namespace WitchCompany.Toolkit.Editor.Configs
+namespace WitchCompany.Toolkit.Editor.DataStructure
 {
-    [CreateAssetMenu(fileName = "BlockOption", menuName = "WitchToolkit/BlockOption", order = 0)]
     public class BlockPublishOption : ScriptableObject
     {
         public string Key => TargetScene.name;
