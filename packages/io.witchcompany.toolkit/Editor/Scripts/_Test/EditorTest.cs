@@ -6,12 +6,15 @@ using WitchCompany.Toolkit.Editor.Validation;
 
 namespace WitchCompany.Toolkit.Editor
 {
-    public static class EditorTest
-    {
-        //[MenuItem("WitchToolkit/Test")]
-        private static void Test()
+    public static class EditorTest{
+        
+        static string username = "username";
+        static string pwd = "a pwd";
+        
+        [MenuItem("WitchToolkit/Test")]
+        static void Test()
         {
-            
+
         }
     }
 }

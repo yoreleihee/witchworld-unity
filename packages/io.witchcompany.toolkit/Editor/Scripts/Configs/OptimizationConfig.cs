@@ -11,6 +11,7 @@
         public const uint MAX_UNIQUE_MATERIALS = 75;
         public const uint MAX_SHARED_TEXTURE_MB = 200;
         public const uint MAX_LIGHTMAP_MB = 200;
+        public const uint MAX_REFLECTIONPROBE_MB = 200;
         
         // // Test
         // public const uint MAX_INDIVIDUAL_VERTS = 0 * K;
@@ -20,7 +21,7 @@
         // public const uint MAX_UNIQUE_MATERIALS = 0;
         // public const uint MAX_SHARED_TEXTURE_MB = 0;
         // public const uint MAX_LIGHTMAP_MB = 0;
-        
+        // public const uint MAX_REFLECTIONPROBE_MB = 0;
     }
     
 }

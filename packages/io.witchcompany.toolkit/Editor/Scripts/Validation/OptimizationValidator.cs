@@ -65,20 +65,33 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 validationReport.Append("Material 최대 개수 이상입니다.");
             }
+
+            // mesh collider 검출
+            if (CheckMeshColliderObjects())
+            {
+                validationReport.Append($"Mesh Collider 검출 : {meshColObjs.Count}");
+                // validationReport.result = ValidationReport.Result.Failed;
+            }
             
+            // realtime light 겁출
+            if (CheckRealtimeLight())
+            {
+                validationReport.Append($"Realtime Light 검출 : {realtimeLights.Count}");
+                // validationReport.Append(realtimeLights[0].name);
+            }
+            
+            // ReflectionProbe 용량 검사
+            var rfProbeMb = GetReflectionProbeMB();
+            if (rfProbeMb > OptimizationConfig.MAX_REFLECTIONPROBE_MB)
+            {
+                validationReport.Append($"ReflectionProbe 용량 초과 : {rfProbeMb}/{OptimizationConfig.MAX_REFLECTIONPROBE_MB} MB");
+            }
+
             // 리포트 오류 메시지가 있으면 Failed 
             if(validationReport.errMessages.Count > 0)
                 validationReport.result = ValidationReport.Result.Failed;
 
             
-            
-            // 검출된 mesh collider가 있으면 검출됨
-            if (CheckMeshColliderObjects())
-            {
-                validationReport.Append($"Mesh Collider 검출 : {meshColObjs.Count}");
-                validationReport.result = ValidationReport.Result.Failed;
-            }
-
             // if (CheckKoreanName())
             // {
             //     validationReport.Append($"Object Name Korean Language 검출 : {korObjects.Count}");
@@ -93,11 +106,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             return GameObject.FindObjectsOfType<Renderer>(true);
         }
-        
-        // public static T[] GetAllGameObjectT<T>()
-        // {
-        //     return GameObject.FindObjectsOfType<T>(true);
-        // }
 
         /// <summary> 개별 매쉬 버텍스 개수 </summary>
         public static int GetIndividualMeshVertex(Renderer renderer, List<Mesh> meshes)
@@ -208,7 +216,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return (int)bytes / 1024 / 1024;
         }
         
-        
         /// <summary> 텍스쳐 용량 </summary>
         public static int GetTextureMB()
         {
@@ -276,7 +283,42 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             return meshColObjs.Count > 0 ? true : false;
         }
-        
+
+        private static List<GameObject> realtimeLights = new ();
+        /// <summary> Realtime Light 개수 검출 </summary>
+        public static bool CheckRealtimeLight()
+        {
+            var lights = GameObject.FindObjectsOfType<Light>(true);
+
+            foreach (var light in lights)
+            {
+                if(light.lightmapBakeType != LightmapBakeType.Baked)
+                {
+                    realtimeLights.Add(light.gameObject);
+                }
+            }
+
+            return realtimeLights.Count > 0 ? true : false;
+        }
+        /// <summary> ReflectionProbe(Bake, Realtime)의 용량(MB) 검출 </summary>
+        public static int GetReflectionProbeMB()
+        {
+            long bytes = 0;
+            var reflectionProbes = GameObject.FindObjectsOfType<ReflectionProbe>(true);
+            foreach (var probe in reflectionProbes)
+            {
+                if (probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Baked && probe.texture != null)
+                {
+                    bytes += Profiler.GetRuntimeMemorySizeLong(probe.texture);
+                }
+                //realtime probes are currently disabled... but leaving this incase we enable them down the road.
+                else if (probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
+                {
+                    bytes += probe.resolution * probe.resolution * 3;
+                }
+            }
+            return (int)bytes / 1024 / 1024;
+        }
 
         
         // public static List<GameObject> korObjects = new List<GameObject>();

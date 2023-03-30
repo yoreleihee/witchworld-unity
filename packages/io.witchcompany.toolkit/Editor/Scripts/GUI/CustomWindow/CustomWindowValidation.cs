@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Tool;
@@ -49,6 +52,8 @@ namespace WitchCompany.Toolkit.Editor
         }
         
         private static Vector2 scrollPos = Vector2.zero;
+        private static GameObject preErrObj = new();
+        
         private static void DrawReport()
         {
             GUILayout.Label("Report", EditorStyles.boldLabel);
@@ -62,6 +67,8 @@ namespace WitchCompany.Toolkit.Editor
                 GUILayout.Space(5);
                 GUILayout.Label("Message", EditorStyles.boldLabel);
                 EditorGUILayout.BeginVertical("box");
+                
+                
                     // scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
                 
                 
@@ -71,13 +78,16 @@ namespace WitchCompany.Toolkit.Editor
                         GUILayout.Label(err);
                     }
                     
-                    // foreach (var errObj in OptimizationValidator.meshColObjs)
-                    // {
-                    //     if (GUILayout.Button(errObj.name))
-                    //     {
-                    //         Debug.Log(errObj.name, errObj);
-                    //     }
-                    // }
+                    foreach (var errObj in OptimizationValidator.meshColObjs)
+                    {
+                        if (GUILayout.Button(errObj.name))
+                        {
+                            if (errObj != null)
+                                EditorGUIUtility.PingObject(errObj);
+                        }
+                    }
+                    
+                    // 직전에 누른 값과 같으면 return
                     
                     // foreach (var errObj in OptimizationValidator.korObjects)
                     // {
@@ -90,6 +100,11 @@ namespace WitchCompany.Toolkit.Editor
                 EditorGUILayout.EndVertical();
                 
             }
+        }
+
+        private static void PingObject(GameObject obj)
+        {
+            
         }
     }
 }
