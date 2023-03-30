@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -13,7 +14,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
 {
     public static class OptimizationValidator
     {
-        private static List<Tuple<string, int>> failedObjects = new();
+        private static List<Tuple<string, int>> vertexObjs = new();
+        public static List<GameObject> meshColObjs = new();
         /// <summary>
         /// 최적화 관련 유효성 검사 -> 개별 함수 작성 필요
         /// - 씬에 배치된 오브젝트 전체 가져오기 v
@@ -25,7 +27,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// </summary>
         public static ValidationReport ValidationCheck()
         {
-            failedObjects.Clear();
+            vertexObjs.Clear();
+
             
             // 유효성 검사 객체 생성
             var validationReport = new ValidationReport();
@@ -37,9 +40,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             
             // 개별 버텍스 검사
-            if (failedObjects.Count > 0)
+            if (vertexObjs.Count > 0)
             {
-                foreach (var obj in failedObjects)
+                foreach (var obj in vertexObjs)
                 {
                     validationReport.Append($"해당 Mesh의 Vertex 개수가 최대값 이상입니다.\n- Path : {obj.Item1} \n- Vertex: {obj.Item2}");
                 }
@@ -67,6 +70,21 @@ namespace WitchCompany.Toolkit.Editor.Validation
             if(validationReport.errMessages.Count > 0)
                 validationReport.result = ValidationReport.Result.Failed;
 
+            
+            
+            // 검출된 mesh collider가 있으면 검출됨
+            if (CheckMeshColliderObjects())
+            {
+                validationReport.Append($"Mesh Collider 검출 : {meshColObjs.Count}");
+                validationReport.result = ValidationReport.Result.Failed;
+            }
+
+            // if (CheckKoreanName())
+            // {
+            //     validationReport.Append($"Object Name Korean Language 검출 : {korObjects.Count}");
+            //     validationReport.result = ValidationReport.Result.Failed;
+            // }
+            
             return validationReport;
         }
 
@@ -157,7 +175,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             // 찾은 mesh 중 중복 제거
             IEnumerable<Mesh> uniqueMeshes = foundMeshes.Distinct();
 
-            failedObjects.AddRange(uniqueMeshes.Select(m => new Tuple<string, int>(AssetDatabase.GetAssetPath(m)+$"/{m.name}", m.vertexCount)).Where(m => m.Item2 > OptimizationConfig.MAX_INDIVIDUAL_VERTS));
+            vertexObjs.AddRange(uniqueMeshes.Select(m => new Tuple<string, int>(AssetDatabase.GetAssetPath(m)+$"/{m.name}", m.vertexCount)).Where(m => m.Item2 > OptimizationConfig.MAX_INDIVIDUAL_VERTS));
 
             return totalVertexCount;
         }
@@ -244,5 +262,40 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return materials.FindAll(m => m != null).Select(m => m.name).Distinct().Count();;
         }
 
+        /// <summary> Mesh collider를 가진 Object 검출 </summary>
+        public static bool CheckMeshColliderObjects()
+        {   
+            meshColObjs.Clear();
+            var meshColliders = GameObject.FindObjectsOfType<MeshCollider>(true).ToArray();
+            foreach (var meshCol in meshColliders)
+            {
+                if (meshCol.sharedMesh != null)
+                {
+                    meshColObjs.Add(meshCol.gameObject);
+                }
+            }
+            return meshColObjs.Count > 0 ? true : false;
+        }
+        
+
+        
+        // public static List<GameObject> korObjects = new List<GameObject>();
+        // /// <summary> 한글 이름을 가진 오브젝트 검출 </summary>
+        // private static bool CheckKoreanName()
+        // {
+        //     korObjects.Clear();
+        //     
+        //     var allObjArray = GameObject.FindObjectsOfType<Transform>();
+        //     // 한글이름 검출
+        //     foreach (var t in allObjArray)
+        //     {
+        //         if(Regex.IsMatch(t.name, @"[ㄱ-ㅎ가-힣]"))
+        //             korObjects.Add(t.gameObject);
+        //         
+        //         // Debug.LogWarning($"한글이름이 있습니다. 영문으로 변경해주세요. ({t.name})", t);
+        //     }
+        //
+        //     return korObjects.Count > 0 ? true : false;
+        // }
     }
 }

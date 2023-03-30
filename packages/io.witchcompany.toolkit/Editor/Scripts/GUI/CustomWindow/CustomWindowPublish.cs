@@ -15,7 +15,7 @@ namespace WitchCompany.Toolkit.Editor
     {
         private static BlockPublishOption blockPublishOption;
         public static JBuildReport buildReport;
-        
+
         public static void ShowPublish()
         {
             // 빌드 정보

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Validation;
 
 namespace WitchCompany.Toolkit.Editor
@@ -26,6 +27,8 @@ namespace WitchCompany.Toolkit.Editor
                 DrawReport();
         }
 
+        private static GameObject go;
+        private static Shader shader;
         private static void DrawSceneVital()
         {
 
@@ -35,10 +38,9 @@ namespace WitchCompany.Toolkit.Editor
             EditorGUILayout.LabelField("Unique Material", OptimizationValidator.GetUniqueMaterialCount().ToString());
             EditorGUILayout.LabelField("Texture", OptimizationValidator.GetTextureMB()+ " MB");
             EditorGUILayout.LabelField("Light Map", OptimizationValidator.GetLightMapMB()+ " MB");
-
+            
+            
             EditorGUILayout.EndVertical();
-            
-            
             if (GUILayout.Button("Validation Check"))
             {
                 validationReport = OptimizationValidator.ValidationCheck();
@@ -46,11 +48,12 @@ namespace WitchCompany.Toolkit.Editor
             }
         }
         
-        
+        private static Vector2 scrollPos = Vector2.zero;
         private static void DrawReport()
         {
             GUILayout.Label("Report", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
+            
             EditorGUILayout.LabelField("Result", validationReport.result.ToString());
             EditorGUILayout.EndVertical();
             
@@ -59,17 +62,34 @@ namespace WitchCompany.Toolkit.Editor
                 GUILayout.Space(5);
                 GUILayout.Label("Message", EditorStyles.boldLabel);
                 EditorGUILayout.BeginVertical("box");
-            
-            
-                foreach (var err in validationReport.errMessages)
-                {
-                    // GUILayout.Label(validationReport.errMessages.Count.ToString());
-                    GUILayout.Label(err);
-                    GUILayout.Space(5);
-                }
+                    // scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+                
+                
+                    foreach (var err in validationReport.errMessages)
+                    {
+                        // GUILayout.Label(validationReport.errMessages.Count.ToString());
+                        GUILayout.Label(err);
+                    }
+                    
+                    // foreach (var errObj in OptimizationValidator.meshColObjs)
+                    // {
+                    //     if (GUILayout.Button(errObj.name))
+                    //     {
+                    //         Debug.Log(errObj.name, errObj);
+                    //     }
+                    // }
+                    
+                    // foreach (var errObj in OptimizationValidator.korObjects)
+                    // {
+                    //     if (GUILayout.Button(errObj.name))
+                    //     {
+                    //         Debug.Log(errObj.name, errObj);
+                    //     }
+                    // }
+                    // EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
+                
             }
-            
         }
     }
 }

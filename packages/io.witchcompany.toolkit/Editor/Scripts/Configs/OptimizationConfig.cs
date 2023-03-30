@@ -21,8 +21,6 @@
         // public const uint MAX_SHARED_TEXTURE_MB = 0;
         // public const uint MAX_LIGHTMAP_MB = 0;
         
-        // public const uint MaxVertexCountIndividual = 16 * 1000; // 16K
-        // public const uint MaxVertexCountSum = 256 * 1000; // 500K
     }
     
 }

@@ -10,10 +10,10 @@ namespace WitchCompany.Toolkit.Editor
 {
     public class CustomWindow : EditorWindow
     {
-        [MenuItem ("WitchToolkit/Witch Control Panel")]
+        [MenuItem ("WitchToolkit/Witch Creator Toolkit")]
         public static void  ShowControlPanel () {
             EditorWindow wnd = GetWindow(typeof(CustomWindow));
-            wnd.titleContent = new GUIContent("Witch Control Panel");
+            wnd.titleContent = new GUIContent("Witch Creator Toolkit");
             wnd.minSize = new Vector2(640, 480);
         }
         
