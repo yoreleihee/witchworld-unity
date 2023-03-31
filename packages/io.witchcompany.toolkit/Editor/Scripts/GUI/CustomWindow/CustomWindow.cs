@@ -55,7 +55,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // input field 값 초기화
             CustomWindowAuth.email = "";
             CustomWindowAuth.password = "";
-            
         }
     }
 }

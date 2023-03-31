@@ -133,14 +133,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 
                 foreach (var c in components)
                 {
-                    var error = new ValidationError("", "", null);
+                    
                     if (c == null)
                     {
-                        error.tag = "Missing Component";
-                        error.message = $"찾을 수 없는 컴포넌트 포함됨 : {tr.gameObject.name}";
-                        error.context = tr;
-                        report.Append(error);
-                        // 하나 검출되면 다음으로 넘어감
+                        // 한 오브젝트에서 하나라도 검출되면 다음으로 넘어감
+                        var error = new ValidationError($"찾을 수 없는 스크립트 포함됨 : {tr.gameObject.name}", "Missing Script", tr);
                         break;
                     }
                 }

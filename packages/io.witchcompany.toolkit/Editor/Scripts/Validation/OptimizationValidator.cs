@@ -4,186 +4,132 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.GUI;
+using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
     public static class OptimizationValidator
     {
-        private static List<Tuple<string, int>> vertexObjs = new();
-        public static List<GameObject> meshColObjs = new();
         /// <summary>
-        /// 최적화 관련 유효성 검사 -> 개별 함수 작성 필요
-        /// - 씬에 배치된 오브젝트 전체 가져오기 v
-        /// - 씬에 배치된 개별 매쉬 버텍스 개수 검사 v
-        /// - 씬에 배치된 전체 메쉬 버텍스 개수 검사 v
-        /// - 씬에서 사용된 라이트맵 용량 검사 v
-        /// - 씬에서 사용된 텍스쳐 용량 검사 v
-        /// - 씬에서 유니크 머테리얼 개수 검사 v 
+        /// 최적화 관련 유효성 검사
+        /// - 씬에 배치된 오브젝트 전체 가져오기
+        /// - 씬에 배치된 개별 매쉬 버텍스 개수
+        /// - 씬에 배치된 전체 메쉬 버텍스 개수
+        /// - 씬에서 사용된 라이트맵 용량
+        /// - 씬에서 사용된 텍스쳐 용량
+        /// - 씬에서 유니크 머테리얼 개수
+        /// - realtime light 개수
+        /// - reflection Probe 용량
         /// </summary>
         public static ValidationReport ValidationCheck()
         {
-            vertexObjs.Clear();
-
-            
-            // 유효성 검사 객체 생성
+            // 유효성 검사 결과
             var validationReport = new ValidationReport();
 
+            /* Scene Vital */
             // 전체 버텍스 검사
-            if (GetMeshVertex() > OptimizationConfig.MAX_VERTS)
+            var meshVertex = GetAllMeshes().Item2;
+            if (meshVertex > OptimizationConfig.MAX_VERTS)
             {
-                validationReport.Append("모든 Mesh의 Vertex 개수가 최대값 이상입니다.");
+                var error = new ValidationError($"Total Mesh Vertex : {meshVertex}/{OptimizationConfig.MAX_VERTS}", OptimizationConfig.TAG_MESH_VERTEX);
+                validationReport.Append(error);
             }
-            
-            // 개별 버텍스 검사
-            if (vertexObjs.Count > 0)
-            {
-                foreach (var obj in vertexObjs)
-                {
-                    validationReport.Append($"해당 Mesh의 Vertex 개수가 최대값 이상입니다.\n- Path : {obj.Item1} \n- Vertex: {obj.Item2}");
-                }
-            }
-
             //  라이트맵 검사
-            if (GetLightMapMB() > OptimizationConfig.MAX_LIGHTMAP_MB)
+            var lightMapSize = GetLightMapMB();
+            if (lightMapSize > OptimizationConfig.MAX_LIGHTMAP_MB)
             {
-                validationReport.Append("LightMap 최대 용량 이상입니다.");
+                var error = new ValidationError($"LightMap : {lightMapSize}/{OptimizationConfig.MAX_LIGHTMAP_MB}", OptimizationConfig.TAG_LIGHTMAP);
+                validationReport.Append(error);
             }
             
             //  텍스쳐 검사
-            if (GetTextureMB() > OptimizationConfig.MAX_SHARED_TEXTURE_MB)
+            var textureSize = GetTextureMB();
+            if (textureSize > OptimizationConfig.MAX_SHARED_TEXTURE_MB)
             {
-                validationReport.Append("Texture 최대 용량 이상입니다.");
+                var error = new ValidationError($"Texture Capacity : {textureSize}/{OptimizationConfig.MAX_SHARED_TEXTURE_MB} MB", OptimizationConfig.TAG_TEXTURE);
+                validationReport.Append(error);
             }
-            
+
             //  유니크 머티리얼 검사
-            if (GetUniqueMaterialCount() > OptimizationConfig.MAX_UNIQUE_MATERIALS)
+            var materialCount = GetUniqueMaterialCount();
+            if (materialCount > OptimizationConfig.MAX_UNIQUE_MATERIALS)
             {
-                validationReport.Append("Material 최대 개수 이상입니다.");
-            }
-
-            // mesh collider 검출
-            if (CheckMeshColliderObjects())
-            {
-                validationReport.Append($"Mesh Collider 검출 : {meshColObjs.Count}");
-                // validationReport.result = ValidationReport.Result.Failed;
+                var error = new ValidationError($"Unique Material : {materialCount}/{OptimizationConfig.MAX_UNIQUE_MATERIALS}", OptimizationConfig.TAG_MATERIAL);
+                validationReport.Append(error);
             }
             
-            // realtime light 겁출
-            if (CheckRealtimeLight())
-            {
-                validationReport.Append($"Realtime Light 검출 : {realtimeLights.Count}");
-                // validationReport.Append(realtimeLights[0].name);
-            }
-            
-            // ReflectionProbe 용량 검사
-            var rfProbeMb = GetReflectionProbeMB();
-            if (rfProbeMb > OptimizationConfig.MAX_REFLECTIONPROBE_MB)
-            {
-                validationReport.Append($"ReflectionProbe 용량 초과 : {rfProbeMb}/{OptimizationConfig.MAX_REFLECTIONPROBE_MB} MB");
-            }
-
-            // 리포트 오류 메시지가 있으면 Failed 
-            // TODO: 주석추가
-            // if(validationReport.errMessages.Count > 0)
-            //     validationReport.result = ValidationReport.Result.Failed;
-
-            
-            // if (CheckKoreanName())
-            // {
-            //     validationReport.Append($"Object Name Korean Language 검출 : {korObjects.Count}");
-            //     validationReport.result = ValidationReport.Result.Failed;
-            // }
+            /* ValidationCheck 버튼 눌렸을 때만 진행 */
+            validationReport.Append(ValidateIndividualMeshVertex());
+            validationReport.Append(ValidateMeshCollider());
+            validationReport.Append(ValidateRealtimeLight());
+            validationReport.Append(ValidateReflectionProbe());
             
             return validationReport;
         }
-
-        /// <summary> 씬에 배치된 Renderer 오브젝트 전체 가져오기 </summary>
-        public static Renderer[] GetAllRenderer()
+        
+        /// <summary> 개별 mesh의 vertex 개수 검사 </summary>
+        private static ValidationReport ValidateIndividualMeshVertex() 
         {
-            return GameObject.FindObjectsOfType<Renderer>(true);
-        }
+            var report = new ValidationReport();
 
-        /// <summary> 개별 매쉬 버텍스 개수 </summary>
-        public static int GetIndividualMeshVertex(Renderer renderer, List<Mesh> meshes)
-        {
-            int vertexCount = 0;
+            var meshes = GetAllMeshes().Item1;
+            // var uniqueMeshes = meshes.Distinct();
             
-            // renderer에서 mesh 탐색 -> 찾은 mesh 리스트에 추가
-            // 모든 Vertex 개수 구함
-            if (renderer is MeshRenderer)
+            foreach (var mesh in meshes)
             {
-                var filter = renderer.GetComponent<MeshFilter>();
-                if (filter != null && filter.sharedMesh != null)
+                if (mesh.Item2.vertexCount > OptimizationConfig.MAX_INDIVIDUAL_VERTS) 
                 {
-                    vertexCount += filter.sharedMesh.vertexCount;
-                    meshes.Add(filter.sharedMesh);
+                    var error = new ValidationError(
+                        $"{mesh.Item1.name}의 {mesh.Item2.name} : {mesh.Item2.vertexCount} / {OptimizationConfig.MAX_INDIVIDUAL_VERTS}",
+                        OptimizationConfig.TAG_MESH_VERTEX, mesh.Item1);
+                    report.Append(error);
                 }
             }
-            else if (renderer is SkinnedMeshRenderer)
-            {
-                var skinned = renderer as SkinnedMeshRenderer;
-                if (skinned.sharedMesh != null)
-                {
-                    vertexCount += skinned.sharedMesh.vertexCount;
-                    meshes.Add(skinned.sharedMesh);
-                }
-            }
-            else if (renderer is BillboardRenderer)
-            {
-                vertexCount += 4;
-            }
-            
-            return vertexCount;
+            return report;
         }
-
-        /// <summary> 전체 매쉬 버텍스 개수 (중복 제거 X)</summary>
-        public static int GetMeshVertex()
+        
+        /// <summary> 전체 mesh의 vertex 개수 검사</summary>
+        public static (List<Tuple<GameObject, Mesh>>, int) GetAllMeshes()
         {
-            var foundMeshes = new List<Mesh>();
-            
+            var meshes = new List<Tuple<GameObject, Mesh>>();
             int totalVertexCount = 0;
 
             // 모든 게임 오브젝트 중 모든 랜더러를 배열에 저장
-            var renderers = GetAllRenderer();
+            var renderers = GameObject.FindObjectsOfType<Renderer>(true);
             
             // 랜더러 배열 탐색
             foreach (var renderer in renderers)
             {
-                int vertex = 0;
                 if (renderer is MeshRenderer)
                 {
-                    MeshFilter filter = renderer.GetComponent<MeshFilter>();
+                    var filter = renderer.GetComponent<MeshFilter>();
                     if (filter != null && filter.sharedMesh != null)
                     {
-                        foundMeshes.Add(filter.sharedMesh);
-                        vertex = filter.sharedMesh.vertexCount;
-                        totalVertexCount += vertex;
+                        meshes.Add(new Tuple<GameObject, Mesh>(filter.gameObject, filter.sharedMesh));
+                        totalVertexCount += filter.sharedMesh.vertexCount;
                     }
                 }
                 else if (renderer is SkinnedMeshRenderer)
                 {
-                    SkinnedMeshRenderer skinned = renderer as SkinnedMeshRenderer;
+                    var skinned = renderer as SkinnedMeshRenderer;
                     if (skinned.sharedMesh != null)
                     {
-                        foundMeshes.Add(skinned.sharedMesh);
+                        meshes.Add(new Tuple<GameObject, Mesh>(skinned.gameObject, skinned.sharedMesh));
                         totalVertexCount += skinned.sharedMesh.vertexCount;
-                        totalVertexCount += vertex;
                     }
                 }
                 else if (renderer is BillboardRenderer)
                 {
-                    totalVertexCount += 4;
+                    meshes.Add(new Tuple<GameObject, Mesh>(renderer.gameObject, null));
+                    totalVertexCount += 4; 
                 }
             }
             
-            // 찾은 mesh 중 중복 제거
-            IEnumerable<Mesh> uniqueMeshes = foundMeshes.Distinct();
-
-            vertexObjs.AddRange(uniqueMeshes.Select(m => new Tuple<string, int>(AssetDatabase.GetAssetPath(m)+$"/{m.name}", m.vertexCount)).Where(m => m.Item2 > OptimizationConfig.MAX_INDIVIDUAL_VERTS));
-
-            return totalVertexCount;
+            return (meshes, totalVertexCount);
         }
 
         /// <summary> 라이트맵 용량 </summary>
@@ -218,7 +164,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         public static int GetTextureMB()
         {
             var foundTextures = new List<Texture>();
-            var renderers  = GetAllRenderer();
+            var renderers  = GameObject.FindObjectsOfType<Renderer>(true);
 
             foreach (Renderer renderer in renderers)
             {
@@ -256,7 +202,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             List<Material> materials = new List<Material>();
             
-            Renderer[] renderers = GetAllRenderer();
+            Renderer[] renderers = GameObject.FindObjectsOfType<Renderer>(true);
             
             foreach (Renderer renderer in renderers)
             {
@@ -268,40 +214,50 @@ namespace WitchCompany.Toolkit.Editor.Validation
         }
 
         /// <summary> Mesh collider를 가진 Object 검출 </summary>
-        public static bool CheckMeshColliderObjects()
-        {   
-            meshColObjs.Clear();
+        private static ValidationReport ValidateMeshCollider()
+        {
+            var report = new ValidationReport();
+            
             var meshColliders = GameObject.FindObjectsOfType<MeshCollider>(true).ToArray();
             foreach (var meshCol in meshColliders)
             {
                 if (meshCol.sharedMesh != null)
                 {
-                    meshColObjs.Add(meshCol.gameObject);
+                    var error = new ValidationError($"Mesh Collider Object : {meshCol.gameObject.name}",OptimizationConfig.TAG_MESH_COLLIDER, meshCol);
+                    //
+                    // error.tag = "Mesh Collider";
+                    // error.message = $"Mesh Collider 존재 : {meshCol.name}";
+                    // error.context = meshCol.transform.gameObject;
+                    
+                    report.Append(error);
                 }
             }
-            return meshColObjs.Count > 0 ? true : false;
+            return report;
         }
-
-        private static List<GameObject> realtimeLights = new ();
+        
         /// <summary> Realtime Light 개수 검출 </summary>
-        public static bool CheckRealtimeLight()
+        public static ValidationReport ValidateRealtimeLight()
         {
-            realtimeLights.Clear();
+            var report = new ValidationReport();
             var lights = GameObject.FindObjectsOfType<Light>(true);
 
             foreach (var light in lights)
             {
                 if(light.lightmapBakeType != LightmapBakeType.Baked)
                 {
-                    realtimeLights.Add(light.gameObject);
+                    var error = new ValidationError($"Realtime Light Object : {light.name}", OptimizationConfig.TAG_LIGHTMODE_REALTIME, light);
+                    report.Append(error);
                 }
             }
-
-            return realtimeLights.Count > 0 ? true : false;
+            return report;
         }
-        /// <summary> ReflectionProbe(Bake, Realtime)의 용량(MB) 검출 </summary>
-        public static int GetReflectionProbeMB()
+        
+        
+        /// <summary> Reflection Probe 용량 검사 </summary>
+        public static ValidationReport ValidateReflectionProbe()
         {
+            var report = new ValidationReport();
+            
             long bytes = 0;
             var reflectionProbes = GameObject.FindObjectsOfType<ReflectionProbe>(true);
             foreach (var probe in reflectionProbes)
@@ -310,33 +266,20 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 {
                     bytes += Profiler.GetRuntimeMemorySizeLong(probe.texture);
                 }
-                //realtime probes are currently disabled... but leaving this incase we enable them down the road.
                 else if (probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
                 {
                     bytes += probe.resolution * probe.resolution * 3;
                 }
             }
-            return (int)bytes / 1024 / 1024;
-        }
 
-        
-        // public static List<GameObject> korObjects = new List<GameObject>();
-        // /// <summary> 한글 이름을 가진 오브젝트 검출 </summary>
-        // private static bool CheckKoreanName()
-        // {
-        //     korObjects.Clear();
-        //     
-        //     var allObjArray = GameObject.FindObjectsOfType<Transform>();
-        //     // 한글이름 검출
-        //     foreach (var t in allObjArray)
-        //     {
-        //         if(Regex.IsMatch(t.name, @"[ㄱ-ㅎ가-힣]"))
-        //             korObjects.Add(t.gameObject);
-        //         
-        //         // Debug.LogWarning($"한글이름이 있습니다. 영문으로 변경해주세요. ({t.name})", t);
-        //     }
-        //
-        //     return korObjects.Count > 0 ? true : false;
-        // }
+            int mBytes = (int)bytes / 1024 / 1024;
+            if (mBytes < OptimizationConfig.MAX_REFLECTION_PROBE_MB)
+            {
+                var error = new ValidationError($"Reflection Probe Capacity : {mBytes}/{OptimizationConfig.MAX_REFLECTION_PROBE_MB} MB", OptimizationConfig.TAG_REFLECTION_PROBE);
+                report.Append(error);
+            }
+            
+            return report;
+        }
     }
 }
