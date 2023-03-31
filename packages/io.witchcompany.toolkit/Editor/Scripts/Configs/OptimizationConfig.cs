@@ -5,32 +5,32 @@
         private const int K = 1000;
         
         // // Test
-        public const uint MAX_INDIVIDUAL_VERTS = 0 * K;
-        public const uint MAX_VERTS = 0 * K;
+        public const uint MaxIndividualVerts = 0 * K;
+        public const uint MaxVerts = 0 * K;
         
         // 임시
-        public const uint MAX_UNIQUE_MATERIALS = 0;
-        public const uint MAX_SHARED_TEXTURE_MB = 0;
-        public const uint MAX_LIGHTMAP_MB = 0;
-        public const uint MAX_REFLECTION_PROBE_MB = 0;
+        public const uint MaxUniqueMaterials = 0;
+        public const uint MaxSharedTextureMb = 0;
+        public const uint MaxLightmapMb = 0;
+        public const uint MaxReflectionProbeMb = 0;
         
         // TEST
-        // public const uint MAX_INDIVIDUAL_VERTS = 16 * K;
-        // public const uint MAX_VERTS = 256 * K;
+        // public const uint MaxIndividualVerts = 16 * K;
+        // public const uint MaxVerts = 256 * K;
         //
-        // public const uint MAX_UNIQUE_MATERIALS = 75;
-        // public const uint MAX_SHARED_TEXTURE_MB = 200;
-        // public const uint MAX_LIGHTMAP_MB = 200;
-        // public const uint MAX_REFLECTION_PROBE_MB = 200;
+        // public const uint MaxUniqueMaterials = 75;
+        // public const uint MaxSharedTextureMb = 200;
+        // public const uint MaxLightmapMb = 200;
+        // public const uint MaxReflectionProbeMb = 200;
 
 
-        public const string TAG_MESH_VERTEX = "Mesh Vertex";
-        public const string TAG_MATERIAL = "Material";
-        public const string TAG_TEXTURE = "Texture";
-        public const string TAG_LIGHTMAP = "Light Map";
-        public const string TAG_MESH_COLLIDER = "Mesh Collider";
-        public const string TAG_LIGHTMODE_REALTIME = "Light Mode [Realtime]";
-        public const string TAG_REFLECTION_PROBE = "Reflection Probe";
+        public const string TagMeshVertex = "Mesh Vertex";
+        public const string TagMaterial = "Material";
+        public const string TagTexture = "Texture";
+        public const string TagLightmap = "Light Map";
+        public const string TagMeshCollider = "Mesh Collider";
+        public const string TagRealtimeLight = "Realtime Light ";
+        public const string TagReflectionProbe = "Reflection Probe";
 
 
 

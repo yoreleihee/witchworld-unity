@@ -44,6 +44,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             if (GUILayout.Button("Check"))
             {
                 validationReport = OptimizationValidator.ValidationCheck();
+                validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
             }
         }
         
@@ -81,16 +82,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
                             preErrorTag = error.tag;
                         }
 
-                        // context가 있으면 버튼 눌렀을 때 object 가리킴
-                        // if (error?.context == null)
-                            // GUILayout.Label($"{error.message}");
-                        // else
-                        // {
-                            if (GUILayout.Button(error.message, EditorStyles.label))
-                            {
-                                EditorGUIUtility.PingObject(error.context);
-                            }
-                        // }
+                        
+                        if (GUILayout.Button(error.message, EditorStyles.label))
+                        {
+                            EditorGUIUtility.PingObject(error.context);
+                        }
                         
                         
                     }

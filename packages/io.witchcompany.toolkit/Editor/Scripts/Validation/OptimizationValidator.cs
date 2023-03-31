@@ -33,32 +33,32 @@ namespace WitchCompany.Toolkit.Editor.Validation
             /* Scene Vital */
             // 전체 버텍스 검사
             var meshVertex = GetAllMeshes().Item2;
-            if (meshVertex > OptimizationConfig.MAX_VERTS)
+            if (meshVertex > OptimizationConfig.MaxVerts)
             {
-                var error = new ValidationError($"Total Mesh Vertex Count : {meshVertex}/{OptimizationConfig.MAX_VERTS}", OptimizationConfig.TAG_MESH_VERTEX);
+                var error = new ValidationError($"Total Mesh Vertex Count : {meshVertex}/{OptimizationConfig.MaxVerts}", OptimizationConfig.TagMeshVertex);
                 validationReport.Append(error);
             }
             //  라이트맵 검사
             var lightMapSize = GetLightMapMB();
-            if (lightMapSize >= OptimizationConfig.MAX_LIGHTMAP_MB)
+            if (lightMapSize >= OptimizationConfig.MaxLightmapMb)
             {
-                var error = new ValidationError($"LightMap Capacity: {lightMapSize}/{OptimizationConfig.MAX_LIGHTMAP_MB}", OptimizationConfig.TAG_LIGHTMAP);
+                var error = new ValidationError($"LightMap Capacity: {lightMapSize}/{OptimizationConfig.MaxLightmapMb}", OptimizationConfig.TagLightmap);
                 validationReport.Append(error);
             }
             
             //  텍스쳐 검사
             var textureSize = GetTextureMB();
-            if (textureSize > OptimizationConfig.MAX_SHARED_TEXTURE_MB)
+            if (textureSize > OptimizationConfig.MaxSharedTextureMb)
             {
-                var error = new ValidationError($"Texture Capacity : {textureSize}/{OptimizationConfig.MAX_SHARED_TEXTURE_MB} MB", OptimizationConfig.TAG_TEXTURE);
+                var error = new ValidationError($"Texture Capacity : {textureSize}/{OptimizationConfig.MaxSharedTextureMb} MB", OptimizationConfig.TagTexture);
                 validationReport.Append(error);
             }
             
             //  유니크 머티리얼 검사
             var materialCount = GetUniqueMaterialCount();
-            if (materialCount >= OptimizationConfig.MAX_UNIQUE_MATERIALS)
+            if (materialCount >= OptimizationConfig.MaxUniqueMaterials)
             {
-                var error = new ValidationError($"Unique Material Count : {materialCount}/{OptimizationConfig.MAX_UNIQUE_MATERIALS}", OptimizationConfig.TAG_MATERIAL);
+                var error = new ValidationError($"Unique Material Count : {materialCount}/{OptimizationConfig.MaxUniqueMaterials}", OptimizationConfig.TagMaterial);
                 validationReport.Append(error);
             }
             
@@ -81,11 +81,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             foreach (var mesh in meshes)
             {
-                if (mesh.Item2.vertexCount > OptimizationConfig.MAX_INDIVIDUAL_VERTS) 
+                if (mesh.Item2.vertexCount > OptimizationConfig.MaxIndividualVerts) 
                 {
                     var error = new ValidationError(
-                        $"{mesh.Item1.name}의 {mesh.Item2.name} : {mesh.Item2.vertexCount} / {OptimizationConfig.MAX_INDIVIDUAL_VERTS}",
-                        OptimizationConfig.TAG_MESH_VERTEX, mesh.Item1);
+                        $"{mesh.Item1.name}의 {mesh.Item2.name} : {mesh.Item2.vertexCount} / {OptimizationConfig.MaxIndividualVerts}",
+                        OptimizationConfig.TagMeshVertex, mesh.Item1);
                     report.Append(error);
                 }
             }
@@ -223,7 +223,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 if (meshCol.sharedMesh != null)
                 {
-                    var error = new ValidationError($"Mesh Collider Object : {meshCol.gameObject.name}",OptimizationConfig.TAG_MESH_COLLIDER, meshCol);
+                    var error = new ValidationError($"Mesh Collider Object : {meshCol.gameObject.name}",OptimizationConfig.TagMeshCollider, meshCol);
                     report.Append(error);
                 }
             }
@@ -240,7 +240,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 if(light.lightmapBakeType != LightmapBakeType.Baked)
                 {
-                    var error = new ValidationError($"Realtime Light Object : {light.name}", OptimizationConfig.TAG_LIGHTMODE_REALTIME, light);
+                    var error = new ValidationError($"Realtime Light Object : {light.name}", OptimizationConfig.TagRealtimeLight, light);
                     report.Append(error);
                 }
             }
@@ -268,9 +268,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
 
             int mBytes = (int)bytes / 1024 / 1024;
-            if (mBytes > OptimizationConfig.MAX_REFLECTION_PROBE_MB)
+            if (mBytes > OptimizationConfig.MaxReflectionProbeMb)
             {
-                var error = new ValidationError($"Reflection Probe Capacity : {mBytes}/{OptimizationConfig.MAX_REFLECTION_PROBE_MB} MB", OptimizationConfig.TAG_REFLECTION_PROBE);
+                var error = new ValidationError($"Reflection Probe Capacity : {mBytes}/{OptimizationConfig.MaxReflectionProbeMb} MB", OptimizationConfig.TagReflectionProbe);
                 report.Append(error);
             }
             

@@ -17,8 +17,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
         public static void  ShowControlPanel () {
             EditorWindow wnd = GetWindow(typeof(CustomWindow));
             wnd.titleContent = new GUIContent("Witch Creator Toolkit");
-            wnd.minSize = new Vector2(600, 480);
-            wnd.maxSize = new Vector2(600, 680);
+            wnd.minSize = new Vector2(518, 600);
+            wnd.maxSize = new Vector2(518, 2000);
         }
         
         private readonly GUIContent[] toolbarLabels = new GUIContent[4]
@@ -33,8 +33,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         {
             // if (bannerImage == null)
             //     bannerImage = Resources.Load<Texture2D>("image_toolkit_banner");
-            
-            GUILayout.Box(bannerImage);
+            // GUILayout.Box(bannerImage);
             ToolkitConfig.CurrControlPanelType = (ControlPanelType)GUILayout.Toolbar((int)ToolkitConfig.CurrControlPanelType, toolbarLabels);
             
             // 선택한 메뉴에 따라 다른 함수 호출

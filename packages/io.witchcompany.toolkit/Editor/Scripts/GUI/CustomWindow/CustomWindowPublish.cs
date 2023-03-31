@@ -9,7 +9,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
     public static class CustomWindowPublish
     {
         private static SceneAsset targetScene;
-        private static BlockPublishOption blockPublishOption;
         public static JBuildReport buildReport;
 
         public static void ShowPublish()
@@ -23,6 +22,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 DrawReport();
         }
 
+        public static BlockPublishOption GetOption()
+        {
+            // targetScene = EditorGUILayout.ObjectField("Scene", targetScene, typeof(SceneAsset), false) as SceneAsset;
+            var targetTheme = BlockTheme.Indoor;
+            return new BlockPublishOption { targetScene = targetScene, theme = BlockTheme.Indoor };
+        }
+
         /// <summary>
         /// 빌드 설정
         /// - Scriptable Object 적용 칸
@@ -32,15 +38,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
         {
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
-
-            //blockPublishOption = EditorGUILayout.ObjectField("blockPublishOption", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;
-            // targetScene = EditorGUILayout.ObjectField("Scene", targetScene, typeof(SceneAsset), false) as SceneAsset;
+            targetScene = EditorGUILayout.ObjectField("Scene", targetScene, typeof(SceneAsset), false) as SceneAsset;
+            
             EditorGUILayout.EndVertical();
-
             if (GUILayout.Button("Publish"))
             {
-                // buildReport = WitchToolkitPipeline.PublishWithValidation(targetScene);
-                buildReport = WitchToolkitPipeline.PublishWithValidation(blockPublishOption);
+                buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
             }
         }
         
@@ -63,13 +66,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 EditorGUILayout.LabelField("ExportPath", buildReport.exportPath);
                 EditorGUILayout.LabelField("TotalSize", $"{CommonTool.ByteToMb(buildReport.totalSizeByte, 2)} MB");
                 // 시작시간
-                // EditorGUILayout.LabelField("StartTime, ${buildReport.}");
+                EditorGUILayout.LabelField("StartTime", $"{buildReport.BuildStatedAt.ToString()}");
                 // 종료시간
                 EditorGUILayout.LabelField("EndTime", buildReport.BuildEndedAt.ToString());
                 // 소요시간 
 
-                TimeSpan time = buildReport.BuildEndedAt - buildReport.BuildEndedAt;
-                EditorGUILayout.LabelField("Duration", time.ToString());;
+                var time = buildReport.BuildEndedAt - buildReport.BuildStatedAt;
+                EditorGUILayout.LabelField("Duration", (int)time.TotalSeconds + "s");;
 
             }
             
