@@ -286,6 +286,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// <summary> Realtime Light 개수 검출 </summary>
         public static bool CheckRealtimeLight()
         {
+            realtimeLights.Clear();
             var lights = GameObject.FindObjectsOfType<Light>(true);
 
             foreach (var light in lights)
