@@ -13,6 +13,8 @@ namespace WitchCompany.Toolkit.Module
                                               "브러쉬가 없다면 검은색, 있다면 첫브러쉬의 색상으로 시작합니다.";
         public override string DocumentURL => "";
 
+        public override int MaximumCount => 1;
+
         [Header("낙서가 그려질 렌더러"), SerializeField] 
         private Renderer targetRenderer;
         

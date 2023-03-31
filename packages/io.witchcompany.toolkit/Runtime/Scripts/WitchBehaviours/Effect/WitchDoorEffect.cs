@@ -27,18 +27,19 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public float DurationSec => durationSec;
         
 #if UNITY_EDITOR
-        // public override ValidationError ValidationCheck()
-        // {
-        //     if (playerEnterTrigger == null) return false;
-        //     if (targetDoor == null) return false;
-        //     
-        //     if (!transform.HasChild(playerEnterTrigger)) return false;
-        //     if (!transform.HasChild(targetDoor)) return false;
-        //
-        //     if (targetDoor.gameObject.isStatic) return false;
-        //
-        //     return true;
-        // }
+        public override ValidationError ValidationCheck()
+        {
+            if (playerEnterTrigger == null) return NullError(nameof(playerEnterTrigger));
+            if (targetDoor == null) return NullError(nameof(targetDoor));
+
+            if (!transform.HasChild(playerEnterTrigger)) return ChildError(nameof(playerEnterTrigger));
+            if (!transform.HasChild(targetDoor)) return ChildError(nameof(targetDoor));
+
+            if (targetDoor.gameObject.isStatic)
+                return new ValidationError($"{name}의 움직일 문({targetDoor.name})은 Static일 수 없습니다.", ValidationTag.Script, targetDoor);
+        
+            return null;
+        }
 #endif
     }
 }

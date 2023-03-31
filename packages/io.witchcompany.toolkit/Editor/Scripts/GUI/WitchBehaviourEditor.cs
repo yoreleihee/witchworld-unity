@@ -117,10 +117,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
                             $"{_currentBlockManager.BehaviourCounter[editorTarget.GetType()].count}/{editorTarget.MaximumCount} 개";
                         GUILayout.Label($"배치 개수 제한: {count}", _counterStyle);
                     }
-                    else
-                    {
-                        GUILayout.Label($"배치 개수 제한: 최대 {editorTarget.MaximumCount}개", _counterStyle);
-                    }
                     
                 }
                 GUILayout.EndVertical();
