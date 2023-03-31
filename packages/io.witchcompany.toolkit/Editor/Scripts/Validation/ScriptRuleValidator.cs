@@ -38,7 +38,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             const string prefix = "잘못된 블록 옵션: ";
             
             // 타겟 씬이 없으면 실패
-            if (option.TargetScene == null) 
+            if (option.targetScene == null) 
                 return prefix + "타겟 씬이 없음";
             
             // 블록 이름 유효성 검사

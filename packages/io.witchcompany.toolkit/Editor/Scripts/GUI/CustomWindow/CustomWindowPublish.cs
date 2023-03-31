@@ -33,7 +33,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
-            blockPublishOption = EditorGUILayout.ObjectField("blockPublishOption", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;
+            //blockPublishOption = EditorGUILayout.ObjectField("blockPublishOption", blockPublishOption, typeof(BlockPublishOption), false) as BlockPublishOption;
             // targetScene = EditorGUILayout.ObjectField("Scene", targetScene, typeof(SceneAsset), false) as SceneAsset;
             EditorGUILayout.EndVertical();
 

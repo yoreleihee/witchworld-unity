@@ -24,7 +24,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 result = JBuildReport.Result.Failed
             };
 
-            if (option == null || option.TargetScene == null)
+            if (option == null || option.targetScene == null)
             {
                 Debug.LogError("잘못된 option 입니다.");
                 return buildReport;
@@ -36,7 +36,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 EditorSceneManager.SaveOpenScenes();
                 
                 // 빌드할 대상 씬으로 전환
-                var scnPath = AssetTool.GetAssetPath(option.TargetScene);
+                var scnPath = AssetTool.GetAssetPath(option.targetScene);
                 if(SceneManager.GetActiveScene().path != scnPath)
                     EditorSceneManager.OpenScene(scnPath, OpenSceneMode.Single);
                 
@@ -59,7 +59,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 // 번들 전부 지우기
                 AssetBundleTool.ClearAllBundles();
                 // 번들 할당
-                var scenePath = AssetDatabase.GetAssetPath(option.TargetScene);
+                var scenePath = AssetDatabase.GetAssetPath(option.targetScene);
                 var bundleName = option.BundleKey;
                 //var bundleName = option.Key;
                 AssetBundleTool.AssignAssetBundle(scenePath, bundleName);

@@ -77,6 +77,27 @@ namespace WitchCompany.Toolkit.Editor.API
             return response.success ? response.payload : null;
         }
 
+        /// <summary>
+        /// 1성공, -1로그인 필요, -2권한 필요
+        /// </summary>
+        public static async UniTask<int> CheckPermission()
+        {
+            var auth = AuthConfig.Auth;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
+            
+            var response = await AuthSafeRequest<JPermission>(new RequestHelper
+            {
+                Method = "GET",
+                Uri = ApiConfig.URL("v2/toolkits/permission"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken)
+            });
+
+            if (response.success && response.payload != null)
+                return response.payload.isUploadAble ? 1 : -2;
+            
+            return -2;
+        }
+
         public static async UniTask<bool> UploadBlock(BlockPublishOption option, JManifest manifest)
         {
             var auth = AuthConfig.Auth;
@@ -84,31 +105,35 @@ namespace WitchCompany.Toolkit.Editor.API
             
             var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
             var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
-            
             var bundleData = await File.ReadAllBytesAsync(bundlePath);
             var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
+
+            var body = new JPublish
+            {
+                block = new JBlock
+                {
+                    name = option.Key,
+                    theme = option.theme.ToString()
+                },
+                manifest = manifest
+            };
+            
             var form = new List<IMultipartFormSection>
             {
-                //new MultipartFormDataSection("json", body, "application/json"),
+                new MultipartFormDataSection("json", JsonConvert.SerializeObject(body), "application/json"),
                 new MultipartFormFileSection("file1", bundleData, option.BundleKey, "application/octet-stream"),
                 new MultipartFormFileSection("file2", thumbnailData, option.ThumbnailKey, "image/jpg")
             };
-            //
-            // var response = await Request<JAuth>(new RequestHelper
-            // {
-            //     Method = "POST",
-            //     Uri = ApiConfig.URL("toolkit/create"),
-            //     Headers = ApiConfig.TokenHeader(auth.refreshToken),
-            //     BodyString = JsonConvert.SerializeObject(new Dictionary<string, string>
-            //     {
-            //         ["accessAt"] = "world"
-            //     }),
-            //     ContentType = ApiConfig.ContentType.Json
-            // });
-            //
-            //return response.success ? response.payload : null;
+            
+             var response = await Request<JPublishResponse>(new RequestHelper
+             {
+                 Method = "POST",
+                 Uri = ApiConfig.URL("v2/toolkits/unity"),
+                 Headers = ApiConfig.TokenHeader(auth.refreshToken),
+                 FormSections = form
+             });
 
-            return false;
+             return response.success;
         }
     }
     
@@ -146,6 +171,20 @@ namespace WitchCompany.Toolkit.Editor.API
             return res;
         }
 
+        private static string GetFormSectionsContentType(out byte[] bodyRaw, RequestHelper options)
+        {
+            var boundary = UnityWebRequest.GenerateBoundary();
+            var formSections = UnityWebRequest.SerializeFormSections(options.FormSections, boundary);
+            var terminate = Encoding.UTF8.GetBytes(string.Concat("\r\n--", Encoding.UTF8.GetString(boundary), "--"));
+            
+            bodyRaw = new byte[formSections.Length + terminate.Length];
+            
+            Buffer.BlockCopy(formSections, 0, bodyRaw, 0, formSections.Length);
+            Buffer.BlockCopy(terminate, 0, bodyRaw, formSections.Length, terminate.Length);
+            
+            return string.Concat("multipart/form-data; boundary=", Encoding.UTF8.GetString(boundary));
+        }
+        
         private static async UniTask<JResponse<T>> Request<T>(RequestHelper helper)
         {
             using var request = new UnityWebRequest();
@@ -158,16 +197,25 @@ namespace WitchCompany.Toolkit.Editor.API
                 foreach (var (key, value) in helper.Headers)
                     request.SetRequestHeader(key, value);
                 request.downloadHandler = new DownloadHandlerBuffer();
+
+                var contentType = ApiConfig.ContentType.Json;
+                var bodyRaw = helper.BodyRaw;
+                
                 if (!string.IsNullOrEmpty(helper.BodyString))
                 {
-                    var bytes = Encoding.UTF8.GetBytes(helper.BodyString.ToCharArray());
-                    request.uploadHandler = new UploadHandlerRaw(bytes);
+                    bodyRaw = Encoding.UTF8.GetBytes(helper.BodyString.ToCharArray());
 
-                    var contentType = string.IsNullOrEmpty(helper.ContentType)
+                    contentType = string.IsNullOrEmpty(helper.ContentType)
                         ? ApiConfig.ContentType.Json
                         : helper.ContentType;
-                    request.uploadHandler.contentType = contentType;
                 }
+                else if (helper.FormSections is {Count: > 0})
+                {
+                    contentType = GetFormSectionsContentType(out bodyRaw, helper);
+                }
+                
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.uploadHandler.contentType = contentType;
 
                 // 로그
                 Log($"{helper.Method} Request ({helper.Uri})\n" + $"{helper.BodyString}");

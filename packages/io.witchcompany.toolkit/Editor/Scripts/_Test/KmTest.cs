@@ -1,22 +1,45 @@
-﻿namespace WitchCompany.Toolkit.Editor
+﻿using Newtonsoft.Json;
+using UnityEditor;
+using UnityEngine;
+using WitchCompany.Toolkit.Editor.API;
+using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.DataStructure;
+using WitchCompany.Toolkit.Editor.Tool;
+
+namespace WitchCompany.Toolkit.Editor
 {
     public static class KmTest
-    {
-        // // [MenuItem("WitchToolkit/Test_Login")]
-        // public static async void Login()
-        // {
-        //     var json = await WitchAPI.Login("kmkim@witchcompany.io", "1998Kimin!");
-        //     Debug.Log(JsonConvert.SerializeObject(json));
-        //     Debug.Log(CommonTool.TimeStampToDateTime(json.accessExpire).ToString("u"));
-        //     Debug.Log(CommonTool.TimeStampToDateTime(json.refreshExpire).ToString("u"));
-        // }
-        //
-        // // [MenuItem("WitchToolkit/Test_Refresh")]
-        // public static async void Refresh()
-        // {
-        //     var json = await WitchAPI.Refresh();
-        //     Debug.Log(JsonConvert.SerializeObject(json));
-        // }
+    { 
+        [MenuItem("WitchToolkit/Permission")]
+        public static async void Login()
+        {
+            var json = await WitchAPI.Login("kmkim@witchcompany.io", "Witch00!");
+            Debug.Log(JsonConvert.SerializeObject(json));
+            Debug.Log(CommonTool.TimeStampToDateTime(json.accessExpire).ToString("u"));
+            Debug.Log(CommonTool.TimeStampToDateTime(json.refreshExpire).ToString("u"));
+            
+            Debug.Log("권한:" + await WitchAPI.CheckPermission());
+        }
+        
+         [MenuItem("WitchToolkit/Upload")]
+        public static async void Refresh()
+        {
+            var scn = AssetTool.GetSelectedAsset() as SceneAsset;
+            var option = new BlockPublishOption
+            {
+                targetScene = scn,
+                theme = BlockTheme.Outdoor
+            };
+
+            var manifest = new JManifest
+            {
+                unityVersion = ToolkitConfig.UnityVersion,
+                toolkitVersion = ToolkitConfig.WitchToolkitVersion,
+                crc = "3435501116",
+            };
+
+            await WitchAPI.UploadBlock(option, manifest);
+        }
         //
         // // [MenuItem("WitchToolkit/Test_GetUserInfo")]
         // public static async void GetUserInfo()
