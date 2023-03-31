@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Validation;
 using WitchCompany.Toolkit.Validation;
 
@@ -38,8 +39,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.LabelField("Unique Material", OptimizationValidator.GetUniqueMaterialCount().ToString());
             EditorGUILayout.LabelField("Texture", OptimizationValidator.GetTextureMB()+ " MB");
             EditorGUILayout.LabelField("Light Map", OptimizationValidator.GetLightMapMB()+ " MB");
-            
-            
+
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Check"))
             {
@@ -76,7 +76,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                         // 이전 tag와 값이 다르면 tag 출력
                         if (preErrorTag != error?.tag)
                         {
-                            GUILayout.Label(error.tag);   
+                            GUILayout.Space(10);
+                            GUILayout.Label(error.tag, EditorStyles.boldLabel);   
                             preErrorTag = error.tag;
                         }
 
@@ -85,11 +86,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
                             // GUILayout.Label($"{error.message}");
                         // else
                         // {
-                            if (GUILayout.Button(error.message))
+                            if (GUILayout.Button(error.message, EditorStyles.label))
                             {
                                 EditorGUIUtility.PingObject(error.context);
                             }
                         // }
+                        
+                        
                     }
                     
                     EditorGUILayout.EndScrollView();

@@ -14,8 +14,8 @@
         public const uint MAX_LIGHTMAP_MB = 0;
         public const uint MAX_REFLECTION_PROBE_MB = 0;
         
-        // 임시
-        // public const uint MAX_INDIVIDUAL_VERTS = 0 * K;
+        // TEST
+        // public const uint MAX_INDIVIDUAL_VERTS = 16 * K;
         // public const uint MAX_VERTS = 256 * K;
         //
         // public const uint MAX_UNIQUE_MATERIALS = 75;
