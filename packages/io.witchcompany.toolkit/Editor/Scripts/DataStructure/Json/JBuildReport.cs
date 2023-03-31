@@ -9,6 +9,7 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         public string exportPath;
         public long totalSizeByte = 0;
         public Result result = Result.Failed;
+        public DateTime BuildStatedAt = DateTime.MinValue;
         public DateTime BuildEndedAt = DateTime.MinValue;
         
         public enum Result

@@ -21,7 +21,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
             var validationReport = new ValidationReport();
             var buildReport = new JBuildReport
             {
-                result = JBuildReport.Result.Failed
+                result = JBuildReport.Result.Failed,
+                BuildStatedAt = DateTime.Now
             };
 
             if (option == null || option.targetScene == null)
