@@ -20,12 +20,16 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public float JumpForce => jumpForce;
         
 #if UNITY_EDITOR
-        // public override ValidationError ValidationCheck()
-        // {
-        //     return 
-        //         TryGetComponent<Collider>(out var col) && 
-        //         col.isTrigger;
-        // }
+        public override ValidationError ValidationCheck()
+        {
+            if (!TryGetComponent<Collider>(out var col))
+                return Error("isTrigger 체크된 콜라이더가 필요합니다.");
+
+            if (!col.isTrigger)
+                return new ValidationError($"{name}의 콜라이더는 isTrigger가 체크되어있어야 합니다.", ValidationTag.Script, col);
+
+            return null;
+        }
 #endif
     }
 }
