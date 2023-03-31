@@ -15,6 +15,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
     {
         public static async UniTask<PackageInfo> GePackageInfo(string name)
         {
+            //Client.Search()
+            
             var listRequest = Client.List(true);
             await UniTask.WaitUntil(() => listRequest.IsCompleted);
             

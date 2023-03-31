@@ -4,7 +4,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(MeshRenderer))]
-    public class WitchLoopingTexture : WitchBehaviour
+    public class WitchTextureScrollEffect : WitchBehaviour
     {
         public override string BehaviourName => "효과: 텍스쳐 스크롤";
 
