@@ -23,6 +23,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// - 블록매니저가 최상위 오브젝트인지 검증
         /// - 유니티 스크립트중 블랙리스트 스크립트 제외
         /// - 개별 WitchBehaviour 검증
+        /// - missing script 있는지 검사
         /// </summary>
         public static ValidationReport ValidationCheck(BlockPublishOption option)
         {
@@ -32,7 +33,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 .Append(ValidateBlockOption(option))
                 .Append(ValidateHierarchy(scene))
                 .Append(ValidateBlacklist(scene))
-                .Append(ValidateWitchBehaviours());
+                .Append(ValidateWitchBehaviours())
+                .Append(ValidateMissingComponents(scene));
         }
 
         private static string ValidateBlockOption(BlockPublishOption option)
@@ -114,6 +116,35 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 if (obj.MaximumCount > 0 && obj.MaximumCount < count)
                     report.Append($"[{obj.BehaviourName}]를 너무 많이 배치했습니다. (현재:{count}개, 최대:{obj.MaximumCount}개)", ValidationTag.Script, manager);
 
+            return report;
+        }
+
+
+        private static ValidationReport ValidateMissingComponents(Scene scene)
+        {
+            var report = new ValidationReport();
+            
+            var rootObject = scene.GetRootGameObjects()[0].transform;
+            var children = HierarchyTool.GetAllChildren(rootObject);
+
+            foreach (var tr in children)
+            {
+                var components = tr.GetComponents<Component>();
+                
+                foreach (var c in components)
+                {
+                    var error = new ValidationError("", "", null);
+                    if (c == null)
+                    {
+                        error.tag = "Missing Component";
+                        error.message = $"찾을 수 없는 컴포넌트 포함됨 : {tr.gameObject.name}";
+                        error.context = tr;
+                        report.Append(error);
+                        // 하나 검출되면 다음으로 넘어감
+                        break;
+                    }
+                }
+            }
             return report;
         }
     }
