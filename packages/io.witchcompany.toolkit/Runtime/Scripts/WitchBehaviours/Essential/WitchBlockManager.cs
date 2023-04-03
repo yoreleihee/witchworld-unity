@@ -13,6 +13,13 @@ namespace WitchCompany.Toolkit.Module
                                               "한 씬에 하나만 배치할 수 있습니다.";
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
+
+        [Header("옵션")] 
+        [SerializeField, Range(1, 5)] private float jumpForce = 1;
+        [SerializeField, Range(-3,-12)] private float gravity = -12f;
+
+        public float JumpForce => jumpForce;
+        public float Gravity => gravity;
         
         public List<WitchBehaviour> Behaviours { get; private set; }
 
