@@ -35,14 +35,14 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var meshVertex = GetAllMeshes().Item2;
             if (meshVertex > OptimizationConfig.MaxVerts)
             {
-                var error = new ValidationError($"Total Mesh Vertex Count : {meshVertex}/{OptimizationConfig.MaxVerts}", OptimizationConfig.TagMeshVertex);
+                var error = new ValidationError($"Total Mesh Vertex Count : {meshVertex} / { OptimizationConfig.MaxVerts}\n모든 Vertex의 최대 개수는 {OptimizationConfig.MaxVerts}개 입니다. Scene 내의 Mesh Vertex를 조절해주세요.", ValidationTag.TagMeshVertex);
                 validationReport.Append(error);
             }
             //  라이트맵 검사
             var lightMapSize = GetLightMapMB();
             if (lightMapSize >= OptimizationConfig.MaxLightmapMb)
             {
-                var error = new ValidationError($"LightMap Capacity: {lightMapSize}/{OptimizationConfig.MaxLightmapMb}", OptimizationConfig.TagLightmap);
+                var error = new ValidationError($"Total Light Map Size : {lightMapSize} / {OptimizationConfig.MaxLightmapMb} MB\n모든 Light Map의 최대 크기는 {OptimizationConfig.MaxLightmapMb} MB입니다. Scene에 적용된 Light Map을 조절해주세요.", ValidationTag.TagLightmap);
                 validationReport.Append(error);
             }
             
@@ -50,7 +50,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var textureSize = GetTextureMB();
             if (textureSize > OptimizationConfig.MaxSharedTextureMb)
             {
-                var error = new ValidationError($"Texture Capacity : {textureSize}/{OptimizationConfig.MaxSharedTextureMb} MB", OptimizationConfig.TagTexture);
+                var error = new ValidationError($"Texture Size : {textureSize} / {OptimizationConfig.MaxSharedTextureMb} MB\n모든 Texture의 최대 크기는 {OptimizationConfig.MaxSharedTextureMb} MB입니다. Scene 내의 Texture를 조절해주세요.", ValidationTag.TagTexture);
                 validationReport.Append(error);
             }
             
@@ -58,7 +58,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var materialCount = GetUniqueMaterialCount();
             if (materialCount >= OptimizationConfig.MaxUniqueMaterials)
             {
-                var error = new ValidationError($"Unique Material Count : {materialCount}/{OptimizationConfig.MaxUniqueMaterials}", OptimizationConfig.TagMaterial);
+                var error = new ValidationError($"Unique Material Count : {materialCount} / {OptimizationConfig.MaxUniqueMaterials}\nMaterial의 최대 개수는 {OptimizationConfig.MaxUniqueMaterials}개입니다. Scene 내에 적용된 Material의 수를 조절해주세요.", ValidationTag.TagMaterial);
                 validationReport.Append(error);
             }
             
@@ -84,8 +84,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 if (mesh.Item2.vertexCount > OptimizationConfig.MaxIndividualVerts) 
                 {
                     var error = new ValidationError(
-                        $"{mesh.Item1.name}의 {mesh.Item2.name} : {mesh.Item2.vertexCount} / {OptimizationConfig.MaxIndividualVerts}",
-                        OptimizationConfig.TagMeshVertex, mesh.Item1);
+                        $"{mesh.Item1.name}의 {mesh.Item2.name} : {mesh.Item2.vertexCount} / {OptimizationConfig.MaxIndividualVerts}\n오브젝트의 최대 Vertex 개수는 {OptimizationConfig.MaxIndividualVerts}입니다. 해당 오브젝트의 Mesh를 수정해주세요.",
+                        ValidationTag.TagMeshVertex, mesh.Item1);
                     report.Append(error);
                 }
             }
@@ -223,7 +223,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 if (meshCol.sharedMesh != null)
                 {
-                    var error = new ValidationError($"Mesh Collider Object : {meshCol.gameObject.name}",OptimizationConfig.TagMeshCollider, meshCol);
+                    var error = new ValidationError($"Object Name : {meshCol.gameObject.name}\nMesh collider가 적용된 오브젝트는 배치할 수 없습니다.", ValidationTag.TagMeshCollider, meshCol);
                     report.Append(error);
                 }
             }
@@ -240,7 +240,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 if(light.lightmapBakeType != LightmapBakeType.Baked)
                 {
-                    var error = new ValidationError($"Realtime Light Object : {light.name}", OptimizationConfig.TagRealtimeLight, light);
+                    var error = new ValidationError($"Object Name : {light.name}\nLight Mode가 RealTime인 Light는 배치할 수 없습니다.", ValidationTag.TagRealtimeLight, light);
                     report.Append(error);
                 }
             }
@@ -270,7 +270,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             int mBytes = (int)bytes / 1024 / 1024;
             if (mBytes > OptimizationConfig.MaxReflectionProbeMb)
             {
-                var error = new ValidationError($"Reflection Probe Capacity : {mBytes}/{OptimizationConfig.MaxReflectionProbeMb} MB", OptimizationConfig.TagReflectionProbe);
+                var error = new ValidationError($"Size : {mBytes}/{OptimizationConfig.MaxReflectionProbeMb} MB\n모든 Reflection Probe의 최대 크기는 {OptimizationConfig.MaxReflectionProbeMb}입니다. ", ValidationTag.TagReflectionProbe);
                 report.Append(error);
             }
             

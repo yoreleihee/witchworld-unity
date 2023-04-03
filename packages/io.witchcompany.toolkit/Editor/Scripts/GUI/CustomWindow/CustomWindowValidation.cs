@@ -27,8 +27,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 DrawReport();
         }
 
-        private static GameObject go;
-        private static Shader shader;
         private static void DrawSceneVital()
         {
 
@@ -45,6 +43,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 validationReport = OptimizationValidator.ValidationCheck();
                 validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
+                
+                // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()
+                CustomWindow.InitialStyles();
             }
         }
         
@@ -68,32 +69,39 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 GUILayout.Label("Message", EditorStyles.boldLabel);
                 EditorGUILayout.BeginVertical("box");
                 
-                
+                    // 에러 메시지 출력
                     scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
                     
                     var preErrorTag = "";
                     foreach (var error in validationReport.errors)
                     {
+                        if (error == null) return;
                         // 이전 tag와 값이 다르면 tag 출력
-                        if (preErrorTag != error?.tag)
+                        if (preErrorTag != error.tag)
                         {
                             GUILayout.Space(10);
                             GUILayout.Label(error.tag, EditorStyles.boldLabel);   
                             preErrorTag = error.tag;
                         }
 
-                        
-                        if (GUILayout.Button(error.message, EditorStyles.label))
+                        // todo : message의 길이에 따라 log Height 변경
+                        // 로그 종류에 따라 버튼 style 변경
+                        if (error.context == null)
                         {
-                            EditorGUIUtility.PingObject(error.context);
+                            GUILayout.Label(error.message, CustomWindow.logTextStyle);
                         }
-                        
-                        
+                        else
+                        {
+                            // 에러 Log 출력
+                            if (GUILayout.Button(error.message, CustomWindow.logButtonStyle))
+                            {
+                                EditorGUIUtility.PingObject(error.context);
+                            }
+                        }
                     }
                     
                     EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
-                
             }
         }
     }
