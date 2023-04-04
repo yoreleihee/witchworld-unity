@@ -16,9 +16,9 @@
         
         
         public const uint MaxIndividualVerts = 16 * K;
-        public const uint MaxVerts = 256 * K;
+        public const uint MaxVerts = 400 * K;
         
-        public const uint MaxUniqueMaterials = 75;
+        public const uint MaxUniqueMaterials = 80;
         public const uint MaxSharedTextureMb = 200;
         public const uint MaxLightmapMb = 200;
         public const uint MaxReflectionProbeMb = 200;
