@@ -35,7 +35,7 @@ namespace WitchCompany.Toolkit.Editor
             {
                 unityVersion = ToolkitConfig.UnityVersion,
                 toolkitVersion = ToolkitConfig.WitchToolkitVersion,
-                crc = "3435501116",
+                crc = "1017531261",
             };
             
             await WitchAPI.UploadBlock(option, manifest);

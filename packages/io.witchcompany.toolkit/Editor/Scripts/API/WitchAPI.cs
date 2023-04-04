@@ -120,10 +120,6 @@ namespace WitchCompany.Toolkit.Editor.API
             };
 
             var json = JsonConvert.SerializeObject(body);
-            
-            // Debug.Log(json);
-            // Debug.Log($"{option.BundleKey} {bundleData.LongLength}");
-            // Debug.Log($"{option.ThumbnailKey} {thumbnailData.LongLength}");
 
             var form = new List<IMultipartFormSection>
             {
@@ -132,14 +128,19 @@ namespace WitchCompany.Toolkit.Editor.API
                 new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg")
             };
             
+            Debug.Log("토큰 : " + auth.accessToken);
+            Debug.Log("json : " + json);
+            
+            
             var response = await Request<JPublishResponse>(new RequestHelper
             {
                 Method = "POST",
                 Uri = ApiConfig.URL("v2/toolkits/unity"),
-                Headers = ApiConfig.TokenHeader(auth.refreshToken),
+                Headers = ApiConfig.TokenHeader(auth.accessToken),
                 FormSections = form
             });
             
+            Debug.Log("message : " + response.message);
             return response.success;
         }
         
@@ -154,8 +155,8 @@ namespace WitchCompany.Toolkit.Editor.API
             {
                 // 임시 데이터
                 unityKeyId = EditorTest.UnitykeyId,
-                type = BlockType.Community,
-                theme = option.theme,
+                type = BlockType.Community.ToString(),
+                theme = option.theme.ToString(),
                 createUserNickname = AuthConfig.NickName,
                 name = blockName
             };
@@ -165,12 +166,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 new MultipartFormDataSection("json", JsonConvert.SerializeObject(body), "application/json"),
                 new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg")
             };
-            
-            // Debug.Log("토큰 : " + auth.accessToken);
-            // Debug.Log("json : " + JsonConvert.SerializeObject(body));
-            // Debug.Log("썸네일 키 : " + option.ThumbnailKey);
-            
-            
+
             var response = await Request<JAuthBlockInfo>(new RequestHelper
             {
                 Method = "POST",
