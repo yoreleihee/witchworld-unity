@@ -14,9 +14,22 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
 
         public override string DocumentURL => "";
 
-        [Header("플레이어 감지"), SerializeField]
-        private UnityEvent triggerEvent;
         
+        [Header("플레이어 감지 이벤트: Enter"), SerializeField]
+        private UnityEvent triggerEnter;
+        
+        [Header("플레이어 감지 이벤트: Stay"), SerializeField]
+        private UnityEvent triggerStay;
+        
+        [Header("플레이어 감지 이벤트: Exit"), SerializeField]
+        private UnityEvent triggerExit;
+
+        
+        public UnityEvent TriggerEnter => triggerEnter;
+        public UnityEvent TriggerStay => triggerStay;
+        public UnityEvent TriggerExit => triggerExit;
+
+
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {

@@ -13,8 +13,9 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Display
 
          [Header("상품 ID"), SerializeField]
          private int productId;
-         
 
+         public int ProductId => productId;
+         
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {

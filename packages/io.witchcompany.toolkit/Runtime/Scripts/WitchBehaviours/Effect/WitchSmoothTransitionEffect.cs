@@ -1,6 +1,4 @@
-using log4net.Filter;
 using UnityEngine;
-using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
@@ -13,7 +11,9 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 
         public override string DocumentURL => "";
 
-        [Header("변화 시간"), SerializeField]
-        private int smoothTime;
+        [Header("변화 시간"), SerializeField, Range(0.01f, 2f)]
+        private float smoothTime;
+
+        public float SmoothTime => smoothTime;
     }
 }

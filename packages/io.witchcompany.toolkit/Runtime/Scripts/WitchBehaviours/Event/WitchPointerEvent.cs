@@ -17,8 +17,20 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
         [Header("Outline 활성화"), SerializeField]
         private bool outline;
 
-        [Header("마우스 포인터"), SerializeField]
-        private UnityEvent pointerEvent;
+        [Header("마우스 포인터 이벤트: Enter"), SerializeField]
+        private UnityEvent pointerEnter;
+        
+        [Header("마우스 포인터 이벤트: Click"), SerializeField]
+        private UnityEvent pointerClick;
+        
+        [Header("마우스 포인터 이벤트: Exit"), SerializeField]
+        private UnityEvent pointerExit;
+
+
+        public bool Outline => outline;
+        public UnityEvent PointerEnter => pointerEnter;
+        public UnityEvent PointerClick => pointerClick;
+        public UnityEvent PointerExit => pointerExit;
         
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
