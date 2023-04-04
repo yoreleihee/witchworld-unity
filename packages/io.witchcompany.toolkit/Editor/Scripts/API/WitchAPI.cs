@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
+using WitchCompany.Toolkit.Editor.Tool;
 
 namespace WitchCompany.Toolkit.Editor.API
 {
@@ -118,11 +119,17 @@ namespace WitchCompany.Toolkit.Editor.API
                 manifest = manifest
             };
 
+            var json = JsonConvert.SerializeObject(body);
+            
+            // Debug.Log(json);
+            // Debug.Log($"{option.BundleKey} {bundleData.LongLength}");
+            // Debug.Log($"{option.ThumbnailKey} {thumbnailData.LongLength}");
+
             var form = new List<IMultipartFormSection>
             {
-                new MultipartFormDataSection("json", JsonConvert.SerializeObject(body), "application/json"),
-                new MultipartFormFileSection("image", bundleData, option.BundleKey, "application/octet-stream"),
-                new MultipartFormFileSection("bundle", thumbnailData, option.ThumbnailKey, "image/jpg")
+                new MultipartFormDataSection("json", json, "application/json"),
+                new MultipartFormFileSection("bundle", bundleData, option.BundleKey, ""),
+                new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg")
             };
             
             var response = await Request<JPublishResponse>(new RequestHelper
@@ -247,17 +254,28 @@ namespace WitchCompany.Toolkit.Editor.API
                     contentType = string.IsNullOrEmpty(helper.ContentType)
                         ? ApiConfig.ContentType.Json
                         : helper.ContentType;
+                    
+                    Log($"{helper.Method} Request ({helper.Uri})\n" + $"{contentType}\n{helper.BodyString}");
                 }
                 else if (helper.FormSections is {Count: > 0})
                 {
                     contentType = GetFormSectionsContentType(out bodyRaw, helper);
+
+                    var builder = new StringBuilder();
+                    builder.Append($"{helper.Method} Request ({helper.Uri})\n");
+                    builder.Append($"{contentType}\n");
+                    foreach (var section in helper.FormSections)
+                    {
+                        var sizeMb = CommonTool.ByteToMb(section.sectionData.LongLength, 4);
+                        builder.Append($" {section.sectionName}: {section.fileName}({sizeMb}mb); {section.contentType}\n");
+                    }
+
+                    Log(builder.ToString());
                 }
-                
+
+                //request.SetRequestHeader("Content-Type", contentType);
                 request.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 request.uploadHandler.contentType = contentType;
-
-                // 로그
-                Log($"{helper.Method} Request ({helper.Uri})\n" + $"{helper.BodyString}");
 
                 // 웹 리퀘스트 전송
                 await request.SendWebRequest();
@@ -270,7 +288,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 Log($"{helper.Method} Response ({helper.Uri})\n" + $"{request.downloadHandler?.text}");
                 return JsonConvert.DeserializeObject<JResponse<T>>(request.downloadHandler.text);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
                 
