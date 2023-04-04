@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using WitchCompany.Toolkit.Module.Base;
 using WitchCompany.Toolkit.Module.PhysicsEffect;
 using WitchCompany.Toolkit.Validation;
