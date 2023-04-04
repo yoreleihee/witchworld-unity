@@ -5,7 +5,10 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
 {
-    [RequireComponent(typeof(MeshCollider), typeof(MeshRenderer))]
+    [RequireComponent(
+        typeof(MeshCollider), 
+        typeof(MeshRenderer),
+        typeof(MeshFilter))]
     public class WitchPaintableWall : WitchBehaviourUnique
     {
         public override string BehaviourName => "낙서 벽";
@@ -44,8 +47,9 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (TryGetComponent(out MeshCollider _)) return NullError(nameof(MeshCollider));
-            if (TryGetComponent(out MeshRenderer _)) return NullError(nameof(MeshRenderer));
+            if (!TryGetComponent(out MeshCollider _)) return NullError(nameof(MeshCollider));
+            if (!TryGetComponent(out MeshRenderer _)) return NullError(nameof(MeshRenderer));
+            if (!TryGetComponent(out MeshFilter _)) return NullError(nameof(MeshFilter));
 
             if (TryGetComponent<WitchPaintableBrush>(out var b))
                 return Error($"{b.BehaviourName}는 {BehaviourName}의 자식이어야 합니다.");
