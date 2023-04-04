@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -14,12 +15,16 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
+        [Header("스폰 포인트(읽기 전용)")]
+        [SerializeField] private WitchSpawnPoint spawnPoint;
+        
         [Header("옵션")] 
         [SerializeField, Range(1, 5)] private float jumpForce = 1;
         [SerializeField, Range(-3,-12)] private float gravity = -12f;
 
         public float JumpForce => jumpForce;
         public float Gravity => gravity;
+        public Transform SpawnPoint => spawnPoint.transform;
         
         public List<WitchBehaviour> Behaviours { get; private set; }
 
@@ -36,6 +41,8 @@ namespace WitchCompany.Toolkit.Module
             // 요소 검색
             Behaviours = transform.GetComponentsInChildren<WitchBehaviour>(true).ToList();
             Behaviours.Remove(this);
+
+            spawnPoint = Behaviours.Find(x => x.GetType() == typeof(WitchSpawnPoint)) as WitchSpawnPoint;
             
             // 요소 카운팅
             BehaviourCounter ??= new Dictionary<Type, (WitchBehaviour obj, int count)>();
