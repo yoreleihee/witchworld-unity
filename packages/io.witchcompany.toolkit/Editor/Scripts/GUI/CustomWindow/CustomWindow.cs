@@ -24,7 +24,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         public static GUIStyle logButtonStyle;
         
         [MenuItem ("WitchToolkit/Witch Creator Toolkit")]
-        private static void ShowWitchToolKit () {
+        private static void WitchToolKit () {
             EditorWindow window = GetWindow(typeof(CustomWindow));
             window.titleContent = new GUIContent("Witch Creator Toolkit");
             window.minSize = new Vector2(518, 600);

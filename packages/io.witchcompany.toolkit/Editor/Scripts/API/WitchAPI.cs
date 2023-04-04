@@ -117,26 +117,65 @@ namespace WitchCompany.Toolkit.Editor.API
                 },
                 manifest = manifest
             };
+
+            var form = new List<IMultipartFormSection>
+            {
+                new MultipartFormDataSection("json", JsonConvert.SerializeObject(body), "application/json"),
+                new MultipartFormFileSection("image", bundleData, option.BundleKey, "application/octet-stream"),
+                new MultipartFormFileSection("bundle", thumbnailData, option.ThumbnailKey, "image/jpg")
+            };
+            
+            var response = await Request<JPublishResponse>(new RequestHelper
+            {
+                Method = "POST",
+                Uri = ApiConfig.URL("v2/toolkits/unity"),
+                Headers = ApiConfig.TokenHeader(auth.refreshToken),
+                FormSections = form
+            });
+            
+            return response.success;
+        }
+        
+        public static async UniTask<JAuthBlockInfo> RegisterBlock(BlockPublishOption option, JLanguageString blockName)
+        {
+            var auth = AuthConfig.Auth;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return null;
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
+            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);  // todo : 에디터에서 파일 선택
+            
+            var body = new JRegisterBlockData
+            {
+                // 임시 데이터
+                unityKeyId = EditorTest.UnitykeyId,
+                type = BlockType.Community,
+                theme = option.theme,
+                createUserNickname = AuthConfig.NickName,
+                name = blockName
+            };
             
             var form = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("json", JsonConvert.SerializeObject(body), "application/json"),
-                new MultipartFormFileSection("file1", bundleData, option.BundleKey, "application/octet-stream"),
-                new MultipartFormFileSection("file2", thumbnailData, option.ThumbnailKey, "image/jpg")
+                new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg")
             };
             
-             var response = await Request<JPublishResponse>(new RequestHelper
-             {
-                 Method = "POST",
-                 Uri = ApiConfig.URL("v2/toolkits/unity"),
-                 Headers = ApiConfig.TokenHeader(auth.refreshToken),
-                 FormSections = form
-             });
-
-             return response.success;
+            // Debug.Log("토큰 : " + auth.accessToken);
+            // Debug.Log("json : " + JsonConvert.SerializeObject(body));
+            // Debug.Log("썸네일 키 : " + option.ThumbnailKey);
+            
+            
+            var response = await Request<JAuthBlockInfo>(new RequestHelper
+            {
+                Method = "POST",
+                Uri = ApiConfig.URL("v2/toolkits/blocks"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken),
+                FormSections = form
+            });
+            
+            return response.success ? response.payload : null;
         }
     }
-    
+
     public static partial class WitchAPI
     {
         private static async UniTask<JResponse<T>> AuthSafeRequest<T>(RequestHelper helper)

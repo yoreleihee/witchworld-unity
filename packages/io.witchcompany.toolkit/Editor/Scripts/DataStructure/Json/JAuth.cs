@@ -9,5 +9,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         public long accessExpire;
         public string refreshToken;
         public long refreshExpire;
+        public JRegisterBlockData adminBlockData;
     }
 }

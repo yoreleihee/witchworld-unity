@@ -13,16 +13,16 @@ namespace WitchCompany.Toolkit.Editor
         [MenuItem("WitchToolkit/Permission")]
         public static async void Login()
         {
-            var json = await WitchAPI.Login("kmkim@witchcompany.io", "Witch00!");
+            var json = await WitchAPI.Login("ohju96@naver.com", "12DHwngus!!");
+            AuthConfig.Auth = json;
+            
             Debug.Log(JsonConvert.SerializeObject(json));
             Debug.Log(CommonTool.TimeStampToDateTime(json.accessExpire).ToString("u"));
             Debug.Log(CommonTool.TimeStampToDateTime(json.refreshExpire).ToString("u"));
-            
-            Debug.Log("권한:" + await WitchAPI.CheckPermission());
         }
         
          [MenuItem("WitchToolkit/Upload")]
-        public static async void Refresh()
+        public static async void Upload()
         {
             var scn = AssetTool.GetSelectedAsset() as SceneAsset;
             var option = new BlockPublishOption
@@ -37,7 +37,7 @@ namespace WitchCompany.Toolkit.Editor
                 toolkitVersion = ToolkitConfig.WitchToolkitVersion,
                 crc = "3435501116",
             };
-
+            
             await WitchAPI.UploadBlock(option, manifest);
         }
         //

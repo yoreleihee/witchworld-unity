@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -73,21 +74,45 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return null;
         }
 
-        private static string ValidateBlacklist(Scene scene)
+        // private static string ValidateBlacklist(Scene scene)
+        // {
+        //     const string prefix = "잘못된 컴포넌트 포함: ";
+        //     
+        //     var rootObject = scene.GetRootGameObjects()[0].transform;
+        //     var children = HierarchyTool.GetAllChildren(rootObject);
+        //
+        //     foreach (var tr in children)
+        //     {
+        //         if(tr.TryGetComponent(out Camera cam))
+        //             return prefix + $"카메라를 포함할 수 없습니다({cam.name})";
+        //
+        //         if (tr.TryGetComponent(out SpriteRenderer spriteRenderer))
+        //             return prefix + $"Sprite Renderer는 포함할 수 없습니다({spriteRenderer.gameObject.name})";
+        //     }
+        //
+        //     return null;
+        // }
+        
+        private static ValidationReport ValidateBlacklist(Scene scene)
         {
             const string prefix = "잘못된 컴포넌트 포함: ";
             
+            var report = new ValidationReport();
             var rootObject = scene.GetRootGameObjects()[0].transform;
             var children = HierarchyTool.GetAllChildren(rootObject);
 
             foreach (var tr in children)
             {
-                if(tr.TryGetComponent(out Camera cam))
-                    return prefix + $"카메라를 포함할 수 없습니다({cam.name})";
+                if (tr.TryGetComponent(out Camera cam))
+                    report.Append($"{prefix}카메라를 포함할 수 없습니다 ({cam.name})", ValidationTag.TagBlackList, cam);
+
+                if (tr.TryGetComponent(out SpriteRenderer spriteRenderer))
+                    report.Append($"{prefix}Sprite Renderer는 포함할 수 없습니다 ({spriteRenderer.name})", ValidationTag.TagBlackList, spriteRenderer);
             }
 
-            return null;
+            return report;
         }
+        
 
         private static ValidationReport ValidateWitchBehaviours()
         {
