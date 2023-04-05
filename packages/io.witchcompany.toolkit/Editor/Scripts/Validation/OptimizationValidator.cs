@@ -40,7 +40,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             //  라이트맵 검사
             var lightMapSize = GetLightMapMB();
-            if (lightMapSize >= OptimizationConfig.MaxLightmapMb)
+            if (lightMapSize > OptimizationConfig.MaxLightmapMb)
             {
                 var error = new ValidationError($"Total Light Map Size : {lightMapSize} / {OptimizationConfig.MaxLightmapMb} MB\n모든 Light Map의 최대 크기는 {OptimizationConfig.MaxLightmapMb} MB입니다. Scene에 적용된 Light Map을 조절해주세요.", ValidationTag.TagLightmap);
                 validationReport.Append(error);
@@ -56,7 +56,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             //  유니크 머티리얼 검사
             var materialCount = GetUniqueMaterialCount();
-            if (materialCount >= OptimizationConfig.MaxUniqueMaterials)
+            if (materialCount > OptimizationConfig.MaxUniqueMaterials)
             {
                 var error = new ValidationError($"Unique Material Count : {materialCount} / {OptimizationConfig.MaxUniqueMaterials}\nMaterial의 최대 개수는 {OptimizationConfig.MaxUniqueMaterials}개입니다. Scene 내에 적용된 Material의 수를 조절해주세요.", ValidationTag.TagMaterial);
                 validationReport.Append(error);
