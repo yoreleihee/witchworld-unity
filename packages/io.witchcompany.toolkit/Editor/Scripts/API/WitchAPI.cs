@@ -284,7 +284,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 Log($"{helper.Method} Response ({helper.Uri})\n" + $"{request.downloadHandler?.text}");
                 return JsonConvert.DeserializeObject<JResponse<T>>(request.downloadHandler.text);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
                 
