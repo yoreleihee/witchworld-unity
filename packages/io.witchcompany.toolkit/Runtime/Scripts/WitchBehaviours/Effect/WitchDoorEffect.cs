@@ -13,7 +13,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public override int MaximumCount => 16;
 
         [Header("플레이어를 인지할 Trigger"), SerializeField]
-        private Collider playerEnterTrigger;
+        private SphereCollider playerEnterTrigger;
         [Header("움직일 문 (static이면 안됨)"), SerializeField]
         private Transform targetDoor;
         [Header("문이 움직이는 거리"), SerializeField]
@@ -21,7 +21,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         [Header("문이 움직이는 시간(초)"), SerializeField, Range(0.01f, 10f)]
         private float durationSec = 0.4f;
 
-        public Collider PlayerEnterTrigger => playerEnterTrigger;
+        public SphereCollider PlayerEnterTrigger => playerEnterTrigger;
         public Transform TargetDoor => targetDoor;
         public Vector3 MoveAmount => moveAmount;
         public float DurationSec => durationSec;
@@ -33,7 +33,9 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
             if (targetDoor == null) return NullError(nameof(targetDoor));
 
             if (!transform.HasChild(playerEnterTrigger)) return ChildError(nameof(playerEnterTrigger));
-            if (!transform.HasChild(targetDoor)) return ChildError(nameof(targetDoor));
+            if (!transform.HasChild(targetDoor, false)) return ChildError(nameof(targetDoor));
+            if (playerEnterTrigger.gameObject == targetDoor.gameObject)
+                return Error("playerEnterTrigger와 targetDoor는 다른 오브젝트여야 합니다.");
 
             if (targetDoor.gameObject.isStatic)
                 return new ValidationError($"{name}의 움직일 문({targetDoor.name})은 Static일 수 없습니다.", ValidationTag.Script, targetDoor);
