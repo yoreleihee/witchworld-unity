@@ -1,6 +1,8 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.API;
+using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
 
@@ -11,16 +13,29 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static SceneAsset blockScene;
         private static BlockTheme blockTheme;
         public static JBuildReport buildReport;
+        private static UploadState uploadResult = UploadState.None;
+        
+        private enum UploadState
+        {
+            None,
+            Uploading,
+            Success,
+            Failed
+        }
 
         public static void ShowPublish()
         {
             // 빌드 정보
-            DrawConfig();
+            DrawPublish();
             
             GUILayout.Space(10);
-            
-            if(buildReport != null)
+
+            if (buildReport != null)
+            {
                 DrawReport();
+                GUILayout.Space(10);
+                DrawUpload();
+            }
         }
 
         public static BlockPublishOption GetOption()
@@ -33,7 +48,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         /// - Scriptable Object 적용 칸
         /// - 빌드 버튼
         /// </summary>
-        private static void DrawConfig()
+        private static void DrawPublish()
         {
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
@@ -44,6 +59,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
             if (GUILayout.Button("Publish"))
             {
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
+
+                if (buildReport.result == JBuildReport.Result.Success)
+                {
+                    Upload();
+                    
+                }
             }
         }
         
@@ -77,6 +98,32 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
             
             EditorGUILayout.EndVertical();
+        }
+
+        private static void DrawUpload()
+        {
+            GUILayout.Label("Upload", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("box");
+            
+            EditorGUILayout.LabelField("Result", uploadResult.ToString());
+
+            EditorGUILayout.EndVertical();
+        }
+        public static async void Upload()
+        {
+            var option = GetOption();
+
+            var manifest = new JManifest
+            {
+                unityVersion = ToolkitConfig.UnityVersion,
+                toolkitVersion = ToolkitConfig.WitchToolkitVersion,
+                crc = "1017531261",
+            };
+            uploadResult = UploadState.Uploading;
+            
+            var response = await WitchAPI.UploadBlock(option, manifest);
+
+            uploadResult = response ? UploadState.Success : UploadState.Failed;
         }
     }
 }

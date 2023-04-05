@@ -127,11 +127,6 @@ namespace WitchCompany.Toolkit.Editor.API
                 new MultipartFormFileSection("bundle", bundleData, option.BundleKey, ""),
                 new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg")
             };
-            
-            Debug.Log("토큰 : " + auth.accessToken);
-            Debug.Log("json : " + json);
-            
-            
             var response = await Request<JPublishResponse>(new RequestHelper
             {
                 Method = "POST",
@@ -140,7 +135,6 @@ namespace WitchCompany.Toolkit.Editor.API
                 FormSections = form
             });
             
-            Debug.Log("message : " + response.message);
             return response.success;
         }
         
