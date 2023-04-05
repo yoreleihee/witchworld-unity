@@ -13,11 +13,11 @@ namespace WitchCompany.Toolkit.Runtime
                                               "입장 권한을 확인할 아이템을 지정해야 합니다.";
         public override string DocumentURL => "";
 
+        // [Header("팝업 제목"), SerializeField]
+        // private string popupTitle;
 
         [Header("입장 권할을 지정할 아이템의 키"), SerializeField]
         private int itemKey;
-        [Header("팝업 제목"), SerializeField]
-        private string popupTitle;
         [Header("설명 제목"), SerializeField]
         private string popupDescriptionTitle;
         [Header("설명"), SerializeField]
@@ -25,8 +25,8 @@ namespace WitchCompany.Toolkit.Runtime
         [Header("구경하기 링크"), SerializeField]
         private string url;
  
+        // public string PopupTitle => popupTitle;
         public int ItemKey => itemKey;
-        public string PopupTitle => popupTitle;
         public string PopupDescriptionTitle => popupDescriptionTitle;
         public string PopupDescription => popupDescription;
         public string Url => url;
@@ -34,8 +34,8 @@ namespace WitchCompany.Toolkit.Runtime
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (string.IsNullOrEmpty(popupTitle))
-                return Error($"프라이빗 도어의 [팝업 제목]을 설정해주세요.");
+            // if (string.IsNullOrEmpty(popupTitle))
+            //     return Error($"프라이빗 도어의 [팝업 제목]을 설정해주세요.");
             
             if (string.IsNullOrEmpty(popupDescriptionTitle))
                 return Error($"프라이빗 도어의 [설명 제목]을 설정해주세요.");
