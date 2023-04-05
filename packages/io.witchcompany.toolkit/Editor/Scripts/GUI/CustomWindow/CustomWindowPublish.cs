@@ -8,7 +8,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowPublish
     {
-        private static SceneAsset targetScene;
+        private static SceneAsset blockScene;
+        private static BlockTheme blockTheme;
         public static JBuildReport buildReport;
 
         public static void ShowPublish()
@@ -24,9 +25,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         public static BlockPublishOption GetOption()
         {
-            // targetScene = EditorGUILayout.ObjectField("Scene", targetScene, typeof(SceneAsset), false) as SceneAsset;
-            var targetTheme = BlockTheme.Indoor;
-            return new BlockPublishOption { targetScene = targetScene, theme = BlockTheme.Indoor };
+            return new BlockPublishOption { targetScene = blockScene, theme = blockTheme };
         }
 
         /// <summary>
@@ -38,7 +37,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
         {
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
-            targetScene = EditorGUILayout.ObjectField("Scene", targetScene, typeof(SceneAsset), false) as SceneAsset;
+            blockScene = EditorGUILayout.ObjectField("Scene", blockScene, typeof(SceneAsset), false) as SceneAsset;
+            blockTheme = (BlockTheme)EditorGUILayout.EnumPopup("Theme", blockTheme);
             
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Publish"))
