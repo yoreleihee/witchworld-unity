@@ -64,9 +64,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             /* ValidationCheck 버튼 눌렸을 때만 진행 */
             validationReport.Append(ValidateIndividualMeshVertex());
-            // validationReport.Append(ValidateMeshCollider());
-            // validationReport.Append(ValidateRealtimeLight());
+            validationReport.Append(ValidateMeshCollider());
+            validationReport.Append(ValidateRealtimeLight());
             validationReport.Append(ValidateReflectionProbe());
+            validationReport.Append(ScriptRuleValidator.ValidateMissingComponents(SceneManager.GetActiveScene()));
             
             return validationReport;
         }

@@ -141,7 +141,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         }
 
 
-        private static ValidationReport ValidateMissingComponents(Scene scene)
+        public static ValidationReport ValidateMissingComponents(Scene scene)
         {
             var report = new ValidationReport();
             
@@ -158,7 +158,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     if (c == null)
                     {
                         // 한 오브젝트에서 하나라도 검출되면 다음으로 넘어감
-                        var error = new ValidationError($"찾을 수 없는 스크립트 포함됨 : {tr.gameObject.name}", "Missing Script", tr);
+                        var error = new ValidationError($"찾을 수 없는 스크립트가 포함되어 있습니다. {tr.gameObject.name}", "Missing Script", tr);
+                        report.Append(error);
                         break;
                     }
                 }
