@@ -27,8 +27,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static void WitchToolKit () {
             EditorWindow window = GetWindow(typeof(CustomWindow));
             window.titleContent = new GUIContent("Witch Creator Toolkit");
-            window.minSize = new Vector2(518, 600);
-            window.maxSize = new Vector2(518, 2000);
+            window.minSize = new Vector2(MinWindowWidth, MinWindowHeight);
+            window.maxSize = new Vector2(MaxWindowWidth, MaxWindowHeight);
             InitialStyles();
             window.Show();
         }
@@ -40,7 +40,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             logTextStyle = new GUIStyle();
             logTextStyle.normal.textColor = Color.white;
             logTextStyle.active.textColor = Color.white;
-            logTextStyle.fixedWidth = MinWindowWidth - 10;
+            logTextStyle.fixedWidth = MinWindowWidth-20;
             logTextStyle.fixedHeight = LogHeight;
             logTextStyle.margin = new RectOffset(0, 0, 0, 3);
             logTextStyle.padding = new RectOffset(5, 5, 5, 5);
@@ -52,7 +52,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             logButtonStyle.active.background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f));
             logButtonStyle.normal.textColor = Color.white;
             logButtonStyle.active.textColor = Color.white;
-            logButtonStyle.fixedWidth = MinWindowWidth - 10;
+            logButtonStyle.fixedWidth = MinWindowWidth-20;
             logButtonStyle.fixedHeight = LogHeight;
             logButtonStyle.margin = new RectOffset(0, 0, 0, 3);
             logButtonStyle.padding = new RectOffset(5, 5, 5, 5);

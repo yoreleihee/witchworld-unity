@@ -67,7 +67,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             validationReport.Append(ValidateMeshCollider());
             validationReport.Append(ValidateRealtimeLight());
             validationReport.Append(ValidateReflectionProbe());
-            validationReport.Append(ScriptRuleValidator.ValidateMissingComponents(SceneManager.GetActiveScene()));
+            // validationReport.Append(ScriptRuleValidator.ValidateMissingComponents(SceneManager.GetActiveScene()));
             
             return validationReport;
         }
@@ -133,11 +133,12 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return (meshes, totalVertexCount);
         }
 
-        /// <summary> 라이트맵 용량 </summary>
-        public static int GetLightMapMB()
+        /// <summary> 라이트맵 용량 : 소수점 아래 3번째 자리까지 표시</summary>
+        public static double GetLightMapMB()
         {
-            long bytes = 0;
+            double bytes = 0;
             var lightmaps = LightmapSettings.lightmaps;
+            
             foreach (var lightmap in lightmaps)
             {
                 if (lightmap.lightmapColor != null)
@@ -158,11 +159,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     bytes += sizeInBytes;
                 }
             }
-            return (int)bytes / 1024 / 1024;
+            return Math.Round(bytes /1024 / 1024, 3);
         }
         
-        /// <summary> 텍스쳐 용량 </summary>
-        public static int GetTextureMB()
+        /// <summary> 텍스쳐 용량 : 소숫점 아래 3번째 자리까지 표시</summary>
+        public static double GetTextureMB()
         {
             var foundTextures = new List<Texture>();
             var renderers  = GameObject.FindObjectsOfType<Renderer>(true);
@@ -188,14 +189,14 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             
             // 텍스트 사이즈 계산 - 중복 제거
-            long bytes = 0;
+            double bytes = 0;
             foreach (Texture texture in foundTextures.Distinct())
             {
                 long sizeInBytes = Profiler.GetRuntimeMemorySizeLong(texture);
                 bytes += sizeInBytes;
             }
             
-            return (int)(bytes / 1024 / 1024);;
+            return Math.Round(bytes /1024 / 1024, 3);
         }
 
         /// <summary> 유니크 머테리얼 개수 </summary>
@@ -224,7 +225,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 if (meshCol.sharedMesh != null)
                 {
-                    var error = new ValidationError($"Object Name : {meshCol.gameObject.name}\nMesh collider가 적용된 오브젝트는 배치할 수 없습니다.", ValidationTag.TagMeshCollider, meshCol);
+                    var error = new ValidationError($"Object : {meshCol.gameObject.name}\nMesh collider가 적용된 오브젝트는 배치할 수 없습니다.", ValidationTag.TagMeshCollider, meshCol);
                     report.Append(error);
                 }
             }
@@ -236,15 +237,30 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             var report = new ValidationReport();
             var lights = GameObject.FindObjectsOfType<Light>(true);
-
+            var realtimeLights = new List<Light>();
+            
             foreach (var light in lights)
             {
                 if(light.lightmapBakeType != LightmapBakeType.Baked)
                 {
-                    var error = new ValidationError($"Object Name : {light.name}\nLight Mode가 RealTime인 Light는 배치할 수 없습니다.", ValidationTag.TagRealtimeLight, light);
-                    report.Append(error);
+                    realtimeLights.Add(light);
                 }
             }
+
+            if (realtimeLights.Count > OptimizationConfig.MaxRealtimeLight)
+            {
+                var errorMessage =
+                    $"Realtime Light의 최대 개수는 {OptimizationConfig.MaxRealtimeLight}개입니다. ({realtimeLights.Count} / {OptimizationConfig.MaxRealtimeLight})\n"+
+                    "Scene 내에 적용된 Realtime Light의 수를 조절해주세요.";
+                report.Append(new ValidationError(errorMessage, ValidationTag.TagRealtimeLight));
+
+                foreach (var light in realtimeLights)
+                {
+                    // todo : 라이트 오브젝트 나열
+                    report.Append(new ValidationError($"Object : {light.name}", ValidationTag.TagRealtimeLight, light));
+                }
+            }
+            
             return report;
         }
         
