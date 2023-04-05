@@ -9,7 +9,7 @@ namespace WitchCompany.Toolkit.Module
     {
         public override string BehaviourName => "페인트 브러쉬";
 
-        public override string Description => "낙서 브러쉬의 색상을 변경할 수 있는 요소입니다.\n" +
+        public override string Description => "페인트 통 등 낙서 브러쉬의 색상을 변경할 수 있는 요소입니다.\n" +
                                               "낙서 벽의 하위 오브젝트로 두어야 합니다.\n" +
                                               "콜라이더가 필요합니다.";
 

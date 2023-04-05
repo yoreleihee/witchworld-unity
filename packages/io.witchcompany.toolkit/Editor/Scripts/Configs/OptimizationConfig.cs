@@ -17,6 +17,7 @@
         
         public const uint MaxIndividualVerts = 16 * K;
         public const uint MaxVerts = 400 * K;
+        public const uint MaxMeshColliderObject = 1;
         
         public const uint MaxUniqueMaterials = 80;
         public const uint MaxSharedTextureMb = 200;

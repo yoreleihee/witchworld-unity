@@ -220,13 +220,22 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             var report = new ValidationReport();
             
-            var meshColliders = GameObject.FindObjectsOfType<MeshCollider>(true).ToArray();
-            foreach (var meshCol in meshColliders)
+            var meshColliders = GameObject.FindObjectsOfType<MeshCollider>(true);
+
+            if (meshColliders.Length > 1)
             {
-                if (meshCol.sharedMesh != null)
+                var errorMessage = $"Realtime Light의 최대 개수는 {OptimizationConfig.MaxMeshColliderObject}개입니다." + 
+                                   $" ({meshColliders.Length} / {OptimizationConfig.MaxMeshColliderObject})\n" +
+                                   $"Scene 내에 적용된 Mesh Collider의 수를 조절해주세요.";
+                report.Append(new ValidationError(errorMessage, ValidationTag.TagMeshCollider));
+                
+                foreach (var meshCol in meshColliders)
                 {
-                    var error = new ValidationError($"Object : {meshCol.gameObject.name}\nMesh collider가 적용된 오브젝트는 배치할 수 없습니다.", ValidationTag.TagMeshCollider, meshCol);
-                    report.Append(error);
+                    if (meshCol.sharedMesh != null)
+                    {
+                        var error = new ValidationError($"Object : {meshCol.gameObject.name}", ValidationTag.TagMeshCollider, meshCol);
+                        report.Append(error);
+                    }
                 }
             }
             return report;
@@ -250,8 +259,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
             if (realtimeLights.Count > OptimizationConfig.MaxRealtimeLight)
             {
                 var errorMessage =
-                    $"Realtime Light의 최대 개수는 {OptimizationConfig.MaxRealtimeLight}개입니다. ({realtimeLights.Count} / {OptimizationConfig.MaxRealtimeLight})\n"+
-                    "Scene 내에 적용된 Realtime Light의 수를 조절해주세요.";
+                    $"Realtime Light의 최대 개수는 {OptimizationConfig.MaxRealtimeLight}개입니다." +
+                    $"({realtimeLights.Count} / {OptimizationConfig.MaxRealtimeLight})\n" +
+                    $"Scene 내에 적용된 Realtime Light의 수를 조절해주세요.";
                 report.Append(new ValidationError(errorMessage, ValidationTag.TagRealtimeLight));
 
                 foreach (var light in realtimeLights)
