@@ -86,7 +86,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
                     if (fullType == null)
                     {
-                        var error = new ValidationError($"Object : {c.name}\n{c.GetType()}은 배치할 수 없습니다.", "Component", c);
+                        var typeName = c.GetType().FullName.Split(".")[^1];
+                        var error = new ValidationError($"Object : {c.name}\n{typeName} 컴포넌트는 배치할 수 없습니다.", "Component", c);
                         report.Append(error);
                     }
                 }
