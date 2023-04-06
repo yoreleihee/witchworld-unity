@@ -17,10 +17,13 @@ namespace WitchCompany.Toolkit.Module
         private Renderer mediaRenderer;
         [Header("유저 클릭에 반응할 콜라이더"), SerializeField]
         private Collider interactionCollider;
+        [Header("전시물 인덱스"), SerializeField]
+        private int index;
 
         public Renderer MediaRenderer => mediaRenderer;
         public Collider InteractionCollider => interactionCollider;
-        
+        public int Index => index;
+
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
