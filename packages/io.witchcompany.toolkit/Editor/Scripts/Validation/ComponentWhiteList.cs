@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Validation;
 
@@ -39,6 +40,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "CanvasRenderer",
             "RectTransform",
             "SpriteMask",
+            "CanvasScaler",
+            "GraphicRaycaster",
             // Text Mesh Pro
             "InlineGraphic",
             "InlineGraphicManager",
@@ -94,6 +97,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     }
                 }
             }
+            
             return report;
         }
     }
