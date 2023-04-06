@@ -59,10 +59,18 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 if (validationReport.Append(ScriptRuleValidator.ValidationCheck(option)).result != ValidationReport.Result.Success)
                     throw new Exception("씬 구조 유효성 검사 실패");
                 Log("씬 구조 유효성 검사 성공!");
+                
+                // 오브젝트 검증
+                if(validationReport.Append(ObjectValidator.ValidationCheck()).result != ValidationReport.Result.Success)
+                    throw new Exception("오브젝트 유효성 검사 실패");
+                Log("오브젝트 유효성 검사 성공!");
 
                 // Static 풀어주기
-                StaticRevertTool.SaveAndClearFlags();
+                if(validationReport.Append(StaticRevertTool.SaveAndClearFlags()).result != ValidationReport.Result.Success)
+                    throw new Exception("static 캐싱 실패");
                 EditorSceneManager.SaveOpenScenes();
+
+                return buildReport;
 
                 //// 에셋번들 빌드
                 // 번들 전부 지우기
@@ -90,8 +98,9 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 buildReport.totalSizeByte = AssetTool.GetFileSizeByte(buildReport.exportPath);
                 buildReport.BuildEndedAt = DateTime.Now;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.LogException(e);
                 foreach (var err in validationReport.errors) 
                     Debug.LogError(err.message, err.context);
             }

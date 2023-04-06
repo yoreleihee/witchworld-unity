@@ -16,5 +16,6 @@
         
         // 유효성 검사
         public const string TagBlackList = "Black List";
+        public const string TagBadObject = "Bad Object";
     }
 }

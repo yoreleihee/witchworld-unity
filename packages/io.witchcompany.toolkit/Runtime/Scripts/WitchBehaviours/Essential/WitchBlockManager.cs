@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using WitchCompany.Toolkit.Attribute;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -29,6 +30,14 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         /// <summary>위치 요소를 카운팅한 딕셔너리</summary>
         public Dictionary<Type, (WitchBehaviour behaviour, int count)> BehaviourCounter;
+
+        public override ValidationError ValidationCheck()
+        {
+            if (spawnPoint == null) return NullError(nameof(spawnPoint));
+            if (gravity is < 0 or > 1) return Error("gravity는 0과 1 사이어야 합니다.");
+            
+            return null;
+        }
 
         /// <summary>포함한 위치 요소를 모두 검색하고, 카운팅한다.</summary>
         public void FindWitchBehaviours()
@@ -58,7 +67,6 @@ namespace WitchCompany.Toolkit.Module
         {
             if(!Application.isPlaying) FindWitchBehaviours();
         }
-
         private void Reset()
         {
             if(!Application.isPlaying) FindWitchBehaviours();

@@ -32,9 +32,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Check"))
             {
-                validationReport = OptimizationValidator.ValidationCheck();
+                validationReport = WhiteListValidator.ValidationCheck();
+                validationReport.Append(OptimizationValidator.ValidationCheck());
                 validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
-                validationReport.Append(WhiteListValidator.ValidationCheck());
+                validationReport.Append(ObjectValidator.ValidationCheck());
                 
                 // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()
                 CustomWindow.InitialStyles();
