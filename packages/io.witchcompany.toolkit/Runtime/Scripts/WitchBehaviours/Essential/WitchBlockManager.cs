@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using WitchCompany.Toolkit.Attribute;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -14,18 +15,16 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
-        [Header("스폰 포인트(읽기 전용)")]
-        [SerializeField] private WitchSpawnPoint spawnPoint;
-        
-        [Header("옵션")] 
-        [SerializeField, Range(1, 5)] private float jumpForce = 1;
-        [SerializeField, Range(-3,-12)] private float gravity = -12f;
+        [Header("읽기 전용")] 
+        [SerializeField, ReadOnly] private List<WitchBehaviour> behaviours;
+        [SerializeField, ReadOnly] private WitchSpawnPoint spawnPoint;
 
-        public float JumpForce => jumpForce;
-        public float Gravity => gravity;
-        public Transform SpawnPoint => spawnPoint.transform;
+        [Header("중력값")]
+        [SerializeField, Range(0.1f, 1f)] private float gravity = 1f;
         
-        public List<WitchBehaviour> Behaviours { get; private set; }
+        public float GravityRatio => gravity;
+        public Transform SpawnPoint => spawnPoint.transform;
+        public List<WitchBehaviour> Behaviours => behaviours;
 
 #if UNITY_EDITOR
         /// <summary>위치 요소를 카운팅한 딕셔너리</summary>
@@ -34,19 +33,18 @@ namespace WitchCompany.Toolkit.Module
         /// <summary>포함한 위치 요소를 모두 검색하고, 카운팅한다.</summary>
         public void FindWitchBehaviours()
         {
-            // 위치 초기화
-            transform.position = Vector3.zero;
-         
+            if(Application.isPlaying) return; 
+            
             // 요소 검색
-            Behaviours = transform.GetComponentsInChildren<WitchBehaviour>(true).ToList();
-            Behaviours.Remove(this);
+            behaviours = transform.GetComponentsInChildren<WitchBehaviour>(true).ToList();
+            behaviours.Remove(this);
 
-            spawnPoint = Behaviours.Find(x => x.GetType() == typeof(WitchSpawnPoint)) as WitchSpawnPoint;
+            spawnPoint = behaviours.Find(x => x.GetType() == typeof(WitchSpawnPoint)) as WitchSpawnPoint;
             
             // 요소 카운팅
             BehaviourCounter ??= new Dictionary<Type, (WitchBehaviour obj, int count)>();
             BehaviourCounter.Clear();
-            foreach (var behaviour in Behaviours)
+            foreach (var behaviour in behaviours)
             {
                 // 각 요소별 카운팅
                 var type = behaviour.GetType();
@@ -56,9 +54,15 @@ namespace WitchCompany.Toolkit.Module
                     BehaviourCounter[type] = (behaviour, BehaviourCounter[type].count + 1);
             }
         }
+        private void OnValidate()
+        {
+            if(!Application.isPlaying) FindWitchBehaviours();
+        }
 
-        private void OnValidate() => FindWitchBehaviours();
-        private void Reset() => FindWitchBehaviours();
+        private void Reset()
+        {
+            if(!Application.isPlaying) FindWitchBehaviours();
+        }
 #endif
     }
 }

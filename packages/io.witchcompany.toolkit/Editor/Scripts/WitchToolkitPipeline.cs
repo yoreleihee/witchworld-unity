@@ -56,6 +56,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
                 //return buildReport;
                 
+                /// TODO: Static 저장해두고, 전부 해제하기
+                
                 //// 에셋번들 빌드
                 // 번들 전부 지우기
                 AssetBundleTool.ClearAllBundles();
@@ -67,6 +69,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 // 번들 빌드
                 var manifest = AssetBundleTool.BuildAssetBundle(BuildTarget.StandaloneWindows64);
                 Log("번들 빌드 성공!");
+                
+                /// TODO: Static 되돌려주기
 
                 // 업로드 룰 검증
                 if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, manifest)).result != ValidationReport.Result.Success)

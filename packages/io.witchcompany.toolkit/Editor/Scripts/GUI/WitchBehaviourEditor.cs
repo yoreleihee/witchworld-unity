@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Module;
@@ -81,6 +80,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private void InitializeInstance()
         {
+            if(Application.isPlaying) return;
+            
             if(_isInstanceInitialized) return;
             _isInstanceInitialized = true;
 
@@ -111,7 +112,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     GUILayout.Label(editorTarget.Description, _descriptionStyle);
                     GUILayout.Space(12);
                     // 개수 렌더링
-                    if (_currentBlockManager != null && _currentBlockManager.BehaviourCounter.ContainsKey(editorTarget.GetType()))
+                    if (!Application.isPlaying && _currentBlockManager != null && _currentBlockManager.BehaviourCounter.ContainsKey(editorTarget.GetType()))
                     {
                         var count = editorTarget.MaximumCount <= 0 ? "제한없음" : 
                             $"{_currentBlockManager.BehaviourCounter[editorTarget.GetType()].count}/{editorTarget.MaximumCount} 개";
