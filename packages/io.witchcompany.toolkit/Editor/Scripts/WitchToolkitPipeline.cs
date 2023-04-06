@@ -54,23 +54,24 @@ namespace WitchCompany.Toolkit.Editor.Tool
                     throw new Exception("씬 구조 유효성 검사 실패");
                 Log("씬 구조 유효성 검사 성공!");
 
-                //return buildReport;
-                
-                /// TODO: Static 저장해두고, 전부 해제하기
-                
+                // Static 풀어주기
+                StaticRevertTool.SaveAndClearFlags();
+                EditorSceneManager.SaveOpenScenes();
+
                 //// 에셋번들 빌드
                 // 번들 전부 지우기
                 AssetBundleTool.ClearAllBundles();
                 // 번들 할당
                 var scenePath = AssetDatabase.GetAssetPath(option.targetScene);
                 var bundleName = option.BundleKey;
-                //var bundleName = option.Key;
                 AssetBundleTool.AssignAssetBundle(scenePath, bundleName);
                 // 번들 빌드
-                var manifest = AssetBundleTool.BuildAssetBundle(BuildTarget.StandaloneWindows64);
+                var manifest = AssetBundleTool.BuildAssetBundle(BuildTarget.WebGL);
                 Log("번들 빌드 성공!");
                 
-                /// TODO: Static 되돌려주기
+                // Static 되돌려주기
+                StaticRevertTool.RevertFlags();
+                //EditorSceneManager.SaveOpenScenes();
 
                 // 업로드 룰 검증
                 if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, manifest)).result != ValidationReport.Result.Success)

@@ -1,64 +1,62 @@
-using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using WitchCompany.Toolkit.Editor.DataStructure;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
     public static class StaticRevertTool
     {
-        private static List<Tuple<GameObject, StaticEditorFlags>> staticObjects;
-        // private static List<> staticObjects;
+        private static Dictionary<int, StaticEditorFlags> _staticObjects = new();
 
         /// <summary>
         /// static 오브젝트의 static 해제
         /// static flag 상태 저장
         /// </summary>
-        public static void Release(BlockPublishOption option)
+        public static void SaveAndClearFlags()
         {
-            try
-            {
-                Debug.Log("Static Release!!");
-                
-                staticObjects ??= new List<Tuple<GameObject, StaticEditorFlags>>();
-            
-                var transforms = GameObject.FindObjectsOfType<Transform>(true);
+            _staticObjects ??= new Dictionary<int, StaticEditorFlags>();
+            _staticObjects.Clear();
 
-                foreach (var tr in transforms)
-                {
-                    var go = tr.gameObject;
-                    if (go.isStatic)
-                    {
-                        // 기존 static 설정 상태 저장
-                        var flag = GameObjectUtility.GetStaticEditorFlags(go);
-                        var tuple = new Tuple<GameObject, StaticEditorFlags>(go, flag);
-                        staticObjects.Add(tuple);
-                        // static 해제
-                        GameObjectUtility.SetStaticEditorFlags(go, 0);
-                    }
-                }
-                
-            }
-            catch (Exception e)
+            foreach (var tr in GetAllTransforms())
             {
-                Console.WriteLine(e);
-                throw;
-            }
+                var go = tr.gameObject;
+                if (!go.isStatic) continue;
+                
+                // 기존 static 설정 상태 저장
+                var id = ObjectTool.GetLocalIdentifier(go);
+                var flag = GameObjectUtility.GetStaticEditorFlags(go);
 
+                // 저장
+                _staticObjects.Add(id, flag);
+                // static 해제
+                GameObjectUtility.SetStaticEditorFlags(go, 0);
+                //Debug.Log($"{go.name}({id}) : {flag.ToString()}");
+            }
         }
         
-        public static void Revert()
+        public static void RevertFlags()
         {
-            foreach (var obj in staticObjects)
+            if(_staticObjects is not {Count: > 0}) return;
+            
+            foreach (var tr in GetAllTransforms())
             {
-                // 게임오브젝트에 static 설정을 원래대로
-                GameObjectUtility.SetStaticEditorFlags(obj.Item1, obj.Item2);
+                var go = tr.gameObject;
+                var id = ObjectTool.GetLocalIdentifier(go);
+
+                if (_staticObjects.TryGetValue(id, out var flag))
+                {
+                    GameObjectUtility.SetStaticEditorFlags(go, flag);
+                    //Debug.Log($"{go.name}({id}) : {flag.ToString()}");
+                }
             }
-            staticObjects.Clear();
-            Debug.Log("Static Revert!!");
+        }
+
+        private static List<Transform> GetAllTransforms()
+        {
+            var scn = SceneManager.GetActiveScene();
+            var parent = scn.GetRootGameObjects()[0];
+            return HierarchyTool.GetAllChildren(parent.transform);
         }
     }
 }

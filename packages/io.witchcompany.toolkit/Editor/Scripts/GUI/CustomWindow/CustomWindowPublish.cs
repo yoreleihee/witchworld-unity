@@ -60,11 +60,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
 
-                if (buildReport.result == JBuildReport.Result.Success)
-                {
-                    Upload();
-                    
-                }
+                // if (buildReport.result == JBuildReport.Result.Success) Upload();
             }
         }
         

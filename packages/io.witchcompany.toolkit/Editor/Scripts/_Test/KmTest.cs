@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
@@ -21,25 +22,35 @@ namespace WitchCompany.Toolkit.Editor
             Debug.Log(CommonTool.TimeStampToDateTime(json.refreshExpire).ToString("u"));
         }
         
-         [MenuItem("WitchToolkit/Upload")]
-        public static async void Upload()
+        [MenuItem("WitchToolkit/SaveAndClearFlags")]
+        public static void Release()
         {
-            var scn = AssetTool.GetSelectedAsset() as SceneAsset;
-            var option = new BlockPublishOption
-            {
-                targetScene = scn,
-                theme = BlockTheme.Outdoor
-            };
-
-            var manifest = new JManifest
-            {
-                unityVersion = ToolkitConfig.UnityVersion,
-                toolkitVersion = ToolkitConfig.WitchToolkitVersion,
-                crc = "1017531261",
-            };
-            
-            await WitchAPI.UploadBlock(option, manifest);
+            StaticRevertTool.SaveAndClearFlags();
+            EditorSceneManager.SaveOpenScenes();
         }
+        
+        [MenuItem("WitchToolkit/RevertFlags")]
+        public static void Revert()
+        {
+            StaticRevertTool.RevertFlags();
+            EditorSceneManager.SaveOpenScenes();
+        }
+        
+        // var scn = AssetTool.GetSelectedAsset() as SceneAsset;
+        // var option = new BlockPublishOption
+        // {
+        //     targetScene = scn,
+        //     theme = BlockTheme.Outdoor
+        // };
+        //
+        // var manifest = new JManifest
+        // {
+        //     unityVersion = ToolkitConfig.UnityVersion,
+        //     toolkitVersion = ToolkitConfig.WitchToolkitVersion,
+        //     crc = "1017531261",
+        // };
+        //
+        // await WitchAPI.UploadBlock(option, manifest);
         //
         // // [MenuItem("WitchToolkit/Test_GetUserInfo")]
         // public static async void GetUserInfo()
