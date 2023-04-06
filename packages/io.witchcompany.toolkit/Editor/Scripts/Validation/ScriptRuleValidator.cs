@@ -118,17 +118,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
             foreach (var tr in children)
             {
                 var components = tr.GetComponents<Component>();
-                
-                foreach (var c in components)
+                if (components.Any(c => c == null))
                 {
-                    
-                    if (c == null)
-                    {
-                        // 한 오브젝트에서 하나라도 검출되면 다음으로 넘어감
-                        var error = new ValidationError($"Object : {tr.gameObject.name}\n찾을 수 없는 스크립트가 포함되어 있습니다.", "Missing Script", tr);
-                        report.Append(error);
-                        break;
-                    }
+                    var error = new ValidationError($"Object : {tr.gameObject.name}\n찾을 수 없는 스크립트가 포함되어 있습니다.", ValidationTag.TagMissingScript, tr);
+                    report.Append(error);
                 }
             }
             return report;

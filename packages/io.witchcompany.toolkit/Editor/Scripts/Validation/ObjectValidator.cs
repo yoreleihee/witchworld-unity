@@ -11,8 +11,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
     {
         public static ValidationReport ValidationCheck()
         {
-            return new ValidationReport()
-                .Append(ValidateObjectID());
+            // return new ValidationReport()
+            //     .Append(ValidateObjectID());
+            return null;
         }
 
         private static ValidationReport ValidateObjectID()
@@ -27,7 +28,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 var id = ObjectTool.GetLocalIdentifier(go);
 
                 if (id == 0)
-                    report.Append($"비정상적인 오브젝트가 존재합니다: {go.name}", ValidationTag.TagBadObject, go);
+                    report.Append($"비정상적인 오브젝트가 존재합니다: {go.name}({id})", ValidationTag.TagBadObject, go);
             }
 
             return report;

@@ -24,33 +24,27 @@ namespace WitchCompany.Toolkit.Editor.Tool
             _staticObjects.Clear();
 
             // 모은 오브젝트를 순회하며,
-            foreach (var tr in GetAllTransforms())
+            var transforms = GetAllTransforms();
+            for (var i = 0; i < transforms.Count; i++)
             {
                 // 게임오브젝트 가져오기
-                var go = tr.gameObject;
+                var go = transforms[i].gameObject;
                 // Static 이 아니라면 다음으로..
                 if (!go.isStatic) continue;
 
                 // 해당 오브젝트의 id 가져오기
-                var id = ObjectTool.GetLocalIdentifier(go);
                 // 해당 오브젝트의 static flag 가져오기
                 var flag = GameObjectUtility.GetStaticEditorFlags(go);
 
-                if (id == 0)
-                    report.Append($"비정상적인 오브젝트가 존재합니다: {go.name}", ValidationTag.TagBadObject, go);
-                else
+                // 캐싱 시도 후 플래그 해제
+                if (_staticObjects.TryAdd(i, flag))
                 {
-                    // 캐싱 시도
-                    if (_staticObjects.TryAdd(id, flag))
-                    {
-                        // static flag 해제
-                        GameObjectUtility.SetStaticEditorFlags(go, 0);   
-                    }
-                    else
-                    {
-                        report.Append($"static 캐싱에 실패했습니다: {go.name}", ValidationTag.TagBadObject, go);
-                    }
+                    //Debug.Log($"static 캐싱: {go.name}({i}): {flag}", go);
+                    GameObjectUtility.SetStaticEditorFlags(go, 0);
                 }
+                // 실패시,
+                else
+                    report.Append($"static 캐싱에 실패했습니다: {go.name}", ValidationTag.TagBadObject, go);
             }
 
             return report;
@@ -61,25 +55,21 @@ namespace WitchCompany.Toolkit.Editor.Tool
             // staticObjects가 없으면 종료
             if(_staticObjects is not {Count: > 0}) return;
             
-            Debug.Log($"4. static 복구 시작");
             // 모은 오브젝트를 순회하며,
-            foreach (var tr in GetAllTransforms())
+            var transforms = GetAllTransforms();
+            for (var i = 0; i < transforms.Count; i++)
             {
                 // 게임오브젝트 가져오기
-                var go = tr.gameObject;
-                // 해당 오브젝트의 id 가져오기
-                var id = ObjectTool.GetLocalIdentifier(go);
+                var go =  transforms[i].gameObject;
 
                 // 해당 오브젝트의 id가 staticObjects에 캐싱되어 있다면,
-                if (_staticObjects.TryGetValue(id, out var flag))
+                if (_staticObjects.TryGetValue(i, out var flag))
                 {
                     // static flag 되돌리기
+                    //Debug.Log($"static 복구: {go.name}({i}): {flag}", go);
                     GameObjectUtility.SetStaticEditorFlags(go, flag);
-                    Debug.Log($"5. 오브젝트 돌리기: {go.name}({id}): {flag}");
                 }
             }
-            
-            Debug.Log($"6. static 복구 종료");
         }
 
         // 현재 씬의 모든 오브젝트 가져오기

@@ -4,6 +4,7 @@
     {
         public const string Optimization = "optimization";
         public const string Script = "script";
+        public const string TagMissingScript = "Missing Script";
         
         // 최적화 검사
         public const string TagMeshVertex = "Mesh Vertex";

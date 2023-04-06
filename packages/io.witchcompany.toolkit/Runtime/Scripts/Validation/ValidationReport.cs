@@ -45,7 +45,7 @@ namespace WitchCompany.Toolkit.Validation
 
         public ValidationReport Append(ValidationReport other)
         {
-            if (other.result != Result.Success)
+            if (other != null && other.result != Result.Success)
             {
                 result = other.result;
                 if (other.errors is {Count: > 0})
