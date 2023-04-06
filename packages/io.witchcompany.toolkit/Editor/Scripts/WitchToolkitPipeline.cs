@@ -18,6 +18,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
         {
             Log("블록 퍼블리쉬 시작!");
             
+            // 리포트 생성
             var validationReport = new ValidationReport();
             var buildReport = new JBuildReport
             {
@@ -25,14 +26,15 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 BuildStatedAt = DateTime.Now
             };
 
-            if (option == null || option.targetScene == null)
-            {
-                Debug.LogError("잘못된 option 입니다.");
-                return buildReport;
-            }
-            
             try
             {
+                // 옵션 체크
+                if (option == null || option.targetScene == null)
+                {
+                    Debug.LogError("잘못된 option 입니다.");
+                    return buildReport;
+                }
+                
                 // 파이프라인 진행 전, 씬 저장 
                 EditorSceneManager.SaveOpenScenes();
                 
@@ -42,8 +44,12 @@ namespace WitchCompany.Toolkit.Editor.Tool
                     EditorSceneManager.OpenScene(scnPath, OpenSceneMode.Single);
                 
                 // TODO: Witch Toolkit 최신버전 체크
-
-                // TODO: 검증 로직 작성
+                
+                //화이트리스트 검증
+                if(validationReport.Append(WhiteListValidator.ValidationCheck()).result != ValidationReport.Result.Success)
+                    throw new Exception("화이트리스트 검사 실패");
+                Log("화이트리스트 검사 성공!");
+                
                 //최적화 검증
                 if (validationReport.Append(OptimizationValidator.ValidationCheck()).result != ValidationReport.Result.Success)
                     throw new Exception("최적화 유효성 검사 실패");
@@ -77,10 +83,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, manifest)).result != ValidationReport.Result.Success)
                     throw new Exception("업로드 유효성 검사 실패");
                 Log("업로드 유효성 검사 성공!");
-                
-                // 업로드 진행
-                Log("블록 퍼블리쉬 성공!");
 
+                // 빌드 리포트 작성
                 buildReport.result = JBuildReport.Result.Success;
                 buildReport.exportPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
                 buildReport.totalSizeByte = AssetTool.GetFileSizeByte(buildReport.exportPath);
@@ -88,10 +92,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
             }
             catch (Exception)
             {
-                foreach (var err in validationReport.errors)
-                {
+                foreach (var err in validationReport.errors) 
                     Debug.LogError(err.message, err.context);
-                }
             }
 
             return buildReport;

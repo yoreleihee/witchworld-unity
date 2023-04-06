@@ -8,9 +8,9 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
-    public static class ComponentWhiteList
+    public static class WhiteListValidator
     {
-        private static string[] componentTypeWhiteList = new string[]
+        private static readonly string[] ComponentTypeWhiteList = 
         {
             "Transform",
             "Terrain",
@@ -81,7 +81,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     while (fullType != null)
                     {
                         var type = fullType.FullName.Split(".")[^1];
-                        var check = Array.Exists(componentTypeWhiteList, x => x == type);
+                        var check = Array.Exists(ComponentTypeWhiteList, x => x == type);
                         
                         // white list에 있으면 통과
                         if (check) break;
