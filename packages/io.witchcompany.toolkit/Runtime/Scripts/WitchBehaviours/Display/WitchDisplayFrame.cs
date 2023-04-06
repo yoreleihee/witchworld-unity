@@ -22,7 +22,8 @@ namespace WitchCompany.Toolkit.Module
 
         public Renderer MediaRenderer => mediaRenderer;
         public Collider InteractionCollider => interactionCollider;
-        
+        public int Index => index;
+
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
