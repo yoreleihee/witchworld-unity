@@ -34,6 +34,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 validationReport = OptimizationValidator.ValidationCheck();
                 validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
+                validationReport.Append(ObjectValidator.ValidationCheck());
                 validationReport.Append(WhiteListValidator.ValidationCheck());
                 
                 // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()

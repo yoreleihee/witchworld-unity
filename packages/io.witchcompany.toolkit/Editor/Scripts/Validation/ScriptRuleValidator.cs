@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,8 +29,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return new ValidationReport()
                 .Append(ValidateBlockOption(option))
                 .Append(ValidateHierarchy(scene))
-                .Append(ValidateBlacklist(scene))
-                .Append(ValidateWitchBehaviours())
+                .Append(ValidateWitchBehaviours(scene))
                 .Append(ValidateMissingComponents(scene));
         }
 
@@ -72,58 +72,26 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
             return null;
         }
-
-        // private static string ValidateBlacklist(Scene scene)
-        // {
-        //     const string prefix = "잘못된 컴포넌트 포함: ";
-        //     
-        //     var rootObject = scene.GetRootGameObjects()[0].transform;
-        //     var children = HierarchyTool.GetAllChildren(rootObject);
-        //
-        //     foreach (var tr in children)
-        //     {
-        //         if(tr.TryGetComponent(out Camera cam))
-        //             return prefix + $"카메라를 포함할 수 없습니다({cam.name})";
-        //
-        //         if (tr.TryGetComponent(out SpriteRenderer spriteRenderer))
-        //             return prefix + $"Sprite Renderer는 포함할 수 없습니다({spriteRenderer.gameObject.name})";
-        //     }
-        //
-        //     return null;
-        // }
         
-        private static ValidationReport ValidateBlacklist(Scene scene)
-        {
-            const string prefix = "잘못된 컴포넌트 포함: ";
-            
-            var report = new ValidationReport();
-            var rootObject = scene.GetRootGameObjects()[0].transform;
-            var children = HierarchyTool.GetAllChildren(rootObject);
-
-            foreach (var tr in children)
-            {
-                if (tr.TryGetComponent(out Camera cam))
-                    report.Append($"{prefix}카메라를 포함할 수 없습니다 ({cam.name})", ValidationTag.TagBlackList, cam);
-
-                if (tr.TryGetComponent(out SpriteRenderer spriteRenderer))
-                    report.Append($"{prefix}Sprite Renderer는 포함할 수 없습니다 ({spriteRenderer.name})", ValidationTag.TagBlackList, spriteRenderer);
-            }
-
-            return report;
-        }
-        
-
-        private static ValidationReport ValidateWitchBehaviours()
+        private static ValidationReport ValidateWitchBehaviours(Scene scene)
         {
             // 블록 매니저를 찾고, WitchBehaviours 찾아서 저장
-            var manager = Object.FindObjectOfType<WitchBlockManager>();
+            var manager = scene.GetRootGameObjects()[0].GetComponent<WitchBlockManager>();
             manager.FindWitchBehaviours();
             EditorSceneManager.SaveOpenScenes();
             
             // 리포트 생성
             var report = new ValidationReport();
             
+            // 블록매니저 중복 검증
+            foreach (var behaviour in manager.Behaviours)
+            {
+                if (behaviour.GetType() == typeof(WitchBlockManager))
+                    return report.Append("BlockManager는 하나만 있을 수 있습니다.", ValidationTag.Script, behaviour);
+            }
+
             // 개별 요소 검증
+            report.Append(manager.ValidationCheck());
             foreach (var behaviour in manager.Behaviours) 
                 report.Append(behaviour.ValidationCheck());
 
@@ -150,17 +118,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
             foreach (var tr in children)
             {
                 var components = tr.GetComponents<Component>();
-                
-                foreach (var c in components)
+                if (components.Any(c => c == null))
                 {
-                    
-                    if (c == null)
-                    {
-                        // 한 오브젝트에서 하나라도 검출되면 다음으로 넘어감
-                        var error = new ValidationError($"Object : {tr.gameObject.name}\n찾을 수 없는 스크립트가 포함되어 있습니다.", "Missing Script", tr);
-                        report.Append(error);
-                        break;
-                    }
+                    var error = new ValidationError($"Object : {tr.gameObject.name}\n찾을 수 없는 스크립트가 포함되어 있습니다.", ValidationTag.TagMissingScript, tr);
+                    report.Append(error);
                 }
             }
             return report;

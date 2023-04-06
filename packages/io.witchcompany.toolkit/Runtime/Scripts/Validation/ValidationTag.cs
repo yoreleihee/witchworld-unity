@@ -4,6 +4,7 @@
     {
         public const string Optimization = "optimization";
         public const string Script = "script";
+        public const string TagMissingScript = "Missing Script";
         
         // 최적화 검사
         public const string TagMeshVertex = "Mesh Vertex";
@@ -16,5 +17,6 @@
         
         // 유효성 검사
         public const string TagBlackList = "Black List";
+        public const string TagBadObject = "Bad Object";
     }
 }
