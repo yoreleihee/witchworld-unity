@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Validation;
 using WitchCompany.Toolkit.Validation;
 
@@ -35,6 +34,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 validationReport = OptimizationValidator.ValidationCheck();
                 validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
+                validationReport.Append(ComponentWhiteList.ValidationCheck());
                 
                 // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()
                 CustomWindow.InitialStyles();

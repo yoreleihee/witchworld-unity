@@ -215,7 +215,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return materials.FindAll(m => m != null).Select(m => m.name).Distinct().Count();;
         }
 
-        /// <summary> Mesh collider를 가진 Object 검출 </summary>
+        /// <summary> Mesh Collider를 가진 Object 검출 </summary>
         private static ValidationReport ValidateMeshCollider()
         {
             var report = new ValidationReport();
@@ -224,7 +224,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
             if (meshColliders.Length > 1)
             {
-                var errorMessage = $"Realtime Light의 최대 개수는 {OptimizationConfig.MaxMeshColliderObject}개입니다." + 
+                var errorMessage = $"Mesh Collider의 최대 개수는 {OptimizationConfig.MaxMeshColliderObject}개입니다." + 
                                    $" ({meshColliders.Length} / {OptimizationConfig.MaxMeshColliderObject})\n" +
                                    $"Scene 내에 적용된 Mesh Collider의 수를 조절해주세요.";
                 report.Append(new ValidationError(errorMessage, ValidationTag.TagMeshCollider));

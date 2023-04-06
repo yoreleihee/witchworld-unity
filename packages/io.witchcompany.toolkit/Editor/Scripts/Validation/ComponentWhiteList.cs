@@ -11,49 +11,87 @@ namespace WitchCompany.Toolkit.Editor.Validation
     {
         private static string[] componentTypeWhiteList = new string[]
         {
-            "Collider",
-            "CapsuleCollider",
             "Transform",
+            "Terrain",
+            "ParticleSystem",
+            "Collider",
+            "Animator",
+            "Rigidbody",
             "MeshFilter",
+            // 렌더러 그룹
+            "ParticleSystemRenderer",
+            "ParticleRenderer",
+            "SkinnedMeshRenderer",
+            "MeshRenderer",
+            "LineRenderer",
+            "OcclusionPortal",
+            "OcclusionArea",
+            // 빛 그룹
+            "Light",
+            "LightProbeGroup",
+            "LightProbeProxyVolume",
+            "ReflectionProbe",
+            "LensFlare",
+            "Skybox",
+            // UI 그룹
+            "Canvas",
+            "CanvasGroup",
+            "CanvasRenderer",
+            "RectTransform",
+            "SpriteMask",
+            // Text Mesh Pro
+            "InlineGraphic",
+            "InlineGraphicManager",
+            "TMP_Dropdown",
+            "TMP_InputField",
+            "TMP_ScrollbarEventHandler",
+            "TMP_SelectionCaret",
+            "TMP_SpriteAnimator",
+            "TMP_SubMesh",
+            "TMP_SubMeshUI",
+            "TMP_Text",
+            "TextMeshPro",
+            "TextMeshProUGUI",
+            "TextContainer",
+            "TMP_Dropdown",
+            // 툴킷
             "WitchBehaviour",
-            "Light"
         };
         
-        public static void FindComponent()
+        public static ValidationReport ValidationCheck()
         {
-            var scene = SceneManager.GetActiveScene();
+            var report = new ValidationReport();
             
-            var rootObject = scene.GetRootGameObjects()[0].transform;
-            var children = HierarchyTool.GetAllChildren(rootObject);
-
+            var allTransforms = GameObject.FindObjectsOfType<Transform>(true);
             // 오브젝트 단위
-            foreach (var tr in children)
+            foreach (var tr in allTransforms)
             {
                 var components = tr.GetComponents<Component>();
-
+                
                 // 컴포넌트 단위
                 foreach (var c in components)
                 {
-                    var derived = c.GetType();
+                    var fullType = c.GetType();
                     // whitelist에서 컴포넌트 존재 여부 탐색
-                    while (derived != null)
+                    while (fullType != null)
                     {
-                        var type = derived.FullName.Split(".")[^1];
+                        var type = fullType.FullName.Split(".")[^1];
                         var check = Array.Exists(componentTypeWhiteList, x => x == type);
                         
                         // white list에 있으면 통과
-                        if (check)
-                        {
-                            // Debug.Log("통과");
-                            break;
-                        }
-
-                        derived = derived.BaseType;
+                        if (check) break;
+                        
+                        fullType = fullType.BaseType;
                     }
-                    if(derived == null)
-                        Debug.Log($"실패\n{c.GetType().FullName}", c);
+
+                    if (fullType == null)
+                    {
+                        var error = new ValidationError($"Object : {c.name}\n{c.GetType()}은 배치할 수 없습니다.", "Component", c);
+                        report.Append(error);
+                    }
                 }
             }
+            return report;
         }
     }
 }
