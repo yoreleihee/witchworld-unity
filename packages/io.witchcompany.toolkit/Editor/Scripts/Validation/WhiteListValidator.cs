@@ -42,6 +42,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "SpriteMask",
             "CanvasScaler",
             "GraphicRaycaster",
+            "Image"
             // Text Mesh Pro
             "InlineGraphic",
             "InlineGraphicManager",
