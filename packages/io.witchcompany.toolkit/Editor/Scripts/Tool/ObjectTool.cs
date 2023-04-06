@@ -6,6 +6,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
 {
     public static class ObjectTool
     {
+        /// <summary>해당 오브젝트의 LocalIdentfierInFile 값을 가져온다.</summary>
         public static int GetLocalIdentifier(Object obj) {
 
             var inspectorModeInfo = typeof(SerializedObject).GetProperty("inspectorMode", BindingFlags.NonPublic | BindingFlags.Instance);

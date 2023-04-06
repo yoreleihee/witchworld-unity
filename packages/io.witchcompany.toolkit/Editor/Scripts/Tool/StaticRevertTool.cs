@@ -15,43 +15,53 @@ namespace WitchCompany.Toolkit.Editor.Tool
         /// </summary>
         public static void SaveAndClearFlags()
         {
+            // staticObjects Null 체크 후 새로 생성, 혹은 비우기
             _staticObjects ??= new Dictionary<int, StaticEditorFlags>();
             _staticObjects.Clear();
 
+            // 모은 오브젝트를 순회하며,
             foreach (var tr in GetAllTransforms())
             {
+                // 게임오브젝트 가져오기
                 var go = tr.gameObject;
+                // Static 이 아니라면 다음으로..
                 if (!go.isStatic) continue;
                 
-                // 기존 static 설정 상태 저장
+                // 해당 오브젝트의 id 가져오기
                 var id = ObjectTool.GetLocalIdentifier(go);
+                // 해당 오브젝트의 static flag 가져오기
                 var flag = GameObjectUtility.GetStaticEditorFlags(go);
 
-                // 저장
+                // 캐싱
                 _staticObjects.Add(id, flag);
-                // static 해제
+                // static flag 해제
                 GameObjectUtility.SetStaticEditorFlags(go, 0);
-                //Debug.Log($"{go.name}({id}) : {flag.ToString()}");
             }
         }
         
         public static void RevertFlags()
         {
+            // staticObjects가 없으면 종료
             if(_staticObjects is not {Count: > 0}) return;
             
+            // 모은 오브젝트를 순회하며,
             foreach (var tr in GetAllTransforms())
             {
+                // 게임오브젝트 가져오기
                 var go = tr.gameObject;
+                // 해당 오브젝트의 id 가져오기
                 var id = ObjectTool.GetLocalIdentifier(go);
 
+                // 해당 오브젝트의 id가 staticObjects에 캐싱되어 있다면,
                 if (_staticObjects.TryGetValue(id, out var flag))
                 {
+                    // static flag 되돌리기
                     GameObjectUtility.SetStaticEditorFlags(go, flag);
-                    //Debug.Log($"{go.name}({id}) : {flag.ToString()}");
                 }
             }
         }
 
+        // 현재 씬의 모든 오브젝트 가져오기
         private static List<Transform> GetAllTransforms()
         {
             var scn = SceneManager.GetActiveScene();
