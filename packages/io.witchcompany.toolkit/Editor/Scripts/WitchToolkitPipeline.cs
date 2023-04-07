@@ -80,7 +80,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 AssetBundleTool.AssignAssetBundle(scenePath, bundleName);
                 // 번들 빌드
                 var bundles = AssetBundleTool.BuildAssetBundle();
-                Log("번들 빌드 성공!: " + bundles.Count);
+                Log("번들 빌드 성공!");
                 
                 // Static 되돌려주기
                 StaticRevertTool.RevertFlags();
