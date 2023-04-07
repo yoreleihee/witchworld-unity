@@ -15,15 +15,18 @@ namespace WitchCompany.Toolkit.Module
 
         public override string DocumentURL => "";
 
-        [Header("변경할 색상")] 
-        public Color targetColor;
-
         [Header("클릭 콜라이더")] 
         public Collider clickCollider;
-
-        public Color TargetTargetColor => targetColor;
-        public Collider ClickCollider => clickCollider;
         
+        [Header("브러쉬 색상")] 
+        [SerializeField] private Color brushColor = Color.black;
+        [Header("브러쉬 반지름")]
+        [SerializeField, Range(0.01f, 0.5f)] private float brushRadius = 0.1f;
+        
+        public Collider ClickCollider => clickCollider;
+        public Color BrushColor => brushColor;
+        public float BrushRadius => brushRadius;
+
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {

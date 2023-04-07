@@ -9,6 +9,7 @@ using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.GUI;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Validation;
+using Object = UnityEngine.Object;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
@@ -220,9 +221,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             var report = new ValidationReport();
             
-            var meshColliders = GameObject.FindObjectsOfType<MeshCollider>(true);
+            var meshColliders = Object.FindObjectsOfType<MeshCollider>(true);
 
-            if (meshColliders.Length > 1)
+            if (meshColliders.Length > OptimizationConfig.MaxMeshColliderCount)
             {
                 var errorMessage = $"Mesh Collider의 최대 개수는 {OptimizationConfig.MaxMeshColliderObject}개입니다." + 
                                    $" ({meshColliders.Length} / {OptimizationConfig.MaxMeshColliderObject})\n" +

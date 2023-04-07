@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Extension;
 using WitchCompany.Toolkit.Validation;
 
@@ -19,17 +20,22 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
 
         public override int MaximumCount => 1;
-
-        [Header("브러쉬 리스트"), SerializeReference] 
-        private List<WitchPaintableBrush> brushes;
+        //
+        // [Header("브러쉬 리스트"), SerializeReference] 
+        // private List<WitchPaintableBrush> brushes
 
         [Header("낙서장 비율")] 
         [SerializeField] private Ratio paintRatioX = Ratio._512;
         [SerializeField] private Ratio paintRatioY = Ratio._512;
-        
-        [Header("기본 텍스쳐 설정")]
+
+        [Header("기본 브러쉬 색상")] 
+        [SerializeField] private Color brushColor = Color.black;
+        [Header("기본 브러쉬 반지름")] 
+        [SerializeField, Range(0.01f, 0.5f)] private float brushRadius = 0.1f;
+        [Header("기본 텍스쳐 (빈 값 가능)")]
         [SerializeField] private Texture2D baseTexture;
-        [SerializeField] private Color baseColor = Color.white;
+        
+        //[SerializeField] private Color baseColor = Color.white;
 
         private enum Ratio
         {
@@ -39,10 +45,12 @@ namespace WitchCompany.Toolkit.Module
             _1024 = 1024
         }
 
-        public List<WitchPaintableBrush> Brushes => brushes;
+        // public List<WitchPaintableBrush> Brushes => brushes;
         public Vector2Int PaintRatio => new((int)paintRatioX, (int)paintRatioY);
+        public Color BrushColor => brushColor;
+        public float BrushRadius => brushRadius;
         public Texture2D BaseTex => baseTexture;
-        public Color BaseColor => baseColor;
+        //public Color BaseColor => baseColor;
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
@@ -54,9 +62,9 @@ namespace WitchCompany.Toolkit.Module
             if (TryGetComponent<WitchPaintableBrush>(out var b))
                 return Error($"{b.BehaviourName}는 {BehaviourName}의 자식이어야 합니다.");
 
-            foreach (var brush in brushes)
-                if (!transform.HasChild(brush, false))
-                    return ChildError(nameof(brush));
+            // foreach (var brush in brushes)
+            //     if (!transform.HasChild(brush, false))
+                    // return ChildError(nameof(brush));
 
             return null;
         }

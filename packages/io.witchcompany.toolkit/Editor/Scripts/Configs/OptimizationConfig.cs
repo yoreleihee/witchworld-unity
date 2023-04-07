@@ -24,6 +24,8 @@
         public const uint MaxRealtimeLight = 4;
         public const uint MaxLightmapMb = 200;
         public const uint MaxReflectionProbeMb = 200;
+
+        public const uint MaxMeshColliderCount = 2;
     }
     
 }
