@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public override string BehaviourName => "효과: 부드럽게 변하기";
 
         public override string Description => "이 모듈이 부착된 오브젝트는 서서히 나타나거나 사라집니다.\n" +
-                                              "변화가 일어날 시간을 설정할 수 있습니다.";
+                                              "변화가 일어날 시간을 설정할 수 있습니다.\n";
 
         public override string DocumentURL => "";
 
@@ -21,7 +21,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public UnityEvent FadeEnable => fadeEnable;
         public UnityEvent FadeDisable => fadeDisable;
 
-        public void FadeStart() { fadeEnable.Invoke(); }
-        public void FadeEnd() { fadeDisable.Invoke(); }
+        public void FadeIn() { fadeEnable.Invoke(); }
+        public void FadeOut() { fadeDisable.Invoke(); }
     }
 }
