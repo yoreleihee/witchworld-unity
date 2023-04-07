@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Module.Base;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Runtime
 {
-    public class WitchPrivateDoor : WitchPassageBase
+    public class WitchPrivateDoor : WitchDoor
     {
         public override string BehaviourName => "통로: 프라이빗 공간";
         public override string Description => "특정 아이템을 가지고 있을 때 프라이빗 공간으로 연결되는 문입니다.\n" +
@@ -22,14 +24,14 @@ namespace WitchCompany.Toolkit.Runtime
         private string popupDescriptionTitle;
         [Header("설명"), SerializeField]
         private string popupDescription;
-        [Header("구경하기 링크"), SerializeField]
-        private string url;
+        // [Header("구경하기 링크"), SerializeField]
+        // private string viewUrl;
  
         // public string PopupTitle => popupTitle;
         public int ItemKey => itemKey;
         public string PopupDescriptionTitle => popupDescriptionTitle;
         public string PopupDescription => popupDescription;
-        public string Url => url;
+        // public string ViewUrl => viewUrl;
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
@@ -43,8 +45,8 @@ namespace WitchCompany.Toolkit.Runtime
             if (string.IsNullOrEmpty(popupDescription))
                 return Error($"프라이빗 도어의 [설명]을 설정해주세요.");
             
-            if (string.IsNullOrEmpty(url))
-                return Error($"프라이빗 도어의 [구경하기 링크]을 설정해주세요.");
+            // if (string.IsNullOrEmpty(viewUrl))
+            //     return Error($"프라이빗 도어의 [구경하기 링크]을 설정해주세요.");
             
             return null;
         }
