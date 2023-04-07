@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine.Serialization;
 
 namespace WitchCompany.Toolkit.Editor.DataStructure
@@ -6,8 +7,7 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     [Serializable]
     public class JBuildReport
     {
-        public string exportPath;
-        public long totalSizeByte = 0;
+        public List<JBuildGroup> buildGroups; 
         public Result result = Result.Failed;
         public DateTime BuildStatedAt = DateTime.MinValue;
         public DateTime BuildEndedAt = DateTime.MinValue;

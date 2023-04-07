@@ -14,17 +14,15 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// <para>-번들 매니페스트 검사</para>
         /// <para>-번들 용량 검사</para>
         /// </summary>
-        public static ValidationReport ValidationCheck(BlockPublishOption option, AssetBundleManifest manifest)
+        public static ValidationReport ValidationCheck(BlockPublishOption option, string target, string[] bundles)
         {
             return new ValidationReport()
-                .Append(ValidateBundleManifest(option, manifest))
-                .Append(ValidateBundleSize(option));
+                .Append(ValidateBundleManifest(option, bundles))
+                .Append(ValidateBundleSize(option, target));
         }
 
-        public static string ValidateBundleManifest(BlockPublishOption option, AssetBundleManifest manifest)
+        public static string ValidateBundleManifest(BlockPublishOption option, string[] bundles)
         {
-            var bundles = manifest.GetAllAssetBundles();
-            
             if (bundles.Length != 1) 
                 return $"잘못된 에셋번들: 번들 개수가 이상합니다.({bundles.Length})";
             if (bundles[0] != option.BundleKey)
@@ -33,9 +31,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return null;
         }
 
-        public static string ValidateBundleSize(BlockPublishOption option)
+        public static string ValidateBundleSize(BlockPublishOption option, string target)
         {
-            var path = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
+            var path = Path.Combine(AssetBundleConfig.BundleExportPath,target, option.BundleKey);
             var sizeByte = AssetTool.GetFileSizeByte(path);
 
             if (sizeByte > AssetBundleConfig.MaxSizeByte)

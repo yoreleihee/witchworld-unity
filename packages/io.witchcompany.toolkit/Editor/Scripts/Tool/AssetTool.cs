@@ -63,5 +63,10 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
             Debug.LogError("파일을 찾을 수 없습니다: " + filePath);
         }
+
+        public static void DeleteFile(string path)
+        {
+            
+        }
     }
 }

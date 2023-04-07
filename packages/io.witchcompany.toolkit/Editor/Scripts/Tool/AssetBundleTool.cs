@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
@@ -66,19 +68,50 @@ namespace WitchCompany.Toolkit.Editor.Tool
         }
 
         /// <summary>번들을 타겟 플렛폼으로 빌드한다.</summary>
-        public static AssetBundleManifest BuildAssetBundle(BuildTarget target)
+        public static Dictionary<string, string[]> BuildAssetBundle()
         {
-            // 디렉토리
-            var directory = AssetBundleConfig.BundleExportPath;
+            try
+            {
+                var result = new Dictionary<string, string[]>();
 
-            // 디렉토리가 없으면 새로 만든다.
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            
-            // 빌드 시작
-            return BuildPipeline.BuildAssetBundles(directory, 
-                BuildAssetBundleOptions.ForceRebuildAssetBundle| BuildAssetBundleOptions.ChunkBasedCompression, 
-                target);
+                // WebGL 빌드
+                result.Add(AssetBundleConfig.WebGL, BuildBundle(AssetBundleConfig.WebGL, BuildTarget.WebGL));
+                result.Add(AssetBundleConfig.Standalone, BuildBundle(AssetBundleConfig.Standalone, BuildTarget.StandaloneWindows64));
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                return null;
+            }
+        }
+
+        private static string[] BuildBundle(string targetName, BuildTarget target)
+        {
+            try
+            {
+                const BuildAssetBundleOptions option = BuildAssetBundleOptions.ForceRebuildAssetBundle |
+                                                       BuildAssetBundleOptions.ChunkBasedCompression;
+                
+                // 경로
+                var path = Path.Combine(AssetBundleConfig.BundleExportPath, targetName);
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                // 빌드
+                var result = BuildPipeline.BuildAssetBundles(path, option, target);
+
+                // 삭제
+                File.Delete(Path.Combine(path, targetName));
+                File.Delete(Path.Combine(path, targetName + ".manifest"));
+
+                return result.GetAllAssetBundles();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                return null;
+            }
         }
         
         /// <summary> manifest 파일에서 crc 읽음 </summary>

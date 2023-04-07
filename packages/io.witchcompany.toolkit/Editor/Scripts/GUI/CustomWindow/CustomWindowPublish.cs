@@ -61,8 +61,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
 
-                if (buildReport.result == JBuildReport.Result.Success) 
-                    Upload();
+                // TODO: 플랫폼별 업로드
+                //if (buildReport.result == JBuildReport.Result.Success) 
+                    //Upload();
             }
         }
         
@@ -82,8 +83,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             if (buildReport.result == JBuildReport.Result.Success)
             {
-                EditorGUILayout.LabelField("ExportPath", buildReport.exportPath);
-                EditorGUILayout.LabelField("TotalSize", $"{CommonTool.ByteToMb(buildReport.totalSizeByte, 2)} MB");
+                // TODO: 플랫폼에 따라 분류
+                //EditorGUILayout.LabelField("ExportPath", buildReport.exportPath);
+                //EditorGUILayout.LabelField("TotalSize", $"{CommonTool.ByteToMb(buildReport.totalSizeByte, 2)} MB");
                 // 시작시간
                 EditorGUILayout.LabelField("StartTime", $"{buildReport.BuildStatedAt.ToString()}");
                 // 종료시간
@@ -107,7 +109,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             EditorGUILayout.EndVertical();
         }
-        public static async void Upload()
+
+        private static async void Upload()
         {
             var option = GetOption();
 
@@ -115,7 +118,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 unityVersion = ToolkitConfig.UnityVersion,
                 toolkitVersion = ToolkitConfig.WitchToolkitVersion,
-                crc = AssetBundleTool.ReadManifest(option.BundleKey),
+                // TODO: 플랫폼별 CRC
+                //crc = AssetBundleTool.ReadManifest(option.BundleKey),
             };
             uploadResult = UploadState.Uploading;
             

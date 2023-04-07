@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -78,22 +79,32 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 var bundleName = option.BundleKey;
                 AssetBundleTool.AssignAssetBundle(scenePath, bundleName);
                 // 번들 빌드
-                var manifest = AssetBundleTool.BuildAssetBundle(BuildTarget.StandaloneWindows64);
-                Log("번들 빌드 성공!");
+                var bundles = AssetBundleTool.BuildAssetBundle();
+                Log("번들 빌드 성공!: " + bundles.Count);
                 
                 // Static 되돌려주기
                 StaticRevertTool.RevertFlags();
                 EditorSceneManager.SaveOpenScenes();
 
                 // 업로드 룰 검증
-                if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, manifest)).result != ValidationReport.Result.Success)
-                    throw new Exception("업로드 유효성 검사 실패");
+                foreach (var (target, bundle) in bundles)
+                {
+                    if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, target, bundle)).result != ValidationReport.Result.Success)
+                        throw new Exception("업로드 유효성 검사 실패");
+                }
+
                 Log("업로드 유효성 검사 성공!");
                 
                 // 빌드 리포트 작성
                 buildReport.result = JBuildReport.Result.Success;
-                buildReport.exportPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
-                buildReport.totalSizeByte = AssetTool.GetFileSizeByte(buildReport.exportPath);
+                buildReport.buildGroups = new List<JBuildGroup>();
+                foreach (var (target, bundle) in bundles)
+                {
+                    var group = new JBuildGroup();
+                    group.target = target;
+                    group.exportPath = Path.Combine(AssetBundleConfig.BundleExportPath, target, option.BundleKey);
+                    group.totalSizeByte = AssetTool.GetFileSizeByte(group.exportPath);
+                }
                 buildReport.BuildEndedAt = DateTime.Now;
             }
             catch (Exception e)
