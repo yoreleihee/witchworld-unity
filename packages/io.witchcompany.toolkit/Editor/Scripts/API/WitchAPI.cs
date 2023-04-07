@@ -257,7 +257,10 @@ namespace WitchCompany.Toolkit.Editor.API
                     foreach (var section in helper.FormSections)
                     {
                         var sizeMb = CommonTool.ByteToMb(section.sectionData.LongLength, 4);
-                        builder.Append($" {section.sectionName}: {section.fileName}({sizeMb}mb); {section.contentType}\n");
+                        if (section.sectionName == "json")
+                            builder.Append($"{section.sectionName}({section.contentType}):\n" + Encoding.UTF8.GetString(section.sectionData));
+                        else
+                            builder.Append($" {section.sectionName}: {section.fileName}({sizeMb}mb); {section.contentType}\n");
                     }
 
                     Log(builder.ToString());

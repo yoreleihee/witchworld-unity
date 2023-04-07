@@ -78,7 +78,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 var bundleName = option.BundleKey;
                 AssetBundleTool.AssignAssetBundle(scenePath, bundleName);
                 // 번들 빌드
-                var manifest = AssetBundleTool.BuildAssetBundle(BuildTarget.WebGL);
+                var manifest = AssetBundleTool.BuildAssetBundle(BuildTarget.StandaloneWindows64);
                 Log("번들 빌드 성공!");
                 
                 // Static 되돌려주기

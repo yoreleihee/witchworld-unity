@@ -1,9 +1,9 @@
 using UnityEngine;
-using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
 {
+    [RequireComponent(typeof(Collider))]
     public class WitchProductDisplay : WitchBehaviour
     {
         public override string BehaviourName => "전시: 상품";
@@ -11,15 +11,16 @@ namespace WitchCompany.Toolkit.Module
                                               "오브젝트에 Collider가 있어야 합니다.\n";
         public override string DocumentURL => "";
 
-         [Header("상품 ID"), SerializeField]
-         private int productId;
+         [Header("상품 ID"), SerializeField] private int productId;
+         [Header("상품 ID (개발서버)"), SerializeField] private int productIdDev;
 
          public int ProductId => productId;
+         public int ProductIdDev => productIdDev;
          
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if(!TryGetComponent(out Collider col)) return NullError("Collider");
+            if(!TryGetComponent(out Collider _)) return NullError("Collider");
             
             return base.ValidationCheck();
         }

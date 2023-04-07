@@ -45,7 +45,7 @@ namespace WitchCompany.Toolkit.Module
             Gizmos.DrawLine(pos, pos + outerDirection*4f);
         }
 
-        private void OnValidate() => ValidationCheck();
+        private void Reset() => ValidationCheck();
 #endif
     }
 }
