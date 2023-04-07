@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
@@ -13,7 +14,14 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 
         [Header("변화 시간"), SerializeField, Range(0.01f, 2f)]
         private float smoothTime;
-
+        private UnityEvent fadeEnable = new UnityEvent();
+        private UnityEvent fadeDisable = new UnityEvent();
+        
         public float SmoothTime => smoothTime;
+        public UnityEvent FadeEnable => fadeEnable;
+        public UnityEvent FadeDisable => fadeDisable;
+
+        public void FadeStart() { fadeEnable.Invoke(); }
+        public void FadeEnd() { fadeDisable.Invoke(); }
     }
 }

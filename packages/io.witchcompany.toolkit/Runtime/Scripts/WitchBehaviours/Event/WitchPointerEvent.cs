@@ -15,7 +15,7 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
         public override string DocumentURL => "";
         
         [Header("Outline 활성화"), SerializeField]
-        private bool outline;
+        private bool isOutline;
 
         [Header("마우스 포인터 이벤트: Enter"), SerializeField]
         private UnityEvent pointerEnter;
@@ -27,7 +27,7 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
         private UnityEvent pointerExit;
 
 
-        public bool Outline => outline;
+        public bool IsOutline => isOutline;
         public UnityEvent PointerEnter => pointerEnter;
         public UnityEvent PointerClick => pointerClick;
         public UnityEvent PointerExit => pointerExit;
