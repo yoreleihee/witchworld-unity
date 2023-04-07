@@ -3,6 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.DataStructure;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
@@ -78,6 +79,18 @@ namespace WitchCompany.Toolkit.Editor.Tool
             return BuildPipeline.BuildAssetBundles(directory, 
                 BuildAssetBundleOptions.ForceRebuildAssetBundle| BuildAssetBundleOptions.ChunkBasedCompression, 
                 target);
+        }
+        
+        /// <summary> manifest 파일에서 crc 읽음 </summary>
+        public static string ReadManifest(string bundleKey)
+        {
+            // 번들 경로/씬이름.bundle.manifest
+            var manifest = Path.Combine(AssetBundleConfig.BundleExportPath, bundleKey)+".manifest";
+            
+            var crcLine = File.ReadAllLines(manifest)[1];
+            var crc = crcLine.Split(" ")[1];
+            
+            return crc;
         }
     }
 }
