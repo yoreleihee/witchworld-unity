@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Attribute;
@@ -18,34 +19,19 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 4;
 
-        [Header("나가는 방향(읽기 전용)")]
-        [SerializeField, ReadOnly] private Vector3 outerDirection;
-        public Vector3 OuterDirection => outerDirection;
+        // [Header("나가는 방향(읽기 전용)")]
+        // [SerializeField, ReadOnly] private Vector3 outerDirection;
+        // public Vector3 OuterDirection => outerDirection;
         
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (Application.isPlaying) return null;
-            
-            var center = FindObjectOfType<WitchBlockManager>().transform.position; center.y = 0f;
-            var pos = transform.position; pos.y = 0f;
-            outerDirection = (pos - center).normalized;
-            
             if(!TryGetComponent<WitchDoorEffect>(out _))
                 return NullError(nameof(WitchDoorEffect));
             
             return base.ValidationCheck();
         }
-
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.red;
-            var pos = transform.position;
-            Gizmos.DrawLine(pos, pos + outerDirection*4f);
-        }
-
-        private void Reset() => ValidationCheck();
 #endif
     }
 }
