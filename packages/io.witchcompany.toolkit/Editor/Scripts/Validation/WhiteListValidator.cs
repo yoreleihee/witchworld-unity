@@ -43,6 +43,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "CanvasScaler",
             "GraphicRaycaster",
             "Image",
+            "Button",
+            "RawImage",
             // Text Mesh Pro
             "InlineGraphic",
             "InlineGraphicManager",
@@ -63,7 +65,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
             // 파티클 에셋
             "CFXR_Effect"
         };
-        
         public static ValidationReport ValidationCheck()
         {
             var report = new ValidationReport();
