@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event.Base;
 using WitchCompany.Toolkit.Validation;
 
@@ -15,7 +16,7 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
         public override string DocumentURL => "";
         
         [Header("Outline 활성화"), SerializeField]
-        private bool isOutline;
+        private bool activeOutline;
 
         [Header("마우스 포인터 이벤트: Enter"), SerializeField]
         private UnityEvent pointerEnter;
@@ -27,7 +28,7 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
         private UnityEvent pointerExit;
 
 
-        public bool IsOutline => isOutline;
+        public bool ActiveOutline => activeOutline;
         public UnityEvent PointerEnter => pointerEnter;
         public UnityEvent PointerClick => pointerClick;
         public UnityEvent PointerExit => pointerExit;

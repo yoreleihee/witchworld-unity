@@ -114,7 +114,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 block = new JBlock
                 {
                     name = option.Key,
-                    theme = option.theme.ToString()
+                    theme = option.theme.ToString().ToLower()
                 },
                 manifest = manifest
             };
@@ -149,12 +149,12 @@ namespace WitchCompany.Toolkit.Editor.API
             {
                 // 임시 데이터
                 unityKeyId = EditorTest.UnitykeyId,
-                type = BlockType.Community.ToString(),
-                theme = option.theme.ToString(),
+                type = BlockType.Community.ToString().ToLower(),
+                theme = option.theme.ToString().ToLower(),
                 createUserNickname = AuthConfig.NickName,
                 name = blockName
             };
-            
+
             var form = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("json", JsonConvert.SerializeObject(body), "application/json"),
