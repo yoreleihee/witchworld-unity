@@ -3,8 +3,5 @@
 namespace WitchCompany.Toolkit.Module
 {
     [DisallowMultipleComponent]
-    public abstract class WitchBehaviourUnique : WitchBehaviour
-    {
-        
-    }
+    public abstract class WitchBehaviourUnique : WitchBehaviour { }
 }

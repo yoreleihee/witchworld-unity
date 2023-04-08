@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Serialization;
-using WitchCompany.Toolkit.Extension;
+﻿using UnityEngine;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
@@ -10,9 +7,9 @@ namespace WitchCompany.Toolkit.Module
         typeof(MeshCollider), 
         typeof(MeshRenderer),
         typeof(MeshFilter))]
-    public class WitchPaintableWall : WitchBehaviourUnique
+    public class WitchPaintWall : WitchBehaviourUnique
     {
-        public override string BehaviourName => "낙서 벽";
+        public override string BehaviourName => "전시: 페인트 벽";
         public override string Description => "유저가 자유롭게 낙서할 수 있는 벽입니다.\n" +
                                               "매쉬콜라이더 및 매쉬렌더러가 필요합니다.\n" +
                                               "낙서가 되는 벽면의 텍스쳐 및 색상은 낙서 설정을 따릅니다.\n" +
@@ -20,9 +17,6 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
 
         public override int MaximumCount => 1;
-        //
-        // [Header("브러쉬 리스트"), SerializeReference] 
-        // private List<WitchPaintableBrush> brushes
 
         [Header("낙서장 비율")] 
         [SerializeField] private Ratio paintRatioX = Ratio._512;
@@ -34,8 +28,6 @@ namespace WitchCompany.Toolkit.Module
         [SerializeField, Range(0.01f, 0.5f)] private float brushRadius = 0.1f;
         [Header("기본 텍스쳐 (빈 값 가능)")]
         [SerializeField] private Texture2D baseTexture;
-        
-        //[SerializeField] private Color baseColor = Color.white;
 
         private enum Ratio
         {
@@ -45,26 +37,21 @@ namespace WitchCompany.Toolkit.Module
             _1024 = 1024
         }
 
-        // public List<WitchPaintableBrush> Brushes => brushes;
         public Vector2Int PaintRatio => new((int)paintRatioX, (int)paintRatioY);
         public Color BrushColor => brushColor;
         public float BrushRadius => brushRadius;
         public Texture2D BaseTex => baseTexture;
-        //public Color BaseColor => baseColor;
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (!TryGetComponent(out MeshCollider _)) return NullError(nameof(MeshCollider));
+            if (!TryGetComponent(out MeshCollider col)) return NullError(nameof(MeshCollider));
             if (!TryGetComponent(out MeshRenderer _)) return NullError(nameof(MeshRenderer));
             if (!TryGetComponent(out MeshFilter _)) return NullError(nameof(MeshFilter));
+            if (col.isTrigger) return Error("콜라이더는 IsTrigger 체크될 수 없습니다.");
 
-            if (TryGetComponent<WitchPaintableBrush>(out var b))
+            if (TryGetComponent<WitchPaintBrush>(out var b))
                 return Error($"{b.BehaviourName}는 {BehaviourName}의 자식이어야 합니다.");
-
-            // foreach (var brush in brushes)
-            //     if (!transform.HasChild(brush, false))
-                    // return ChildError(nameof(brush));
 
             return null;
         }
