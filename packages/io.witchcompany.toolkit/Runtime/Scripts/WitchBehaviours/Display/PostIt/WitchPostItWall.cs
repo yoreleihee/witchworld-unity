@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
@@ -10,6 +11,7 @@ namespace WitchCompany.Toolkit.Module
 
         public override string Description => "포스트잇을 붙일 수 있는 벽입니다.\n" +
                                               "World Space 캔버스가 필요합니다.\n" +
+                                              "캔버스의 사이즈가 포스트잇을 붙일 수 있는 공간의 사이즈입니다.\n" +
                                               @"'전시: 포스트잇 생성 버튼'이 씬에 있어야 합니다.";
 
         public override string DocumentURL => "";
@@ -20,6 +22,10 @@ namespace WitchCompany.Toolkit.Module
         {
             if (!TryGetComponent(out Canvas canvas)) 
                 canvas = gameObject.AddComponent<Canvas>();
+            if (!TryGetComponent(out CanvasScaler _))
+                gameObject.AddComponent<CanvasScaler>();
+            if (!TryGetComponent(out GraphicRaycaster _))
+                gameObject.AddComponent<GraphicRaycaster>();
             
             canvas.renderMode = RenderMode.WorldSpace;
             canvas.sortingLayerName = "Default";
