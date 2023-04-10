@@ -45,6 +45,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "Image",
             "Button",
             "RawImage",
+            "Mask",
             // Text Mesh Pro
             "InlineGraphic",
             "InlineGraphicManager",

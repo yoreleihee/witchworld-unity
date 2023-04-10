@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Module.Base;
+using WitchCompany.Toolkit.Module.PhysicsEffect;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Runtime
 {
-    public class WitchPrivateDoor : WitchDoor
+    [RequireComponent(typeof(WitchDoor))]
+    [RequireComponent(typeof(WitchDoorEffect))]
+    public class WitchPrivateDoor : WitchPassageBase
     {
         public override string BehaviourName => "통로: 프라이빗 공간";
         public override string Description => "특정 아이템을 가지고 있을 때 프라이빗 공간으로 연결되는 문입니다.\n" +
@@ -18,6 +21,7 @@ namespace WitchCompany.Toolkit.Runtime
         // [Header("팝업 제목"), SerializeField]
         // private string popupTitle;
 
+        // todo : url은 door와 privatedoor 중 하나만?! 
         [Header("입장 권할을 지정할 아이템의 키"), SerializeField]
         private int itemKey;
         [Header("설명 제목"), SerializeField]
