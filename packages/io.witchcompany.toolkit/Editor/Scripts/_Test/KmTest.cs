@@ -11,30 +11,30 @@ namespace WitchCompany.Toolkit.Editor
 {
     public static class KmTest
     { 
-        [MenuItem("WitchToolkit/Permission")]
-        public static async void Login()
-        {
-            var json = await WitchAPI.Login("ohju96@naver.com", "12DHwngus!!");
-            AuthConfig.Auth = json;
-            
-            Debug.Log(JsonConvert.SerializeObject(json));
-            Debug.Log(CommonTool.TimeStampToDateTime(json.accessExpire).ToString("u"));
-            Debug.Log(CommonTool.TimeStampToDateTime(json.refreshExpire).ToString("u"));
-        }
-        
-        [MenuItem("WitchToolkit/SaveAndClearFlags")]
-        public static void Release()
-        {
-            StaticRevertTool.SaveAndClearFlags();
-            EditorSceneManager.SaveOpenScenes();
-        }
-        
-        [MenuItem("WitchToolkit/RevertFlags")]
-        public static void Revert()
-        {
-            StaticRevertTool.RevertFlags();
-            EditorSceneManager.SaveOpenScenes();
-        }
+        // [MenuItem("WitchToolkit/Permission")]
+        // public static async void Login()
+        // {
+        //     var json = await WitchAPI.Login("ohju96@naver.com", "12DHwngus!!");
+        //     AuthConfig.Auth = json;
+        //     
+        //     Debug.Log(JsonConvert.SerializeObject(json));
+        //     Debug.Log(CommonTool.TimeStampToDateTime(json.accessExpire).ToString("u"));
+        //     Debug.Log(CommonTool.TimeStampToDateTime(json.refreshExpire).ToString("u"));
+        // }
+        //
+        // [MenuItem("WitchToolkit/SaveAndClearFlags")]
+        // public static void Release()
+        // {
+        //     StaticRevertTool.SaveAndClearFlags();
+        //     EditorSceneManager.SaveOpenScenes();
+        // }
+        //
+        // [MenuItem("WitchToolkit/RevertFlags")]
+        // public static void Revert()
+        // {
+        //     StaticRevertTool.RevertFlags();
+        //     EditorSceneManager.SaveOpenScenes();
+        // }
         
         // var scn = AssetTool.GetSelectedAsset() as SceneAsset;
         // var option = new BlockPublishOption
