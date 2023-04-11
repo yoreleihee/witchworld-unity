@@ -16,7 +16,7 @@
         public const string TagReflectionProbe = "Reflection Probe";
         
         // 유효성 검사
-        public const string TagBlackList = "Black List";
+        public const string TagComponent = "Component";
         public const string TagBadObject = "Bad Object";
     }
 }

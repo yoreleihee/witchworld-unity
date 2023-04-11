@@ -36,14 +36,16 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var meshVertex = GetAllMeshes().Item2;
             if (meshVertex > OptimizationConfig.MaxVerts)
             {
-                var error = new ValidationError($"Total Mesh Vertex Count : {meshVertex} / { OptimizationConfig.MaxVerts}\n모든 Vertex의 최대 개수는 {OptimizationConfig.MaxVerts}개 입니다. Scene 내의 Mesh Vertex를 조절해주세요.", ValidationTag.TagMeshVertex);
+                var error = new ValidationError($"Total Mesh Vertex Count : {meshVertex} / { OptimizationConfig.MaxVerts}\n" +
+                                                $"모든 Vertex의 최대 개수는 {OptimizationConfig.MaxVerts}개 입니다. Scene 내의 Mesh Vertex를 조절해주세요.", ValidationTag.TagMeshVertex);
                 validationReport.Append(error);
             }
             //  라이트맵 검사
             var lightMapSize = GetLightMapMB();
             if (lightMapSize > OptimizationConfig.MaxLightmapMb)
             {
-                var error = new ValidationError($"Total Light Map Size : {lightMapSize} / {OptimizationConfig.MaxLightmapMb} MB\n모든 Light Map의 최대 크기는 {OptimizationConfig.MaxLightmapMb} MB입니다. Scene에 적용된 Light Map을 조절해주세요.", ValidationTag.TagLightmap);
+                var error = new ValidationError($"Total Light Map Size : {lightMapSize} / {OptimizationConfig.MaxLightmapMb} MB\n" +
+                                                $"모든 Light Map의 최대 크기는 {OptimizationConfig.MaxLightmapMb} MB입니다. Scene에 적용된 Light Map을 조절해주세요.", ValidationTag.TagLightmap);
                 validationReport.Append(error);
             }
             
@@ -51,7 +53,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var textureSize = GetTextureMB();
             if (textureSize > OptimizationConfig.MaxSharedTextureMb)
             {
-                var error = new ValidationError($"Texture Size : {textureSize} / {OptimizationConfig.MaxSharedTextureMb} MB\n모든 Texture의 최대 크기는 {OptimizationConfig.MaxSharedTextureMb} MB입니다. Scene 내의 Texture를 조절해주세요.", ValidationTag.TagTexture);
+                var error = new ValidationError($"Texture Size : {textureSize} / {OptimizationConfig.MaxSharedTextureMb} MB\n" +
+                                                $"모든 Texture의 최대 크기는 {OptimizationConfig.MaxSharedTextureMb} MB입니다. Scene 내의 Texture를 조절해주세요.", ValidationTag.TagTexture);
                 validationReport.Append(error);
             }
             
@@ -59,7 +62,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var materialCount = GetUniqueMaterialCount();
             if (materialCount > OptimizationConfig.MaxUniqueMaterials)
             {
-                var error = new ValidationError($"Unique Material Count : {materialCount} / {OptimizationConfig.MaxUniqueMaterials}\nMaterial의 최대 개수는 {OptimizationConfig.MaxUniqueMaterials}개입니다. Scene 내에 적용된 Material의 수를 조절해주세요.", ValidationTag.TagMaterial);
+                var error = new ValidationError($"Unique Material Count : {materialCount} / {OptimizationConfig.MaxUniqueMaterials}\n" +
+                                                $"Material의 최대 개수는 {OptimizationConfig.MaxUniqueMaterials}개입니다. Scene 내에 적용된 Material의 수를 조절해주세요.", ValidationTag.TagMaterial);
                 validationReport.Append(error);
             }
             
@@ -86,7 +90,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 if (mesh.Item2.vertexCount > OptimizationConfig.MaxIndividualVerts) 
                 {
                     var error = new ValidationError(
-                        $"{mesh.Item1.name}의 {mesh.Item2.name} : {mesh.Item2.vertexCount} / {OptimizationConfig.MaxIndividualVerts}\n오브젝트의 최대 Vertex 개수는 {OptimizationConfig.MaxIndividualVerts}입니다. 해당 오브젝트의 Mesh를 수정해주세요.",
+                        $"{mesh.Item1.name}의 {mesh.Item2.name} : {mesh.Item2.vertexCount} / {OptimizationConfig.MaxIndividualVerts}\n" +
+                        $"오브젝트의 최대 Vertex 개수는 {OptimizationConfig.MaxIndividualVerts}입니다. 해당 오브젝트의 Mesh를 수정해주세요.",
                         ValidationTag.TagMeshVertex, mesh.Item1);
                     report.Append(error);
                 }

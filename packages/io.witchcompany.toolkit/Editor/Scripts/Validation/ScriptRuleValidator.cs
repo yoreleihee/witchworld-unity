@@ -1,12 +1,15 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
+using Cysharp.Threading.Tasks;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Module;
+using WitchCompany.Toolkit.Runtime;
 using WitchCompany.Toolkit.Validation;
 using Object = UnityEngine.Object;
 
@@ -108,7 +111,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         }
 
 
-        public static ValidationReport ValidateMissingComponents(Scene scene)
+        private static ValidationReport ValidateMissingComponents(Scene scene)
         {
             var report = new ValidationReport();
             

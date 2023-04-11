@@ -18,7 +18,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 DrawReport();
         }
 
-        private static void DrawSceneVital()
+        private static async void DrawSceneVital()
         {
 
             GUILayout.Label("Scene Vital", EditorStyles.boldLabel);
@@ -36,6 +36,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
                 validationReport.Append(ObjectValidator.ValidationCheck());
                 validationReport.Append(WhiteListValidator.ValidationCheck());
+                validationReport.Append(await AwaitValidator.ValidationCheck());
                 
                 // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()
                 CustomWindow.InitialStyles();

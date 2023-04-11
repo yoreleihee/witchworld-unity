@@ -171,6 +171,18 @@ namespace WitchCompany.Toolkit.Editor.API
             
             return response.success ? response.payload : null;
         }
+
+        public static async UniTask<bool> GetValidItem(int itemKey)
+        {
+            
+            var response = await Request<JItemDetail>(new RequestHelper
+            {
+                Method = "GET",
+                Uri = ApiConfig.URL($"item/detail/{itemKey}")
+            });
+            
+            return response.success;
+        }
     }
 
     public static partial class WitchAPI
