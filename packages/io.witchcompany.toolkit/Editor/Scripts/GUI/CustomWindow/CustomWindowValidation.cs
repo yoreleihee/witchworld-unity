@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Validation;
 using WitchCompany.Toolkit.Validation;
 
@@ -70,11 +71,24 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     foreach (var error in validationReport.errors)
                     {
                         if (error == null) return;
+                        
                         // 이전 tag와 값이 다르면 tag 출력
                         if (preErrorTag != error.tag)
                         {
                             GUILayout.Space(10);
+                            
+                            EditorGUILayout.BeginHorizontal();
                             GUILayout.Label(error.tag, EditorStyles.boldLabel);   
+                            
+                            
+                            if (error.tag == ValidationTag.TagBatchingStatic && GUILayout.Button("Clear", CustomWindow.clearButtionStyle))
+                            {
+                                StaticRevertTool.ClearBatchingStatics();
+                            }
+                            
+                            
+                            EditorGUILayout.EndHorizontal();
+                            
                             preErrorTag = error.tag;
                         }
 

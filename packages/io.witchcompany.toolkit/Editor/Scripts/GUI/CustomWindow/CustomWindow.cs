@@ -22,6 +22,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         
         public static GUIStyle logTextStyle;
         public static GUIStyle logButtonStyle;
+        public static GUIStyle clearButtionStyle;
         
         [MenuItem ("WitchToolkit/Witch Creator Toolkit")]
         private static void WitchToolKit () {
@@ -57,6 +58,17 @@ namespace WitchCompany.Toolkit.Editor.GUI
             logButtonStyle.margin = new RectOffset(0, 0, 0, 3);
             logButtonStyle.padding = new RectOffset(5, 5, 5, 5);
             logButtonStyle.alignment = TextAnchor.MiddleLeft;
+            
+            // clear static button
+            clearButtionStyle = new GUIStyle();
+            clearButtionStyle.normal.background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f));
+            clearButtionStyle.active.background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f));
+            clearButtionStyle.normal.textColor = Color.white;
+            clearButtionStyle.active.textColor = Color.white;
+            clearButtionStyle.fixedWidth = 70f;
+            clearButtionStyle.margin = new RectOffset(0, 6, 0, 10);
+            
+            clearButtionStyle.alignment = TextAnchor.MiddleCenter;
         }
         
         
