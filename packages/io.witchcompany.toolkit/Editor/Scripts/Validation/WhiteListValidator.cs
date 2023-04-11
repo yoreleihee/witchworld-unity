@@ -47,8 +47,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "RawImage",
             "Mask",
             "ScrollRect",
+            "Scrollbar",
             "HorizontalLayoutGroup",
+            "VerticalLayoutGroup",
             "ContentSizeFitter",
+            "LayoutElement",
             // Text Mesh Pro
             "InlineGraphic",
             "InlineGraphicManager",
