@@ -1,14 +1,19 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
+using WitchCompany.Toolkit.Module;
 using Object = UnityEngine.Object;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
     public static class CaptureTool
     {
-        public static void CaptureAndSave(Transform cameraParent, string savePath)
+        public static void CaptureAndSave(string savePath)
         {
+            var offset = new Vector3(0, 1.8f, 0);
+            var cameraParent = GameObject.FindObjectOfType<WitchSpawnPoint>().transform;
+            cameraParent.position += offset;
+            
             //cameraParent에 카메라 생성
             var cam = new GameObject("Capture Camera").AddComponent<Camera>();
             
@@ -33,12 +38,10 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
             //rt리셋, 카메라 파괴
             RenderTexture.active = null;
-            Object.Destroy(cam);
+            Object.DestroyImmediate(cam);
             
             //캡쳐 파일 저장
             var bytes = newTexture.EncodeToJPG(75);
-            var date = DateTime.Now.ToString("yyyy_MM_HH-mm-ss");
-            var fileName = "WCapture" + date;
             
             File.WriteAllBytes(savePath, bytes);
         }

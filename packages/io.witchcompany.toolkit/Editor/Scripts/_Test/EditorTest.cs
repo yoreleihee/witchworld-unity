@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Unity.Plastic.Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
@@ -9,28 +10,15 @@ namespace WitchCompany.Toolkit.Editor
 {
     public static class EditorTest
     {
-        public static int UnitykeyId;
-        
-        
-        // [MenuItem("WitchToolkit/Register")]
-        // public static async void Register()
-        // {
-        //     var scene = AssetTool.GetSelectedAsset() as SceneAsset;
-        //     var option = new BlockPublishOption
-        //     {
-        //         targetScene = scene,
-        //         theme = BlockTheme.Outdoor
-        //     };
-        //
-        //     var blockName = new JLanguageString
-        //     {
-        //         en = "chichi",
-        //         kr = "치치"
-        //     };
-        //
-        //     var response = await WitchAPI.RegisterBlock(option, blockName);
-        //     
-        //     Debug.Log("블록 아이디" + response.blockId);
-        // }
+        [MenuItem("WitchToolkit/UnityKeyList Test")]
+        public static async void Test()
+        {
+            var response = await WitchAPI.GetUnityKeyList();
+
+            foreach (var key in response.unityKeyList)
+            {
+                Debug.Log(JsonConvert.SerializeObject(key));
+            }
+        }
     }
 }

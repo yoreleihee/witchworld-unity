@@ -4,6 +4,7 @@
     public class JPublish
     {
         public JBlock block;
+        public string bundleType;
         public JManifest manifest;
     }
 }

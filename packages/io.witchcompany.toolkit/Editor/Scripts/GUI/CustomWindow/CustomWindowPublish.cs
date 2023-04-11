@@ -1,7 +1,10 @@
 using System;
+using System.IO;
+using Cysharp.Threading.Tasks;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
@@ -13,6 +16,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
     {
         private static SceneAsset blockScene;
         private static BlockTheme blockTheme;
+        private static BuildTargetGroup blockPlatform;
         public static JBuildReport buildReport;
         private static UploadState uploadResult = UploadState.None;
         
@@ -49,21 +53,35 @@ namespace WitchCompany.Toolkit.Editor.GUI
         /// - Scriptable Object 적용 칸
         /// - 빌드 버튼
         /// </summary>
-        private static void DrawPublish()
+        private static async UniTaskVoid DrawPublish()
         {
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
             blockScene = EditorGUILayout.ObjectField("Scene", blockScene, typeof(SceneAsset), false) as SceneAsset;
             blockTheme = (BlockTheme)EditorGUILayout.EnumPopup("Theme", blockTheme);
-            
+
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Publish"))
             {
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
 
                 // TODO: 플랫폼별 업로드
-                //if (buildReport.result == JBuildReport.Result.Success) 
-                    //Upload();
+                if (buildReport.result == JBuildReport.Result.Success)
+                {
+                    // 썸네일 캡쳐
+                    var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, GetOption().ThumbnailKey);
+                    CaptureTool.CaptureAndSave(thumbnailPath);
+                    
+                    
+                    // todo : 1. 업로드 로딩창 띄우기
+                    
+                    uploadResult = UploadState.Uploading;
+                    await Upload(AssetBundleConfig.Standalone);
+                    await Upload(AssetBundleConfig.WebGL);
+                    
+                    // todo : 2. 업로드 비동기 끝날 때까지 로딩창 유지
+                    // uploadResult = response ? UploadState.Success : UploadState.Failed;
+                }
             }
         }
         
@@ -110,7 +128,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
         }
 
-        private static async void Upload()
+        private static async UniTask<bool> Upload(string bundleType)
         {
             var option = GetOption();
 
@@ -118,14 +136,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 unityVersion = ToolkitConfig.UnityVersion,
                 toolkitVersion = ToolkitConfig.WitchToolkitVersion,
-                // TODO: 플랫폼별 CRC
-                //crc = AssetBundleTool.ReadManifest(option.BundleKey),
+                crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey),
             };
             uploadResult = UploadState.Uploading;
             
-            var response = await WitchAPI.UploadBlock(option, manifest);
+            var response = await WitchAPI.UploadBlock(option, manifest, bundleType);
 
-            uploadResult = response ? UploadState.Success : UploadState.Failed;
+            return response;
         }
     }
 }

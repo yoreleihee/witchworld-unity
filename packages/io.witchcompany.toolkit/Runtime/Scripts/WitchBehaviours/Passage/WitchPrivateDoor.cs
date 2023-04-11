@@ -11,7 +11,8 @@ namespace WitchCompany.Toolkit.Runtime
 {
     [RequireComponent(typeof(WitchDoor))]
     [RequireComponent(typeof(WitchDoorEffect))]
-    public class WitchPrivateDoor : WitchPassageBase
+    [DisallowMultipleComponent]
+    public class WitchPrivateDoor : WitchBehaviour
     {
         public override string BehaviourName => "통로: 프라이빗 공간";
         public override string Description => "특정 아이템을 가지고 있을 때 프라이빗 공간으로 연결되는 문입니다.\n" +

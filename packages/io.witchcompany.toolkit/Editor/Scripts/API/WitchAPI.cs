@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+using UnityEditor;
+using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.Networking;
 using WitchCompany.Toolkit.Editor.Configs;
@@ -99,13 +101,13 @@ namespace WitchCompany.Toolkit.Editor.API
             return -2;
         }
 
-        public static async UniTask<bool> UploadBlock(BlockPublishOption option, JManifest manifest)
+        public static async UniTask<bool> UploadBlock(BlockPublishOption option, JManifest manifest, string bundleType)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return false;
             
-            var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, option.BundleKey);
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
+            var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, bundleType, option.BundleKey);
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, bundleType, option.ThumbnailKey);
             var bundleData = await File.ReadAllBytesAsync(bundlePath);
             var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
 
@@ -116,10 +118,13 @@ namespace WitchCompany.Toolkit.Editor.API
                     name = option.Key,
                     theme = option.theme.ToString().ToLower()
                 },
+                bundleType = bundleType,
                 manifest = manifest
             };
 
             var json = JsonConvert.SerializeObject(body);
+            
+            Debug.Log("publish 요청 값\n"+json);
 
             var form = new List<IMultipartFormSection>
             {
@@ -130,7 +135,7 @@ namespace WitchCompany.Toolkit.Editor.API
             var response = await Request<JPublishResponse>(new RequestHelper
             {
                 Method = "POST",
-                Uri = ApiConfig.URL("v2/toolkits/unity"),
+                Uri = ApiConfig.URL("v2/toolkits/unity-key"),
                 Headers = ApiConfig.TokenHeader(auth.accessToken),
                 FormSections = form
             });
@@ -148,11 +153,11 @@ namespace WitchCompany.Toolkit.Editor.API
             var body = new JRegisterBlockData
             {
                 // 임시 데이터
-                unityKeyId = EditorTest.UnitykeyId,
-                type = BlockType.Community.ToString().ToLower(),
-                theme = option.theme.ToString().ToLower(),
-                createUserNickname = AuthConfig.NickName,
-                name = blockName
+                // unityKeyId = EditorTest.UnitykeyId,
+                // type = BlockType.Community.ToString().ToLower(),
+                // theme = option.theme.ToString().ToLower(),
+                // createUserNickname = AuthConfig.NickName,
+                // name = blockName
             };
 
             var form = new List<IMultipartFormSection>
@@ -183,6 +188,20 @@ namespace WitchCompany.Toolkit.Editor.API
             
             return response.success;
         }
+
+        public static async UniTask<JUnityKeyList> GetUnityKeyList()
+        {
+            var auth = AuthConfig.Auth;
+
+            var response = await Request<JUnityKeyList>(new RequestHelper
+            {
+                Method = "GET",
+                Uri = ApiConfig.URL($"v2/toolkits/unity"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken)
+            });
+            return response.success ? response.payload : null;
+        }
+        
     }
 
     public static partial class WitchAPI
