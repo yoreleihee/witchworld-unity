@@ -18,5 +18,6 @@
         // 유효성 검사
         public const string TagComponent = "Component";
         public const string TagBadObject = "Bad Object";
+        public const string TagBatchingStatic = "Batching Static";
     }
 }

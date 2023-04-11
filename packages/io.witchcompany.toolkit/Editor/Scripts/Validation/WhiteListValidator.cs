@@ -67,7 +67,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             // 툴킷
             "WitchBehaviour",
             // 파티클 에셋
-            "CFXR_Effect"
+            //"CFXR_Effect"
         };
         public static ValidationReport ValidationCheck()
         {

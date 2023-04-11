@@ -8,7 +8,7 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
-    public class AwaitValidator
+    public static class AwaitValidator
     {
         public static async UniTask<ValidationReport> ValidationCheck()
         {

@@ -28,7 +28,7 @@ namespace WitchCompany.Toolkit.Module
             if (col.radius <= 0)
                 return Error("포탈 입구의 크기는 0보다 커야 합니다.");
             if (!col.isTrigger)
-                return Error("포탈 입구는 IsTrigger 체크되어야 합니다.");
+                return TriggerError(col);
 
             var distance = Vector3.Distance(exit.position, transform.position);
             if (distance < col.radius + 1)

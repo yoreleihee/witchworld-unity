@@ -11,9 +11,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
     {
         public static ValidationReport ValidationCheck()
         {
-            // return new ValidationReport()
-            //     .Append(ValidateObjectID());
-            return null;
+            return ValidateStatic();
         }
 
         private static ValidationReport ValidateObjectID()
@@ -29,6 +27,24 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
                 if (id == 0)
                     report.Append($"비정상적인 오브젝트가 존재합니다: {go.name}({id})", ValidationTag.TagBadObject, go);
+            }
+
+            return report;
+        }
+
+        private static ValidationReport ValidateStatic()
+        {
+            var report = new ValidationReport();
+            
+            foreach (var tr in GetAllTransforms())
+            {
+                var go = tr.gameObject;
+                if (!go.isStatic) continue;
+                
+                var flag = GameObjectUtility.GetStaticEditorFlags(go);
+
+                if (flag.HasFlag(StaticEditorFlags.BatchingStatic))
+                    report.Append($"{go.name}의 Batching Static 설정을 꺼주세요.", ValidationTag.TagBatchingStatic, go);
             }
 
             return report;

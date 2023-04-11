@@ -19,11 +19,6 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 4;
 
-        [Header("나가는 방향(읽기 전용)")]
-        [SerializeField, ReadOnly] private Vector3 outerDirection;
-        public Vector3 OuterDirection => outerDirection;
-        
-
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {

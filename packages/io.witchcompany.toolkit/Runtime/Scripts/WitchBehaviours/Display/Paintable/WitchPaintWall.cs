@@ -48,7 +48,10 @@ namespace WitchCompany.Toolkit.Module
             if (!TryGetComponent(out MeshCollider col)) return NullError(nameof(MeshCollider));
             if (!TryGetComponent(out MeshRenderer _)) return NullError(nameof(MeshRenderer));
             if (!TryGetComponent(out MeshFilter _)) return NullError(nameof(MeshFilter));
+            
             if (col.isTrigger) return Error("콜라이더는 IsTrigger 체크될 수 없습니다.");
+            if (col.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast")) 
+                return RayLayerError(col.gameObject);
 
             if (TryGetComponent<WitchPaintBrush>(out var b))
                 return Error($"{b.BehaviourName}는 {BehaviourName}의 자식이어야 합니다.");

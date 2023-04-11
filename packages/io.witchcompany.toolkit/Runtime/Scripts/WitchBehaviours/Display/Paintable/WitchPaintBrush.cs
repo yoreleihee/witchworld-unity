@@ -26,7 +26,10 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (!TryGetComponent(out Collider _)) return NullError(nameof(Collider));
+            if (!TryGetComponent(out Collider col)) 
+                return NullError(nameof(Collider));
+            if (col.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast")) 
+                return RayLayerError(col.gameObject);
             
             if (FindObjectOfType<WitchPaintWall>() == null) 
                 return Error("'전시: 페인트 벽'이 씬에 있어야 합니다. 생성해주세요.");
