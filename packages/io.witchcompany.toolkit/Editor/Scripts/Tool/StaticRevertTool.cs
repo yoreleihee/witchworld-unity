@@ -7,7 +7,6 @@ namespace WitchCompany.Toolkit.Editor.Tool
 {
     public static class StaticRevertTool
     {
-        [MenuItem("WitchToolkit/ClearStatics")]
         public static void ClearBatchingStatics()
         {
             foreach (var tr in GetAllTransforms())
