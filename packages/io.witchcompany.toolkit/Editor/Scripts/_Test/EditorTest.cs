@@ -17,8 +17,13 @@ namespace WitchCompany.Toolkit.Editor
 
             foreach (var key in response.unityKeyList)
             {
-                Debug.Log(JsonConvert.SerializeObject(key));
+                Debug.Log(JsonConvert.SerializeObject(key, Formatting.Indented));
             }
+        }
+        [MenuItem("WitchToolkit/ViewAuth")]
+        public static void GetAuth()
+        {
+            Debug.Log(AuthConfig.Auth.accessToken);
         }
     }
 }
