@@ -34,10 +34,6 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 
             if (!transform.HasChild(playerEnterTrigger)) return ChildError(nameof(playerEnterTrigger));
             if (!transform.HasChild(targetDoor, false)) return ChildError(nameof(targetDoor));
-            if (playerEnterTrigger.gameObject == targetDoor.gameObject)
-                return Error("playerEnterTrigger와 targetDoor는 다른 오브젝트여야 합니다.");
-            if (targetDoor.HasChild(playerEnterTrigger))
-                return Error($"playerEnterTrigger 는 targetDoor의 자식일 수 없습니다.");
 
             if (!playerEnterTrigger.isTrigger)
                 return TriggerError(playerEnterTrigger);
