@@ -73,14 +73,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     CaptureTool.CaptureAndSave(thumbnailPath);
                     
                     
-                    // todo : 1. 업로드 로딩창 띄우기
-                    
-                    uploadResult = UploadState.Uploading;
-                    await Upload(AssetBundleConfig.Standalone);
-                    await Upload(AssetBundleConfig.WebGL);
-                    
-                    // todo : 2. 업로드 비동기 끝날 때까지 로딩창 유지
-                    // uploadResult = response ? UploadState.Success : UploadState.Failed;
+                    // 업로드 로딩창
+                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit Publishing", "Uploading...", 1.0f);
+                    await UniTask.Delay(10000);
+                    EditorUtility.ClearProgressBar();
                 }
             }
         }

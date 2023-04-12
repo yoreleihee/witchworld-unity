@@ -12,14 +12,13 @@ namespace WitchCompany.Toolkit.Editor.Tool
         {
             var offset = new Vector3(0, 1.8f, 0);
             var cameraParent = GameObject.FindObjectOfType<WitchSpawnPoint>().transform;
-            cameraParent.position += offset;
             
             //cameraParent에 카메라 생성
             var cam = new GameObject("Capture Camera").AddComponent<Camera>();
             
             //camera Transform 설정
             cam.transform.SetParent(cameraParent);
-            cam.transform.position = cameraParent.position;
+            cam.transform.position = cameraParent.position + offset;
             cam.transform.forward = cameraParent.forward;
 
             //화면 캡쳐
@@ -38,7 +37,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
             //rt리셋, 카메라 파괴
             RenderTexture.active = null;
-            Object.DestroyImmediate(cam);
+            Object.DestroyImmediate(cam.gameObject);
             
             //캡쳐 파일 저장
             var bytes = newTexture.EncodeToJPG(75);
