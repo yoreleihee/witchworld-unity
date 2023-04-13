@@ -11,7 +11,7 @@ namespace WitchCompany.Toolkit.Module
     {
         public override string BehaviourName => "필수: 블록 매니저";
         public override string Description => "블록의 기본이 되는 요소입니다.\n" +
-                                              "모든 오브젝트의 최상위 부모이며, 기본 좌표에 고정됩니다.\n" +
+                                              "모든 오브젝트의 최상위 부모이며, 기본 좌표에 있어야 합니다.\n" +
                                               "한 씬에 하나만 배치할 수 있습니다.";
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
@@ -35,6 +35,9 @@ namespace WitchCompany.Toolkit.Module
         {
             if (spawnPoint == null) return NullError(nameof(spawnPoint));
             if (gravity is < 0 or > 1) return Error("gravity는 0과 1 사이어야 합니다.");
+            if (transform.position != Vector3.zero) return Error("매니저의 좌표는 0이어야 합니다.");
+            if (transform.rotation != Quaternion.identity) return Error("매니저의 회전값은 0이어야 합니다.");
+            if (transform.localScale != Vector3.one) return Error("매니저의 스케일은 1이어야 합니다.");
             
             return null;
         }
