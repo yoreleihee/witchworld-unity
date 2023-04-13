@@ -81,7 +81,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                             GUILayout.Label(error.tag, EditorStyles.boldLabel);   
                             
                             
-                            if (error.tag == ValidationTag.TagBatchingStatic && GUILayout.Button("Clear", CustomWindow.clearButtionStyle))
+                            if (error.tag == ValidationTag.TagBatchingStatic && GUILayout.Button("Clear", CustomWindow.ClearButtionStyle))
                             {
                                 StaticRevertTool.ClearBatchingStatics();
                             }
@@ -96,12 +96,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
                         // 로그 종류에 따라 버튼 style 변경
                         if (error.context == null)
                         {
-                            GUILayout.Label(error.message, CustomWindow.logTextStyle);
+                            GUILayout.Label(error.message, CustomWindow.LogTextStyle);
                         }
                         else
                         {
                             // 에러 Log 출력
-                            if (GUILayout.Button(error.message, CustomWindow.logButtonStyle))
+                            if (GUILayout.Button(error.message, CustomWindow.LogButtonStyle))
                             {
                                 EditorGUIUtility.PingObject(error.context);
                             }

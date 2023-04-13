@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
@@ -66,6 +65,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Publish"))
             {
+                CustomWindow.IsInputDisable = true;
+                
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
 
                 // TODO: 플랫폼별 업로드
@@ -77,7 +78,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     
                     
                     // 업로드 로딩창
-                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "uploading to server...", 1.0f);
+                    // todo: 입력 제한 기능 필요
+                    // EditorGUI.DisabledGuiViewInputScope(GUIView.current, true);
+                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     await UniTask.Delay(5000);
                     EditorUtility.ClearProgressBar();
                     
@@ -85,6 +88,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     // EditorUtility.DisplayDialog("Witch Creator Toolkit", successMsg, "OK");
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", failedMsg, "OK");
                 }
+
+                CustomWindow.IsInputDisable = false;
             }
         }
         

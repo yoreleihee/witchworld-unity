@@ -11,18 +11,22 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public class CustomWindow : EditorWindow
     {
+        
         private const float MinWindowWidth = 600;
         private const float MinWindowHeight = 700;
-        
         private const float MaxWindowWidth = 600;
         private const float MaxWindowHeight = 2000;
-        
         private const float LogHeight = 40;
+        private static GUIStyle logTextStyle;
+        private static GUIStyle logButtonStyle;
+        private static GUIStyle clearButtionStyle;
+        private static bool isInputDisable;
+
+        public static GUIStyle LogTextStyle => logTextStyle;
+        public static GUIStyle LogButtonStyle => logButtonStyle;
+        public static GUIStyle ClearButtionStyle => clearButtionStyle;
+        public static bool IsInputDisable { set => isInputDisable = value; }
         
-        
-        public static GUIStyle logTextStyle;
-        public static GUIStyle logButtonStyle;
-        public static GUIStyle clearButtionStyle;
         
         [MenuItem ("WitchToolkit/Witch Creator Toolkit")]
         private static void WitchToolKit () {
@@ -72,16 +76,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
         }
         
         
-        private readonly GUIContent[] toolbarLabels = new GUIContent[4]
+        private static readonly GUIContent[] toolbarLabels = new GUIContent[5]
         {
             new ("Authentication"),
             new ("Validation"),
             new ("Publish"),
+            new ("Admin"),
             new ("Settings")
         };
         
         private void OnGUI()
         {
+            // 윈도우 비활성화 그룹 지정
+            EditorGUI.BeginDisabledGroup (isInputDisable);
+            
             ToolkitConfig.CurrControlPanelType = (ControlPanelType)GUILayout.Toolbar((int)ToolkitConfig.CurrControlPanelType, toolbarLabels);
             
             // 선택한 메뉴에 따라 다른 함수 호출
@@ -93,14 +101,18 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 case ControlPanelType.Validate :
                     CustomWindowValidation.ShowValidation();
                     break;
-                case ControlPanelType.Publish : 
+                case ControlPanelType.Publish: 
                     CustomWindowPublish.ShowPublish();
+                    break;
+                case ControlPanelType.Admin :
+                    CustomWindowAdmin.ShowAdmin();
                     break;
                 case ControlPanelType.Config : 
                     CustomWindowSetting.ShowSetting();
                     break;
                 default: break;
             }
+            EditorGUI.EndDisabledGroup();
         }
         
         /// <summary> Editor Window가 닫힐 때 호출 </summary>
