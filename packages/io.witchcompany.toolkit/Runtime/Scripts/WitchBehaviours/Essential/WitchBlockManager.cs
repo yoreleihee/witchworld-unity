@@ -12,7 +12,8 @@ namespace WitchCompany.Toolkit.Module
         public override string BehaviourName => "필수: 블록 매니저";
         public override string Description => "블록의 기본이 되는 요소입니다.\n" +
                                               "모든 오브젝트의 최상위 부모이며, 기본 좌표에 있어야 합니다.\n" +
-                                              "한 씬에 하나만 배치할 수 있습니다.";
+                                              "한 씬에 하나만 배치할 수 있습니다.\n" +
+                                              "중력값은 기본이 1입니다.";
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
@@ -20,9 +21,12 @@ namespace WitchCompany.Toolkit.Module
         [SerializeField, ReadOnly] private List<WitchBehaviour> behaviours;
         [SerializeField, ReadOnly] private WitchSpawnPoint spawnPoint;
 
+        [Header("BGM")] 
+        [SerializeField] private AudioClip defaultBGM;
         [Header("중력값")]
         [SerializeField, Range(0.1f, 1f)] private float gravity = 1f;
-        
+
+        public AudioClip DefaultBGM => defaultBGM;
         public float GravityRatio => gravity;
         public Transform SpawnPoint => spawnPoint.transform;
         public List<WitchBehaviour> Behaviours => behaviours;
