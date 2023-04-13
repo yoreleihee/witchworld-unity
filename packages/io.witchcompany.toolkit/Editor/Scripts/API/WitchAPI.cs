@@ -107,7 +107,7 @@ namespace WitchCompany.Toolkit.Editor.API
             if (string.IsNullOrEmpty(auth?.accessToken)) return false;
             
             var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, bundleType, option.BundleKey);
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, bundleType, option.ThumbnailKey);
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
             var bundleData = await File.ReadAllBytesAsync(bundlePath);
             var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
 
@@ -124,7 +124,7 @@ namespace WitchCompany.Toolkit.Editor.API
 
             var json = JsonConvert.SerializeObject(body);
             
-            Debug.Log("publish 요청 값\n"+json);
+            Debug.Log("publish 요청 값\n" + json);
 
             var form = new List<IMultipartFormSection>
             {
@@ -177,7 +177,7 @@ namespace WitchCompany.Toolkit.Editor.API
             return response.success ? response.payload : null;
         }
 
-        public static async UniTask<bool> GetValidItem(int itemKey)
+        public static async UniTask<bool> CheckValidItem(int itemKey)
         {
             
             var response = await Request<JItemDetail>(new RequestHelper

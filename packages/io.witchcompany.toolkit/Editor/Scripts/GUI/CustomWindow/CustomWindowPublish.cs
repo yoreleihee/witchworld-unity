@@ -20,6 +20,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
         public static JBuildReport buildReport;
         private static UploadState uploadResult = UploadState.None;
         
+        private const string successMsg = "Upload Result : Success\n블록을 서버에 업로드했습니다";
+        private const string failedMsg = "Upload Result : Failed\n블록을 서버에 업로드하지 못했습니다\n다시 시도해주세요";
+        
         private enum UploadState
         {
             None,
@@ -73,14 +76,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     CaptureTool.CaptureAndSave(thumbnailPath);
                     
                     
-                    // todo : 1. 업로드 로딩창 띄우기
+                    // 업로드 로딩창
+                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "uploading to server...", 1.0f);
+                    await UniTask.Delay(5000);
+                    EditorUtility.ClearProgressBar();
                     
-                    uploadResult = UploadState.Uploading;
-                    await Upload(AssetBundleConfig.Standalone);
-                    await Upload(AssetBundleConfig.WebGL);
-                    
-                    // todo : 2. 업로드 비동기 끝날 때까지 로딩창 유지
-                    // uploadResult = response ? UploadState.Success : UploadState.Failed;
+                    // todo : 유니티 키 생성 api 결과에 따라 팝업창 메시지 다르게 변경할 것
+                    // EditorUtility.DisplayDialog("Witch Creator Toolkit", successMsg, "OK");
+                    EditorUtility.DisplayDialog("Witch Creator Toolkit", failedMsg, "OK");
                 }
             }
         }
