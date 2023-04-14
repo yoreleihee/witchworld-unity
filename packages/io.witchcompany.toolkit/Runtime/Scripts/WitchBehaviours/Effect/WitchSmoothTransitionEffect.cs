@@ -13,15 +13,15 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public override string DocumentURL => "";
 
         [Header("변화 시간"), SerializeField, Range(0.01f, 2f)]
-        private float smoothTime;
-        private UnityEvent fadeEnable = new UnityEvent();
-        private UnityEvent fadeDisable = new UnityEvent();
+        private float smoothTime = 0.1f;
+        [HideInInspector]
+        public UnityEvent show = new();
+        [HideInInspector]
+        public UnityEvent hide = new();
         
         public float SmoothTime => smoothTime;
-        public UnityEvent FadeEnable => fadeEnable;
-        public UnityEvent FadeDisable => fadeDisable;
 
-        public void FadeIn() { fadeEnable.Invoke(); }
-        public void FadeOut() { fadeDisable.Invoke(); }
+        public void Show() => show.Invoke();
+        public void Hide() => hide.Invoke();
     }
 }
