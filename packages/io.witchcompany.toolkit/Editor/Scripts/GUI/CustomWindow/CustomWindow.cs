@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using Color = UnityEngine.Color;
@@ -20,6 +22,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static GUIStyle logTextStyle;
         private static GUIStyle logButtonStyle;
         private static bool isInputDisable;
+        private static bool isAdmin;
 
         public static GUIStyle LogTextStyle => logTextStyle;
         public static GUIStyle LogButtonStyle => logButtonStyle;
@@ -71,25 +74,44 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 }
             };
         }
+
+        private static GUIContent[] defalutToolbarLabels = new GUIContent[4]
+        {
+            new ("Authentication"),
+            new ("Validation"),
+            new ("Publish"),
+            new ("Settings"),
+        };
         
-        
-        private static readonly GUIContent[] toolbarLabels = new GUIContent[5]
+        private static GUIContent[] adminToolbarLabels = new GUIContent[5]
         {
             new ("Authentication"),
             new ("Validation"),
             new ("Publish"),
             new ("Admin"),
-            new ("Settings")
+            new ("Settings"),
         };
-        
+
         private void OnGUI()
         {
             InitialStyles();
             
             // 윈도우 비활성화 그룹 지정
-            EditorGUI.BeginDisabledGroup (isInputDisable);
-            
-            ToolkitConfig.CurrControlPanelType = (ControlPanelType)GUILayout.Toolbar((int)ToolkitConfig.CurrControlPanelType, toolbarLabels);
+            EditorGUI.BeginDisabledGroup(isInputDisable);
+
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                var label = AuthConfig.Admin ? adminToolbarLabels : defalutToolbarLabels;
+                var controlPanelType = (ControlPanelType)GUILayout.Toolbar((int)ToolkitConfig.CurrControlPanelType, label);
+
+                if (check.changed)
+                {
+                    if (!AuthConfig.Admin && (int)controlPanelType == 3)
+                        controlPanelType++;
+                    
+                    ToolkitConfig.CurrControlPanelType = controlPanelType;
+                }
+            }
             
             // 선택한 메뉴에 따라 다른 함수 호출
             switch (ToolkitConfig.CurrControlPanelType)
@@ -103,11 +125,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 case ControlPanelType.Publish: 
                     CustomWindowPublish.ShowPublish();
                     break;
-                case ControlPanelType.Admin :
-                    CustomWindowAdmin.ShowAdmin();
-                    break;
                 case ControlPanelType.Config : 
                     CustomWindowSetting.ShowSetting();
+                    break;
+                case ControlPanelType.Admin :
+                        CustomWindowAdmin.ShowAdmin();
                     break;
                 default: break;
             }
