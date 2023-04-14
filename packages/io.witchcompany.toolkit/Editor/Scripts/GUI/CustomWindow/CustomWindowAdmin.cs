@@ -40,59 +40,92 @@ namespace WitchCompany.Toolkit.Editor.GUI
             GUILayout.Label("Unity Key", EditorStyles.boldLabel);
 
             // 키 선택
-            EditorGUILayout.BeginHorizontal("box");
-            
-            // todo : unity key 페이징 조회 api와 연동
-            _selectedUnityKey = EditorGUILayout.Popup("key list", _selectedUnityKey, unityKeyList.ToArray());
-            
-            if (GUILayout.Button("refresh"))
+            using (new EditorGUILayout.HorizontalScope("box"))
             {
-                CustomWindow.IsInputDisable = true;
+                // todo : unity key 페이징 조회 api와 연동
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var unityKeyIndex = EditorGUILayout.Popup("key list", AdminConfig.UnityKeyIndex, unityKeyList.ToArray());
+
+                    if (check.changed)
+                        AdminConfig.UnityKeyIndex = unityKeyIndex;
+                }
                 
-                EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Getting unity key list from server....", 1.0f);
-                await UniTask.Delay(3000);
-                EditorUtility.ClearProgressBar();
                 
-                CustomWindow.IsInputDisable = false;
+                if (GUILayout.Button("Refresh", GUILayout.Width(100)))
+                {
+                    CustomWindow.IsInputDisable = true;
+                    
+                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Getting unity key list from server....", 1.0f);
+                    await UniTask.Delay(3000);
+                    EditorUtility.ClearProgressBar();
+                    
+                    CustomWindow.IsInputDisable = false;
+                    AdminConfig.UnityKeyIndex = 0;
+                }
             }
-            EditorGUILayout.EndHorizontal();
             
         }
         
         private static async UniTaskVoid DrawBlockConfig()
         {
             GUILayout.Label("Block Config", EditorStyles.boldLabel);
-            
-            EditorGUILayout.BeginVertical("box");
 
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("thumbnail", _thumbnailPath, EditorStyles.textField);
-            if (GUILayout.Button("Select image..."))
+            using (new EditorGUILayout.VerticalScope("box"))
             {
-                _thumbnailPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "jpg");
+                using (new GUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("thumbnail", AdminConfig.ThumbnailPath, EditorStyles.textField);
+                    if (GUILayout.Button("Select", GUILayout.Width(100)))
+                    {
+                        AdminConfig.ThumbnailPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "jpg");
+                    
+                    }
+                } 
+
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    // 정규식에 맞지 않을 경우 이전 값으로 되돌림
+                    var prePathName = _pathName;
+                    _pathName = EditorGUILayout.TextField("path name", AdminConfig.PathName);
+                    if (!Regex.IsMatch(string.IsNullOrEmpty(_pathName) ? "" : _pathName, AssetBundleConfig.ValidNameRegex))
+                        _pathName = prePathName;
+
+                    if (check.changed)
+                        AdminConfig.PathName = _pathName;
+                }
+
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    // 최대 글자수 넘으면 이전값으로 되돌림
+                    var preBlockNameKr = _blockName.kr;
+                    _blockName.kr = EditorGUILayout.TextField("block name (한글)", AdminConfig.BlockNameKr);
+                    if (_blockName.kr?.Length > maxBlockNameLength)
+                        _blockName.kr = preBlockNameKr;
+
+                    if (check.changed)
+                        AdminConfig.BlockNameKr = _blockName.kr;
+                }
+
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var preBlockNameEn = _blockName.en;
+                    _blockName.en = EditorGUILayout.TextField("block name (영문)", AdminConfig.BlockNameEn);
+                    if (_blockName.en?.Length > maxBlockNameLength)
+                        _blockName.en = preBlockNameEn; 
+                    
+                    if (check.changed)
+                        AdminConfig.BlockNameEn = _blockName.en; 
+                }
+
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var blockType = (BlockType)EditorGUILayout.EnumPopup("type", AdminConfig.Type);
+
+                    if (check.changed)
+                        AdminConfig.Type = blockType;
+                }
             }
-            EditorGUILayout.EndHorizontal();
-
-            // 정규식에 맞지 않을 경우 이전 값으로 되돌림
-            var prePathName = _pathName;
-            _pathName = EditorGUILayout.TextField("path name", _pathName);
-            if (!Regex.IsMatch(string.IsNullOrEmpty(_pathName) ? "" : _pathName, AssetBundleConfig.ValidNameRegex))
-                _pathName = prePathName;
-
-            // 최대 글자수 넘으면 이전값으로 되돌림
-            var preBlockNameKr = _blockName.kr;
-            _blockName.kr = EditorGUILayout.TextField("block name (한글)",_blockName.kr);
-            if (_blockName.kr?.Length > maxBlockNameLength)
-                _blockName.kr = preBlockNameKr;
-
-            var preBlockNameEn = _blockName.en;
-            _blockName.en = EditorGUILayout.TextField("block name (영문)",_blockName.en);
-            if (_blockName.en?.Length > maxBlockNameLength)
-                _blockName.en = preBlockNameEn;
-
-            _blockType = (BlockType)EditorGUILayout.EnumPopup("type", _blockType);
-            
-            EditorGUILayout.EndVertical();
 
             if (GUILayout.Button("Publish"))
             {

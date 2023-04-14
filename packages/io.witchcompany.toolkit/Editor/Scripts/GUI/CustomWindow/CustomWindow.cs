@@ -19,12 +19,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private const float LogHeight = 40;
         private static GUIStyle logTextStyle;
         private static GUIStyle logButtonStyle;
-        private static GUIStyle clearButtionStyle;
         private static bool isInputDisable;
 
         public static GUIStyle LogTextStyle => logTextStyle;
         public static GUIStyle LogButtonStyle => logButtonStyle;
-        public static GUIStyle ClearButtionStyle => clearButtionStyle;
         public static bool IsInputDisable { set => isInputDisable = value; }
         
         
@@ -63,11 +61,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 normal=
                 {
                     background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f)),
+                    // background = Texture2D.grayTexture,
                     textColor = Color.white,
                 },
                 active =
                 {
-                    background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f)),
+                    background = Texture2D.grayTexture,
                     textColor = Color.white
                 }
             };
@@ -89,6 +88,15 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     textColor = Color.white
                 }
             };
+
+            shortButtonSytle = new GUIStyle
+            {
+                // fixedWidth = 100f,
+                // fixedHeight = 18f,
+                // alignment = TextAnchor.MiddleCenter,
+                // normal = { background = Texture2D.grayTexture,  textColor = Color.white },
+                // active = { background = Texture2D.linearGrayTexture, textColor = Color.white }
+            };
         }
         
         
@@ -103,6 +111,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
         
         private void OnGUI()
         {
+            InitialStyles();
+            
             // 윈도우 비활성화 그룹 지정
             EditorGUI.BeginDisabledGroup (isInputDisable);
             

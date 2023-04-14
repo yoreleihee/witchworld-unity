@@ -3,7 +3,9 @@ using System.IO;
 using Cysharp.Threading.Tasks;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
@@ -13,8 +15,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowPublish
     {
-        private static SceneAsset blockScene;
-        private static BlockTheme blockTheme;
+        // private static SceneAsset blockScene;
+        // private static BlockTheme blockTheme;
         private static BuildTargetGroup blockPlatform;
         public static JBuildReport buildReport;
         private static UploadState uploadResult = UploadState.None;
@@ -47,7 +49,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         public static BlockPublishOption GetOption()
         {
-            return new BlockPublishOption { targetScene = blockScene, theme = blockTheme };
+            return new BlockPublishOption { targetScene = PublishConfig.Scene, theme = PublishConfig.Theme };
         }
 
         /// <summary>
@@ -59,12 +61,37 @@ namespace WitchCompany.Toolkit.Editor.GUI
         {
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
-            blockScene = EditorGUILayout.ObjectField("Scene", blockScene, typeof(SceneAsset), false) as SceneAsset;
-            blockTheme = (BlockTheme)EditorGUILayout.EnumPopup("Theme", blockTheme);
+            
+            // todo : 현재 씬 지정 버튼
+            // todo : blockscene 에디터 저장
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var blockScene = EditorGUILayout.ObjectField("Scene", PublishConfig.Scene, typeof(SceneAsset), false) as SceneAsset;
+                    if (check.changed)
+                        PublishConfig.Scene = blockScene;
+
+                    if (GUILayout.Button("Active Scene", GUILayout.Width(100)))
+                    {
+                        var activeScenePath = SceneManager.GetActiveScene().path;
+                        PublishConfig.Scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(activeScenePath);
+                    }
+                }
+            }
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                var blockTheme = (BlockTheme)EditorGUILayout.EnumPopup("Theme", (BlockTheme)PublishConfig.Theme);
+
+                if (check.changed)
+                    PublishConfig.Theme = blockTheme;
+            } 
 
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Publish"))
             {
+                // 입력 제한
                 CustomWindow.IsInputDisable = true;
                 
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
@@ -76,9 +103,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, GetOption().ThumbnailKey);
                     CaptureTool.CaptureAndSave(thumbnailPath);
                     
-                    
                     // 업로드 로딩창
-                    // todo: 입력 제한 기능 필요
                     // EditorGUI.DisabledGuiViewInputScope(GUIView.current, true);
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     await UniTask.Delay(5000);
@@ -89,6 +114,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", failedMsg, "OK");
                 }
 
+                // 입력 제한 해제
                 CustomWindow.IsInputDisable = false;
             }
         }

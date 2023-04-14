@@ -81,7 +81,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                             GUILayout.Label(error.tag, EditorStyles.boldLabel);   
                             
                             
-                            if (error.tag == ValidationTag.TagBatchingStatic && GUILayout.Button("Clear", CustomWindow.ClearButtionStyle))
+                            if (error.tag == ValidationTag.TagBatchingStatic && GUILayout.Button("Clear", GUILayout.Width(100)))
                             {
                                 StaticRevertTool.ClearBatchingStatics();
                             }

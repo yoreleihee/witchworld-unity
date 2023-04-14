@@ -29,9 +29,9 @@ namespace WitchCompany.Toolkit.Editor.Configs
         public static LogLevel CurrLogLevel
         {
             get => (LogLevel)EditorPrefs.GetInt(Prefs_LogOption, (int)LogLevel.None);
-            set => EditorPrefs.SetInt(Prefs_LogOption, (int) value);
+            set => EditorPrefs.SetInt(Prefs_LogOption, (int)value);
         }
-        
+
         /// <summary>현재 유효성 검사 수준</summary>
         public static ValidateLevel CurrValidateLevel
         {

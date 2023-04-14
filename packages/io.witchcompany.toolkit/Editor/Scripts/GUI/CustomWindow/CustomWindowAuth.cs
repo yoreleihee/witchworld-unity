@@ -9,9 +9,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowAuth
     {
+        public static string email;
+        public static string password;
         
-        private static GUIStyle style = new GUIStyle();
-
         private enum LoginState
         {
             None,
@@ -26,9 +26,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
         {
             switch (loginState)
             {
-                // case LoginState.None:
-                //     DrawLogin();
-                //     break;
                 case LoginState.Wait:
                     DrawWait();
                     break;
@@ -41,7 +38,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
         }
         
-        
         private static void DrawWait()
         {
             GUILayout.Label("Account", EditorStyles.boldLabel);
@@ -50,14 +46,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
         }
 
-        public static string email;
-        public static string password;
-        
-
         // 로그아웃 상태 (로그인 진행)
         private static void DrawLogin()
         {
-            // ChangeGUIStyle();
             GUILayout.Label("Account", EditorStyles.boldLabel);
             
             EditorGUILayout.BeginVertical("box");
@@ -65,10 +56,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             email = EditorGUILayout.TextField("E-Mail", email);
             password = EditorGUILayout.PasswordField("Password",password);
             
-            // AuthConfig.Email = EditorGUILayout.TextField("E-Mail", AuthConfig.Email);
-            // AuthConfig.Password = EditorGUILayout.PasswordField("Password", AuthConfig.Password);
 
-            // GUILayout.Space(10);
             EditorGUILayout.EndVertical();
 
             if (GUILayout.Button("Login"))
@@ -137,25 +125,5 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 loginState = LoginState.Logout;
             }
         }
-        
-        
-        private static async UniTask TestUniTask()
-        {
-            await UniTask.Delay(1000);
-            Debug.Log("대기 1초");
-            await UniTask.Delay(1000);
-            Debug.Log("대기 2초");
-            await UniTask.Delay(1000);
-            Debug.Log("대기 3초");
-        }
-
-        private static void ChangeGUIStyle(int fontSize = 12, Color fontColor = default)
-        {
-            if(fontColor == default) fontColor = Color.white;
-            
-            style.fontSize = fontSize;
-            style.normal.textColor = fontColor;
-        }
-        
     }
 }
