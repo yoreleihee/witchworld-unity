@@ -20,6 +20,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static GUIStyle _titleStyle;
         private static GUIStyle _descriptionStyle;
         private static GUIStyle _counterStyle;
+        private static GUIStyle _docsButtonStyle;
+        private static GUIContent _docsIconContent;
         
         private static void Initialize()
         {
@@ -76,6 +78,24 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     textColor = new Color(1, 1, 0.2f, .75f)
                 }
             };
+            _docsButtonStyle = new GUIStyle
+            {
+                fontSize = 12,
+                wordWrap = true,
+                richText = true,
+                alignment = TextAnchor.MiddleCenter,
+                fixedWidth = 50,
+                normal =
+                {
+                    background = Texture2D.linearGrayTexture,
+                    textColor = Color.white
+                },
+            };
+
+            _docsIconContent = new GUIContent
+            {
+                
+            };
         }
 
         private void InitializeInstance()
@@ -100,13 +120,23 @@ namespace WitchCompany.Toolkit.Editor.GUI
             serializedObject.Update();
             
             var editorTarget = target as WitchBehaviour;
+            
             if (editorTarget != null)
             {
                 GUILayout.Space(4);
                 GUILayout.BeginVertical(_areaStyle);
                 {
+                    GUILayout.BeginHorizontal();
                     // 이름 렌더링
                     GUILayout.Label(editorTarget.BehaviourName, _titleStyle);
+                    // 문서 버튼 렌더링
+                    if (GUILayout.Button("docs", _docsButtonStyle))
+                    {
+                        Application.OpenURL(editorTarget.DocumentURL);
+                    }
+                    GUILayout.EndHorizontal();
+                    
+                    
                     GUILayout.Space(8);
                     // 설명 렌더링
                     GUILayout.Label(editorTarget.Description, _descriptionStyle);

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using Color = UnityEngine.Color;
@@ -11,18 +13,21 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public class CustomWindow : EditorWindow
     {
+        
         private const float MinWindowWidth = 600;
         private const float MinWindowHeight = 700;
-        
         private const float MaxWindowWidth = 600;
         private const float MaxWindowHeight = 2000;
-        
         private const float LogHeight = 40;
+        private static GUIStyle logTextStyle;
+        private static GUIStyle logButtonStyle;
+        private static bool isInputDisable;
+        private static bool isAdmin;
+
+        public static GUIStyle LogTextStyle => logTextStyle;
+        public static GUIStyle LogButtonStyle => logButtonStyle;
+        public static bool IsInputDisable { set => isInputDisable = value; }
         
-        
-        public static GUIStyle logTextStyle;
-        public static GUIStyle logButtonStyle;
-        public static GUIStyle clearButtionStyle;
         
         [MenuItem ("WitchToolkit/Witch Creator Toolkit")]
         private static void WitchToolKit () {
@@ -37,52 +42,76 @@ namespace WitchCompany.Toolkit.Editor.GUI
         
         public static void InitialStyles()
         {
-            // 로그 텍스트 스타일
-            logTextStyle = new GUIStyle();
-            logTextStyle.normal.textColor = Color.white;
-            logTextStyle.active.textColor = Color.white;
-            logTextStyle.fixedWidth = MinWindowWidth-20;
-            logTextStyle.fixedHeight = LogHeight;
-            logTextStyle.margin = new RectOffset(0, 0, 0, 3);
-            logTextStyle.padding = new RectOffset(5, 5, 5, 5);
-            logTextStyle.alignment = TextAnchor.MiddleLeft;
+            logTextStyle = new GUIStyle
+            {
+                fixedWidth = MinWindowWidth - 20,
+                fixedHeight = LogHeight,
+                margin = new RectOffset(0, 0, 0, 3),
+                padding = new RectOffset(5, 5, 5, 5),
+                alignment = TextAnchor.MiddleLeft,
+                normal = { textColor = Color.white },
+                active = { textColor = Color.white }
+            };
             
             // 로그 버튼 스타일
-            logButtonStyle = new GUIStyle();
-            logButtonStyle.normal.background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f));
-            logButtonStyle.active.background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f));
-            logButtonStyle.normal.textColor = Color.white;
-            logButtonStyle.active.textColor = Color.white;
-            logButtonStyle.fixedWidth = MinWindowWidth-20;
-            logButtonStyle.fixedHeight = LogHeight;
-            logButtonStyle.margin = new RectOffset(0, 0, 0, 3);
-            logButtonStyle.padding = new RectOffset(5, 5, 5, 5);
-            logButtonStyle.alignment = TextAnchor.MiddleLeft;
-            
-            // clear static button
-            clearButtionStyle = new GUIStyle();
-            clearButtionStyle.normal.background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f));
-            clearButtionStyle.active.background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f));
-            clearButtionStyle.normal.textColor = Color.white;
-            clearButtionStyle.active.textColor = Color.white;
-            clearButtionStyle.fixedWidth = 70f;
-            clearButtionStyle.margin = new RectOffset(0, 6, 0, 10);
-            
-            clearButtionStyle.alignment = TextAnchor.MiddleCenter;
+            logButtonStyle = new GUIStyle
+            {
+                fixedWidth = MinWindowWidth-20,
+                fixedHeight = LogHeight,
+                margin = new RectOffset(0, 0, 0, 3),
+                padding = new RectOffset(5, 5, 5, 5),
+                alignment = TextAnchor.MiddleLeft,
+                normal=
+                {
+                    background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f)),
+                    // background = Texture2D.grayTexture,
+                    textColor = Color.white,
+                },
+                active =
+                {
+                    background = Texture2D.grayTexture,
+                    textColor = Color.white
+                }
+            };
         }
-        
-        
-        private readonly GUIContent[] toolbarLabels = new GUIContent[4]
+
+        private static GUIContent[] defalutToolbarLabels = new GUIContent[4]
         {
             new ("Authentication"),
             new ("Validation"),
             new ("Publish"),
-            new ("Settings")
+            new ("Settings"),
         };
         
+        private static GUIContent[] adminToolbarLabels = new GUIContent[5]
+        {
+            new ("Authentication"),
+            new ("Validation"),
+            new ("Publish"),
+            new ("Admin"),
+            new ("Settings"),
+        };
+
         private void OnGUI()
         {
-            ToolkitConfig.CurrControlPanelType = (ControlPanelType)GUILayout.Toolbar((int)ToolkitConfig.CurrControlPanelType, toolbarLabels);
+            InitialStyles();
+            
+            // 윈도우 비활성화 그룹 지정
+            EditorGUI.BeginDisabledGroup(isInputDisable);
+
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                var label = AuthConfig.Admin ? adminToolbarLabels : defalutToolbarLabels;
+                var controlPanelType = (ControlPanelType)GUILayout.Toolbar((int)ToolkitConfig.CurrControlPanelType, label);
+
+                if (check.changed)
+                {
+                    if (!AuthConfig.Admin && (int)controlPanelType == 3)
+                        controlPanelType++;
+                    
+                    ToolkitConfig.CurrControlPanelType = controlPanelType;
+                }
+            }
             
             // 선택한 메뉴에 따라 다른 함수 호출
             switch (ToolkitConfig.CurrControlPanelType)
@@ -93,14 +122,18 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 case ControlPanelType.Validate :
                     CustomWindowValidation.ShowValidation();
                     break;
-                case ControlPanelType.Publish : 
+                case ControlPanelType.Publish: 
                     CustomWindowPublish.ShowPublish();
                     break;
                 case ControlPanelType.Config : 
                     CustomWindowSetting.ShowSetting();
                     break;
+                case ControlPanelType.Admin :
+                        CustomWindowAdmin.ShowAdmin();
+                    break;
                 default: break;
             }
+            EditorGUI.EndDisabledGroup();
         }
         
         /// <summary> Editor Window가 닫힐 때 호출 </summary>

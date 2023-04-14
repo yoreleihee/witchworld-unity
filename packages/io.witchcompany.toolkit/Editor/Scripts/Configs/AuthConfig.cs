@@ -14,6 +14,8 @@ namespace WitchCompany.Toolkit.Editor.Configs
         private const string Prefs_NickName = "auth_nick_name";
         private const string Prefs_LoginTime = "auth_login_time";
         private const string Prefs_Auth = "auth_auth";
+        private const string Prefs_Admin = "auth_admin";
+        private const string Prefs_LoginState = "auth_login_state";
 
         public static string Email
         {
@@ -51,6 +53,17 @@ namespace WitchCompany.Toolkit.Editor.Configs
                 var json = JsonConvert.SerializeObject(value);
                 EditorPrefs.SetString(Prefs_Auth, json);
             }
+        }
+        public static bool Admin
+        {
+            get => EditorPrefs.GetBool(Prefs_Admin, false);
+            set => EditorPrefs.SetBool(Prefs_Admin, value);
+        }
+
+        public static LoginState LoginState
+        {
+            get => (LoginState)EditorPrefs.GetInt(Prefs_LoginState, (int)LoginState.Logout);
+            set => EditorPrefs.SetInt(Prefs_LoginState, (int)value);
         }
     }
 }

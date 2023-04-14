@@ -11,7 +11,9 @@
         Validate = 1,
         // 빌드 패널
         Publish = 2,
+        // 어드민 패널
+        Admin = 3,
         // 설정 패널
-        Config = 3
+        Config = 4
     }
 }

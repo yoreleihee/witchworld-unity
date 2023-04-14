@@ -14,7 +14,7 @@ namespace WitchCompany.Toolkit.Module
                                               "모든 오브젝트의 최상위 부모이며, 기본 좌표에 있어야 합니다.\n" +
                                               "한 씬에 하나만 배치할 수 있습니다.\n" +
                                               "중력값은 기본이 1입니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchBlockManager-27694686287943d28baa4cfbf1803b28?pvs=4";
         public override int MaximumCount => 1;
 
         [Header("읽기 전용")] 

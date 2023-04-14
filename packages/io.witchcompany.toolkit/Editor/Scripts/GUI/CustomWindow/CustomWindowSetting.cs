@@ -67,17 +67,25 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static void DrawLogLevel()
         {
             EditorGUILayout.LabelField("Log Level", EditorStyles.boldLabel);
-            
-            ToolkitConfig.CurrLogLevel = (LogLevel)EditorGUILayout.EnumFlagsField("", ToolkitConfig.CurrLogLevel);
-            
+
+
+            using var check = new EditorGUI.ChangeCheckScope();
+            var logLevel = (LogLevel)EditorGUILayout.EnumFlagsField("", ToolkitConfig.CurrLogLevel);
+                
+            if (check.changed)
+                ToolkitConfig.CurrLogLevel = logLevel;
         }
         
         /// <summary> 유효성 검사 수준 : Essentials, Strict 두 옵션 중 택 </summary>
         private static void DrawValidateLevel()
         {
             EditorGUILayout.LabelField("Validate Level", EditorStyles.boldLabel);
-            ToolkitConfig.CurrValidateLevel = (ValidateLevel)EditorGUILayout.EnumPopup("", ToolkitConfig.CurrValidateLevel);
-            
+                
+            using var check = new EditorGUI.ChangeCheckScope();
+            var validateLevel = (ValidateLevel)EditorGUILayout.EnumPopup("", ToolkitConfig.CurrValidateLevel);
+
+            if (check.changed)
+                ToolkitConfig.CurrValidateLevel = validateLevel;
         }
     }
 }
