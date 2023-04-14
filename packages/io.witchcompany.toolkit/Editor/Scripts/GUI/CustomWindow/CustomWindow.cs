@@ -41,38 +41,54 @@ namespace WitchCompany.Toolkit.Editor.GUI
         
         public static void InitialStyles()
         {
-            // 로그 텍스트 스타일
-            logTextStyle = new GUIStyle();
-            logTextStyle.normal.textColor = Color.white;
-            logTextStyle.active.textColor = Color.white;
-            logTextStyle.fixedWidth = MinWindowWidth-20;
-            logTextStyle.fixedHeight = LogHeight;
-            logTextStyle.margin = new RectOffset(0, 0, 0, 3);
-            logTextStyle.padding = new RectOffset(5, 5, 5, 5);
-            logTextStyle.alignment = TextAnchor.MiddleLeft;
+            logTextStyle = new GUIStyle
+            {
+                fixedWidth = MinWindowWidth - 20,
+                fixedHeight = LogHeight,
+                margin = new RectOffset(0, 0, 0, 3),
+                padding = new RectOffset(5, 5, 5, 5),
+                alignment = TextAnchor.MiddleLeft,
+                normal = { textColor = Color.white },
+                active = { textColor = Color.white }
+            };
             
             // 로그 버튼 스타일
-            logButtonStyle = new GUIStyle();
-            logButtonStyle.normal.background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f));
-            logButtonStyle.active.background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f));
-            logButtonStyle.normal.textColor = Color.white;
-            logButtonStyle.active.textColor = Color.white;
-            logButtonStyle.fixedWidth = MinWindowWidth-20;
-            logButtonStyle.fixedHeight = LogHeight;
-            logButtonStyle.margin = new RectOffset(0, 0, 0, 3);
-            logButtonStyle.padding = new RectOffset(5, 5, 5, 5);
-            logButtonStyle.alignment = TextAnchor.MiddleLeft;
+            logButtonStyle = new GUIStyle
+            {
+                fixedWidth = MinWindowWidth-20,
+                fixedHeight = LogHeight,
+                margin = new RectOffset(0, 0, 0, 3),
+                padding = new RectOffset(5, 5, 5, 5),
+                alignment = TextAnchor.MiddleLeft,
+                normal=
+                {
+                    background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f)),
+                    textColor = Color.white,
+                },
+                active =
+                {
+                    background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f)),
+                    textColor = Color.white
+                }
+            };
             
             // clear static button
-            clearButtionStyle = new GUIStyle();
-            clearButtionStyle.normal.background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f));
-            clearButtionStyle.active.background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f));
-            clearButtionStyle.normal.textColor = Color.white;
-            clearButtionStyle.active.textColor = Color.white;
-            clearButtionStyle.fixedWidth = 70f;
-            clearButtionStyle.margin = new RectOffset(0, 6, 0, 10);
-            
-            clearButtionStyle.alignment = TextAnchor.MiddleCenter;
+            clearButtionStyle = new GUIStyle
+            {
+                fixedWidth = 70f,
+                margin = new RectOffset(0, 6, 0, 10),
+                alignment = TextAnchor.MiddleCenter,
+                normal =
+                {
+                    background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f)),
+                    textColor = Color.white
+                },
+                active =
+                {
+                    background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f)),
+                    textColor = Color.white
+                }
+            };
         }
         
         
