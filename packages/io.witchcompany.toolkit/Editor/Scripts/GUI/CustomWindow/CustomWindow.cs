@@ -70,33 +70,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     textColor = Color.white
                 }
             };
-            
-            // clear static button
-            clearButtionStyle = new GUIStyle
-            {
-                fixedWidth = 70f,
-                margin = new RectOffset(0, 6, 0, 10),
-                alignment = TextAnchor.MiddleCenter,
-                normal =
-                {
-                    background = CreateBackgroundColorImage(new Color(0.3f, 0.3f, 0.3f)),
-                    textColor = Color.white
-                },
-                active =
-                {
-                    background = CreateBackgroundColorImage(new Color(0.4f, 0.4f, 0.4f)),
-                    textColor = Color.white
-                }
-            };
-
-            shortButtonSytle = new GUIStyle
-            {
-                // fixedWidth = 100f,
-                // fixedHeight = 18f,
-                // alignment = TextAnchor.MiddleCenter,
-                // normal = { background = Texture2D.grayTexture,  textColor = Color.white },
-                // active = { background = Texture2D.linearGrayTexture, textColor = Color.white }
-            };
         }
         
         
