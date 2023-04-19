@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event.Base;
 using WitchCompany.Toolkit.Validation;
 
