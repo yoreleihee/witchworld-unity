@@ -15,5 +15,7 @@ namespace WitchCompany.Toolkit.Editor.Configs
 
         public const string Standalone = "standalone";
         public const string WebGL = "webgl";
+        public const string Ios = "ios";
+        public const string Android = "android";
     }
 }

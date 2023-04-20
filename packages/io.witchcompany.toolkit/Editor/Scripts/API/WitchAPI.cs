@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
@@ -8,8 +9,10 @@ using UnityEditor;
 using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
+using WitchCompany.Toolkit.Editor.DataStructure.Admin;
 using WitchCompany.Toolkit.Editor.Tool;
 
 namespace WitchCompany.Toolkit.Editor.API
@@ -101,37 +104,68 @@ namespace WitchCompany.Toolkit.Editor.API
             return -2;
         }
 
-        public static async UniTask<bool> UploadBlock(BlockPublishOption option, JManifest manifest, string bundleType)
+        /// <summary> 번들 파일 존재할 때 파일 반환 </summary>
+        private static async UniTask<byte[]> GetBundleData(string filePath)
+        {
+            if (!File.Exists(filePath)) return null;
+            
+            var bundleData = await File.ReadAllBytesAsync(filePath);
+            return bundleData;
+        }
+        
+        /// <summary> 유니티 키 생성 (번들 업로드) </summary>
+        public static async UniTask<bool> UploadBundle(BlockPublishOption option, Dictionary<string, JManifest> manifests)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return false;
             
-            var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, bundleType, option.BundleKey);
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
-            var bundleData = await File.ReadAllBytesAsync(bundlePath);
-            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
+            // bundle
+            var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
+            var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebGL, option.BundleKey);
+            var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
+            var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
 
-            var body = new JPublish
+            var standaloneBundleData = await GetBundleData(standaloneBundlePath);
+            var webglBundleData = await GetBundleData(webglBundlePath);
+            var androidBundleData = await GetBundleData(androidBundlePath);
+            var iosBundleData = await GetBundleData(iosBundlePath);
+            
+            // thumbnail
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
+            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
+            
+            var blockData = new JBlock
             {
-                block = new JBlock
-                {
-                    name = option.Key,
-                    theme = option.theme.ToString().ToLower()
-                },
-                bundleType = bundleType,
-                manifest = manifest
+                pathName = option.Key,
+                theme = option.theme.ToString().ToLower()
             };
 
-            var json = JsonConvert.SerializeObject(body);
+            var bundleData = new JBundle
+            {
+                blockData = blockData,
+                standalone = new JBundleData{manifest = manifests[AssetBundleConfig.Standalone]},
+                webgl = new JBundleData{manifest = manifests[AssetBundleConfig.WebGL]},
+                android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
+                ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]}
+            };
             
-            Debug.Log("publish 요청 값\n" + json);
-
+            var jsonBundleData = JsonConvert.SerializeObject(bundleData, new JsonSerializerSettings{ NullValueHandling = NullValueHandling.Ignore });
+            
             var form = new List<IMultipartFormSection>
             {
-                new MultipartFormDataSection("json", json, "application/json"),
-                new MultipartFormFileSection("bundle", bundleData, option.BundleKey, ""),
-                new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg")
+                new MultipartFormDataSection("json", jsonBundleData, "application/json"),
+                new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg"),
             };
+            // 번들 파일 있을 때만 보냄
+            if(standaloneBundleData != null)
+                form.Add(new MultipartFormFileSection("android", standaloneBundleData, option.BundleKey, ""));
+            if(webglBundleData != null)
+                form.Add(new MultipartFormFileSection("ios", webglBundleData, option.BundleKey, ""));
+            if(androidBundleData != null)
+                form.Add(new MultipartFormFileSection("android", androidBundleData, option.BundleKey, ""));
+            if(iosBundleData != null)
+                form.Add(new MultipartFormFileSection("ios", iosBundleData, option.BundleKey, ""));
+            
             var response = await Request<JPublishResponse>(new RequestHelper
             {
                 Method = "POST",
@@ -142,31 +176,38 @@ namespace WitchCompany.Toolkit.Editor.API
             
             return response.success;
         }
-        
-        public static async UniTask<JAuthBlockInfo> RegisterBlock(BlockPublishOption option, JLanguageString blockName)
+
+        /// <summary> 유니티 키 리스트 조회 </summary>
+        public static async UniTask<List<JUnityKey>> GetUnityKeys(int page, int limit)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return null;
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
-            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);  // todo : 에디터에서 파일 선택
             
-            var body = new JRegisterBlockData
+            var response = await Request<List<JUnityKey>>(new RequestHelper
             {
-                // 임시 데이터
-                // unityKeyId = EditorTest.UnitykeyId,
-                // type = BlockType.Community.ToString().ToLower(),
-                // theme = option.theme.ToString().ToLower(),
-                // createUserNickname = AuthConfig.NickName,
-                // name = blockName
-            };
+                Method = "GET",
+                Uri = ApiConfig.URL($"v2/toolkits/unity-key?page={page}&limit={limit}"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken)
+            });
+            
+            return response.success ? response.payload : null;
+        }
 
+        public static async UniTask<bool> UploadBlock(JBlockData blockData)
+        {
+            var auth = AuthConfig.Auth;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return false;
+            
+            var thumbnailData = await File.ReadAllBytesAsync(AdminConfig.ThumbnailPath);
+            var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
+            
             var form = new List<IMultipartFormSection>
             {
-                new MultipartFormDataSection("json", JsonConvert.SerializeObject(body), "application/json"),
-                new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg")
+                new MultipartFormDataSection("json", JsonConvert.SerializeObject(blockData), "application/json"),
+                new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg")
             };
-
-            var response = await Request<JAuthBlockInfo>(new RequestHelper
+            
+            var response = await Request<JBlockData>(new RequestHelper
             {
                 Method = "POST",
                 Uri = ApiConfig.URL("v2/toolkits/blocks"),
@@ -174,7 +215,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 FormSections = form
             });
             
-            return response.success ? response.payload : null;
+            return response.success;
         }
 
         public static async UniTask<bool> CheckValidItem(int itemKey)
@@ -189,19 +230,17 @@ namespace WitchCompany.Toolkit.Editor.API
             return response.success;
         }
 
-        public static async UniTask<JUnityKeyList> GetUnityKeyList()
+        public static async UniTask<JBlockData> GetBlock(string pathName)
         {
-            var auth = AuthConfig.Auth;
-
-            var response = await Request<JUnityKeyList>(new RequestHelper
+            var response = await Request<JBlockData>(new RequestHelper
             {
                 Method = "GET",
-                Uri = ApiConfig.URL($"v2/toolkits/unity"),
-                Headers = ApiConfig.TokenHeader(auth.accessToken)
+                Uri = ApiConfig.URL($"v2/toolkits/blocks/{{path-name}}?path-name={pathName}")
             });
+
             return response.success ? response.payload : null;
+
         }
-        
     }
 
     public static partial class WitchAPI
@@ -314,6 +353,7 @@ namespace WitchCompany.Toolkit.Editor.API
             }
             catch (Exception)
             {
+                LogErr(request.downloadHandler?.error);
                 LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
                 
                 return new JResponse<T>

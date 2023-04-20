@@ -5,26 +5,28 @@ using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
+using WitchCompany.Toolkit.Editor.DataStructure.Admin;
 using WitchCompany.Toolkit.Editor.Validation;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowAdmin
     {
-        private const int maxBlockNameLength = 20;
+        private const string successMsg = "Upload Result : Success\n블록을 서버에 업로드했습니다";
+        private const string failedMsg = "Upload Result : Failed\n블록을 서버에 업로드하지 못했습니다\n다시 시도해주세요";
         
         private static string _thumbnailPath;
         private static string _pathName;
         private static string _pathNameErrorMsg;
-        private static JLanguageString _blockName = new JLanguageString();
+        private static JLanguageString _blockName = new ();
         private static BlockType _blockType;
-        private static int _selectedUnityKey = 0;
 
         private static Texture2D thumbnailImage;
-        // todo : 유니티 키 리스트 api에서 받은 값 저장
-        private static List<string> unityKeyList = new List<string>() { "ryu(made by jj)", "ryu(made by hh)", "ryu(made by kk)"};
+        private static List<string> popupUnityKeys = new ();
+        private static List<JUnityKey> unityKeys;
         
         public static void ShowAdmin()
         {
@@ -36,38 +38,56 @@ namespace WitchCompany.Toolkit.Editor.GUI
             DrawBlockConfig();
             
         }
-
+        private static bool isProcessing = false;
         private static async UniTaskVoid DrawUnityKey()
         {
             GUILayout.Label("Unity Key", EditorStyles.boldLabel);
 
-            // 키 선택
             using (new EditorGUILayout.HorizontalScope("box"))
             {
-                // todo : unity key 페이징 조회 api와 연동
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
-                    var unityKeyIndex = EditorGUILayout.Popup("key list", AdminConfig.UnityKeyIndex, unityKeyList.ToArray());
+                    var unityKeyIndex = EditorGUILayout.Popup("key list", AdminConfig.UnityKeyIndex, popupUnityKeys.ToArray());
 
-                    if (check.changed)
-                        AdminConfig.UnityKeyIndex = unityKeyIndex;
+                        if (check.changed)
+                        {
+                            AdminConfig.UnityKeyIndex = unityKeyIndex;
+                        }
+                    
                 }
                 
-                
-                if (GUILayout.Button("Refresh", GUILayout.Width(100)))
+
+                using (new EditorGUI.DisabledScope(isProcessing))
                 {
-                    CustomWindow.IsInputDisable = true;
-                    
-                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Getting unity key list from server....", 1.0f);
-                    await UniTask.Delay(3000);
-                    EditorUtility.ClearProgressBar();
-                    
-                    CustomWindow.IsInputDisable = false;
-                    AdminConfig.UnityKeyIndex = 0;
+                    // unity key list 조회
+                    if (GUILayout.Button("Refresh", GUILayout.Width(100)))
+                    {
+                        // 비동기 처리하는 동안 버튼 비활성화 
+                        isProcessing = true;
+                        UnityEngine.GUI.enabled = false;
+                        unityKeys = await WitchAPI.GetUnityKeys(0, 0);
+
+                        if (unityKeys != null)
+                        {
+                            // 키 리스트 초기화 및 서버 데이터 반영
+                            popupUnityKeys.Clear();
+                            
+                            
+                            foreach (var key in unityKeys)
+                            {
+                                popupUnityKeys.Add($"{key.pathName} (made by {key.creatorNickName})");
+                            }
+                            
+                            AdminConfig.UnityKeyIndex = 0;
+                            
+                            UnityEngine.GUI.enabled = true;
+                            isProcessing = false;
+                            
+                        }
+                    }
                 }
             }
-            
-        }
+        } 
         
         private static async UniTaskVoid DrawBlockConfig()
         {
@@ -139,14 +159,22 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 }
                 else
                 {
-                    // todo : 블록 생성 api 연동
-                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server....", 1.0f);
-                    await UniTask.Delay(5000);
-                    EditorUtility.ClearProgressBar();
+                    var selectUnityKey = unityKeys[AdminConfig.UnityKeyIndex];
+                    var blockData = new JBlockData()
+                    {
+                        unityKeyId = selectUnityKey.unityKeyId,
+                        pathName = AdminConfig.PathName,
+                        ownerNickname = AuthConfig.NickName,
+                        blockName = new JLanguageString(AdminConfig.BlockNameEn, AdminConfig.BlockNameKr),
+                        blockType = AdminConfig.Type.ToString().ToLower()
+                    };
                     
-                    // todo : 유니티 키 생성 api 결과에 따라 팝업창 메시지 다르게 변경할 것
-                    // EditorUtility.DisplayDialog("Witch Creator Toolkit", successMsg, "OK");
-                    EditorUtility.DisplayDialog("Witch Creator Toolkit", "블록 생성 성공", "OK");
+                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server....", 1.0f);
+                    var uploadResult = await WitchAPI.UploadBlock(blockData);
+                    EditorUtility.ClearProgressBar();
+
+                    var uploadMsg = uploadResult ? successMsg : failedMsg;
+                    EditorUtility.DisplayDialog("Witch Creator Toolkit", uploadMsg, "OK");
                 }
                 
                 CustomWindow.IsInputDisable = false;

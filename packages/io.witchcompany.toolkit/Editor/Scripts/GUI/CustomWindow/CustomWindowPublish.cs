@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using Unity.Plastic.Newtonsoft.Json;
@@ -15,14 +17,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowPublish
     {
-        // private static SceneAsset blockScene;
-        // private static BlockTheme blockTheme;
-        private static BuildTargetGroup blockPlatform;
-        public static JBuildReport buildReport;
-        private static UploadState uploadResult = UploadState.None;
-        
         private const string successMsg = "Upload Result : Success\n블록을 서버에 업로드했습니다";
         private const string failedMsg = "Upload Result : Failed\n블록을 서버에 업로드하지 못했습니다\n다시 시도해주세요";
+
+        private static BuildTargetGroup blockPlatform;
+        private static JBuildReport buildReport;
+        private static UploadState uploadResult = UploadState.None;
+        
+        private static string[] bundleTypes =
+        {
+            AssetBundleConfig.Standalone,
+            AssetBundleConfig.WebGL,
+            AssetBundleConfig.Android,
+            AssetBundleConfig.Ios
+        };
         
         private enum UploadState
         {
@@ -95,23 +103,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 CustomWindow.IsInputDisable = true;
                 
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
-
-                // TODO: 플랫폼별 업로드
+                
                 if (buildReport.result == JBuildReport.Result.Success)
                 {
                     // 썸네일 캡쳐
                     var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, GetOption().ThumbnailKey);
                     CaptureTool.CaptureAndSave(thumbnailPath);
                     
-                    // 업로드 로딩창
-                    // EditorGUI.DisabledGuiViewInputScope(GUIView.current, true);
+                    // 업로드
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
-                    await UniTask.Delay(5000);
+                    var result = await Upload();
                     EditorUtility.ClearProgressBar();
                     
-                    // todo : 유니티 키 생성 api 결과에 따라 팝업창 메시지 다르게 변경할 것
-                    // EditorUtility.DisplayDialog("Witch Creator Toolkit", successMsg, "OK");
-                    EditorUtility.DisplayDialog("Witch Creator Toolkit", failedMsg, "OK");
+                    var resultMsg = result ? successMsg : failedMsg;
+                    EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 }
 
                 // 입력 제한 해제
@@ -162,20 +167,26 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
         }
 
-        private static async UniTask<bool> Upload(string bundleType)
+        private static async UniTask<bool> Upload()
         {
             var option = GetOption();
 
-            var manifest = new JManifest
+            var manifests = new Dictionary<string, JManifest>();
+            foreach (var bundleType in bundleTypes)
             {
-                unityVersion = ToolkitConfig.UnityVersion,
-                toolkitVersion = ToolkitConfig.WitchToolkitVersion,
-                crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey),
-            };
+                var manifest = new JManifest()
+                {
+                    unityVersion = ToolkitConfig.UnityVersion,
+                    toolkitVersion = ToolkitConfig.WitchToolkitVersion,
+                    crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey)
+                };
+                
+                manifests.Add(bundleType, manifest);
+            }
+            
             uploadResult = UploadState.Uploading;
             
-            var response = await WitchAPI.UploadBlock(option, manifest, bundleType);
-
+            var response = await WitchAPI.UploadBundle(option, manifests);
             return response;
         }
     }
