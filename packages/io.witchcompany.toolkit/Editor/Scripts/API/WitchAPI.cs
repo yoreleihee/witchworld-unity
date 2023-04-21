@@ -104,13 +104,13 @@ namespace WitchCompany.Toolkit.Editor.API
             return -2;
         }
 
-        /// <summary> 번들 파일 존재할 때 파일 반환 </summary>
-        private static async UniTask<byte[]> GetBundleData(string filePath)
+        /// <summary> 파일 경로 존재할 때 파일 반환 </summary>
+        private static async UniTask<byte[]> GetByte(string filePath)
         {
             if (!File.Exists(filePath)) return null;
             
-            var bundleData = await File.ReadAllBytesAsync(filePath);
-            return bundleData;
+            var bytes = await File.ReadAllBytesAsync(filePath);
+            return bytes;
         }
         
         /// <summary>
@@ -128,10 +128,10 @@ namespace WitchCompany.Toolkit.Editor.API
             var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
             var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
 
-            var standaloneBundleData = await GetBundleData(standaloneBundlePath);
-            var webglBundleData = await GetBundleData(webglBundlePath);
-            var androidBundleData = await GetBundleData(androidBundlePath);
-            var iosBundleData = await GetBundleData(iosBundlePath);
+            var standaloneBundleData = await GetByte(standaloneBundlePath);
+            var webglBundleData = await GetByte(webglBundlePath);
+            var androidBundleData = await GetByte(androidBundlePath);
+            var iosBundleData = await GetByte(iosBundlePath);
             
             // thumbnail
             var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
@@ -207,15 +207,18 @@ namespace WitchCompany.Toolkit.Editor.API
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
-            
-            var thumbnailData = await File.ReadAllBytesAsync(AdminConfig.ThumbnailPath);
+
+
+            var thumbnailData = await GetByte(AdminConfig.ThumbnailPath);
             var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
             
-            var form = new List<IMultipartFormSection>
-            {
+            
+            var form = new List<IMultipartFormSection> {
                 new MultipartFormDataSection("json", JsonConvert.SerializeObject(blockData), "application/json"),
-                new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg")
             };
+            
+            if(thumbnailData != null)
+                form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
             
             var response = await Request<JBlockData>(new RequestHelper
             {
@@ -369,7 +372,6 @@ namespace WitchCompany.Toolkit.Editor.API
             }
             catch (Exception)
             {
-                LogErr(request.downloadHandler?.error);
                 LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
                 
                 return new JResponse<T>

@@ -36,7 +36,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
         }
         private static bool isProcessing = false;
-        private static async UniTaskVoid DrawUnityKey()
+        private static void DrawUnityKey()
         {
             GUILayout.Label("Unity Key", EditorStyles.boldLabel);
 
@@ -59,30 +59,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     // unity key list 조회
                     if (GUILayout.Button("Refresh", GUILayout.Width(100)))
                     {
-                        // 비동기 처리하는 동안 버튼 비활성화 
                         isProcessing = true;
-                        unityKeys = await WitchAPI.GetUnityKeys(0, 0);
-
-                        if (unityKeys == null)
-                        {
-                            EditorUtility.DisplayDialog("Witch Creator Toolkit", "Unity Key를 조회할 수 없습니다", "OK");
-                            isProcessing = false;
-                            return;
-                        }
-                        // 키 리스트 초기화 및 서버 데이터 반영
-                        popupUnityKeys.Clear();
                         
-                        foreach (var key in unityKeys)
-                        {
-                            popupUnityKeys.Add($"{key.pathName} (made by {key.creatorNickName})");
-                        }
-                        
-                        AdminConfig.UnityKeyIndex = 0;
-                        isProcessing = false;
+                        GetUnityKey().Forget();
                     }
                 }
             }
-        } 
+        }
+
         
         private static async UniTaskVoid DrawBlockConfig()
         {
@@ -170,6 +154,27 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 }
                 
             }
+        }
+        /// <summary> 유니티 키 조회 api 호출 </summary>
+        private static async UniTaskVoid GetUnityKey()
+        {
+            unityKeys = await WitchAPI.GetUnityKeys(0, 0);
+
+            if (unityKeys == null)
+            {
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", "Unity Key를 조회할 수 없습니다", "OK");
+                isProcessing = false;
+                return;
+            }
+            
+            // 키 리스트 초기화 및 서버 데이터 반영
+            popupUnityKeys.Clear();
+                        
+            foreach (var key in unityKeys)
+                popupUnityKeys.Add($"{key.pathName} (made by {key.creatorNickName})");
+
+            AdminConfig.UnityKeyIndex = 0;
+            isProcessing = false;
         }
     }
 }
