@@ -3,7 +3,8 @@
     "rootNamespace": "WitchCompany.Toolkit.Runtime",
     "references": [
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:ad82fde54339bdc40b898a8340e12e02"
+        "GUID:ad82fde54339bdc40b898a8340e12e02",
+        "GUID:ab1c707b02c248d79b0112544e6ed3be"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
