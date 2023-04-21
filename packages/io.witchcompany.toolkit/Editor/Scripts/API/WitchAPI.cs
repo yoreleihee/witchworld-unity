@@ -113,11 +113,14 @@ namespace WitchCompany.Toolkit.Editor.API
             return bundleData;
         }
         
-        /// <summary> 유니티 키 생성 (번들 업로드) </summary>
-        public static async UniTask<bool> UploadBundle(BlockPublishOption option, Dictionary<string, JManifest> manifests)
+        /// <summary>
+        /// 유니티 키 생성 (번들 업로드)
+        /// 성공(1), 실패(-1), pathName 중복(-2)
+        /// </summary>
+        public static async UniTask<int> UploadBundle(BlockPublishOption option, Dictionary<string, JManifest> manifests)
         {
             var auth = AuthConfig.Auth;
-            if (string.IsNullOrEmpty(auth?.accessToken)) return false;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
             
             // bundle
             var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
@@ -173,8 +176,10 @@ namespace WitchCompany.Toolkit.Editor.API
                 Headers = ApiConfig.TokenHeader(auth.accessToken),
                 FormSections = form
             });
-            
-            return response.success;
+
+            if (response.statusCode == 200) return 1;
+            if (response.statusCode == 409) return -2;
+            return -1;
         }
 
         /// <summary> 유니티 키 리스트 조회 </summary>
@@ -192,11 +197,14 @@ namespace WitchCompany.Toolkit.Editor.API
             
             return response.success ? response.payload : null;
         }
-
-        public static async UniTask<bool> UploadBlock(JBlockData blockData)
+        /// <summary>
+        /// 블록 생성
+        /// 성공(1), 실패(-1), pathName 중복(-2)
+        /// </summary>
+        public static async UniTask<int> UploadBlock(JBlockData blockData)
         {
             var auth = AuthConfig.Auth;
-            if (string.IsNullOrEmpty(auth?.accessToken)) return false;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
             
             var thumbnailData = await File.ReadAllBytesAsync(AdminConfig.ThumbnailPath);
             var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
@@ -215,7 +223,9 @@ namespace WitchCompany.Toolkit.Editor.API
                 FormSections = form
             });
             
-            return response.success;
+            if (response.statusCode == 200) return 1;
+            if (response.statusCode == 409) return -2;
+            return -1;
         }
 
         public static async UniTask<bool> CheckValidItem(int itemKey)

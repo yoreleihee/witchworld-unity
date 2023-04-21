@@ -170,11 +170,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     };
                     
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server....", 1.0f);
-                    var uploadResult = await WitchAPI.UploadBlock(blockData);
+                    var result = await WitchAPI.UploadBlock(blockData);
                     EditorUtility.ClearProgressBar();
 
-                    var uploadMsg = uploadResult ? successMsg : failedMsg;
-                    EditorUtility.DisplayDialog("Witch Creator Toolkit", uploadMsg, "OK");
+                    var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
+                    EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 }
                 
                 CustomWindow.IsInputDisable = false;

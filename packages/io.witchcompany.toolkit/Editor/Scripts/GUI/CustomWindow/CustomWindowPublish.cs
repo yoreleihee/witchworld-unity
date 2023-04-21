@@ -17,9 +17,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowPublish
     {
-        private const string successMsg = "Upload Result : Success\n블록을 서버에 업로드했습니다";
-        private const string failedMsg = "Upload Result : Failed\n블록을 서버에 업로드하지 못했습니다\n다시 시도해주세요";
-
         private static BuildTargetGroup blockPlatform;
         private static JBuildReport buildReport;
         private static UploadState uploadResult = UploadState.None;
@@ -114,8 +111,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     var result = await Upload();
                     EditorUtility.ClearProgressBar();
+
+                    var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
                     
-                    var resultMsg = result ? successMsg : failedMsg;
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 }
 
@@ -167,7 +165,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
         }
 
-        private static async UniTask<bool> Upload()
+        private static async UniTask<int> Upload()
         {
             var option = GetOption();
 
