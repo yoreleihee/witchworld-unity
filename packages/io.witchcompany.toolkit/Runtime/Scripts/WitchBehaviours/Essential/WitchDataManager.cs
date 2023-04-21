@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Runtime.Scripts;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -21,5 +22,6 @@ namespace WitchCompany.Toolkit.Module
         public void GetValue(GetValueData data) => getValue.Invoke(data);
         public void GetValues(GetValuesData data) => getValues.Invoke(data);
         public void SetValue(SetValueData data) => setValue.Invoke(data);
+
     }
 }
