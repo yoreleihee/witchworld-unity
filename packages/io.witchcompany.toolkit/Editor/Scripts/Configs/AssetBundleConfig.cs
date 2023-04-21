@@ -15,8 +15,8 @@ namespace WitchCompany.Toolkit.Editor.Configs
 
         public const string Standalone = "standalone";
         public const string WebGL = "webgl";
-        public const string Ios = "ios";
         public const string Android = "android";
+        public const string Ios = "ios";
         
         public const string SuccessMsg = "Upload Success\n\n블록을 서버에 업로드했습니다";
         public const string FailedMsg = "Upload Failed\n\n블록을 서버에 업로드하지 못했습니다\n다시 시도해주세요";

@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.GUI;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
@@ -13,7 +14,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return new ValidationReport()
                 .Append(ValidatePathName())
                 .Append(ValidateBlockName(AdminConfig.BlockNameKr, true))
-                .Append(ValidateBlockName(AdminConfig.BlockNameEn, false));
+                .Append(ValidateBlockName(AdminConfig.BlockNameEn, false))
+                .Append( ValidateUnityKey());
         }
         
         private static ValidationReport ValidatePathName()
@@ -45,5 +47,19 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return report;
         }
         
+        
+        private static ValidationReport ValidateUnityKey()
+        {
+            var report = new ValidationReport();
+            var unityKey = CustomWindowAdmin.unityKeys;
+            
+            if (unityKey == null)
+            {
+                var error = new ValidationError("선택된 unityKey가 없습니다.");
+                report.Append(error);
+            }
+
+            return report;
+        }
     }
 }

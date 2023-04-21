@@ -15,7 +15,7 @@ namespace WitchCompany.Toolkit.Editor
         [MenuItem("WitchToolkit/API Test")]
         public static async void Test()
         {
-            var response = await WitchAPI.GetBlock("test3");
+            var response = await WitchAPI.GetBlock("ranking");
 
             Debug.Log(JsonConvert.SerializeObject(response, Formatting.Indented));
         }

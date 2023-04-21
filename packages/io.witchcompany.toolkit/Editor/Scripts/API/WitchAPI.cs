@@ -151,24 +151,25 @@ namespace WitchCompany.Toolkit.Editor.API
                 android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
                 ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]}
             };
-            
-            var jsonBundleData = JsonConvert.SerializeObject(bundleData, new JsonSerializerSettings{ NullValueHandling = NullValueHandling.Ignore });
+
+            var jsonBundleData = JsonConvert.SerializeObject(bundleData);
             
             var form = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("json", jsonBundleData, "application/json"),
                 new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg"),
             };
+            
             // 번들 파일 있을 때만 보냄
             if(standaloneBundleData != null)
-                form.Add(new MultipartFormFileSection("android", standaloneBundleData, option.BundleKey, ""));
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""));
             if(webglBundleData != null)
-                form.Add(new MultipartFormFileSection("ios", webglBundleData, option.BundleKey, ""));
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.WebGL, webglBundleData, option.BundleKey, ""));
             if(androidBundleData != null)
-                form.Add(new MultipartFormFileSection("android", androidBundleData, option.BundleKey, ""));
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
             if(iosBundleData != null)
-                form.Add(new MultipartFormFileSection("ios", iosBundleData, option.BundleKey, ""));
-            
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
+             
             var response = await Request<JPublishResponse>(new RequestHelper
             {
                 Method = "POST",
@@ -197,8 +198,9 @@ namespace WitchCompany.Toolkit.Editor.API
             
             return response.success ? response.payload : null;
         }
+        
         /// <summary>
-        /// 블록 생성
+        /// 유니티 키로 블록 생성
         /// 성공(1), 실패(-1), pathName 중복(-2)
         /// </summary>
         public static async UniTask<int> UploadBlock(JBlockData blockData)
@@ -239,7 +241,11 @@ namespace WitchCompany.Toolkit.Editor.API
             
             return response.success;
         }
-
+        /// <summary>
+        /// pathName으로 블록 조회 
+        /// </summary>
+        /// <param name="pathName"></param>
+        /// <returns></returns>
         public static async UniTask<JBlockData> GetBlock(string pathName)
         {
             var response = await Request<JBlockData>(new RequestHelper

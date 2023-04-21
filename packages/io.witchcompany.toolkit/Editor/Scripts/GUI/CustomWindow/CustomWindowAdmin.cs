@@ -15,9 +15,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
 {
     public static class CustomWindowAdmin
     {
-        private const string successMsg = "Upload Result : Success\n블록을 서버에 업로드했습니다";
-        private const string failedMsg = "Upload Result : Failed\n블록을 서버에 업로드하지 못했습니다\n다시 시도해주세요";
-        
         private static string _thumbnailPath;
         private static string _pathName;
         private static string _pathNameErrorMsg;
@@ -26,7 +23,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static Texture2D thumbnailImage;
         private static List<string> popupUnityKeys = new ();
-        private static List<JUnityKey> unityKeys;
+        public static List<JUnityKey> unityKeys;
         
         public static void ShowAdmin()
         {
@@ -64,26 +61,24 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     {
                         // 비동기 처리하는 동안 버튼 비활성화 
                         isProcessing = true;
-                        UnityEngine.GUI.enabled = false;
                         unityKeys = await WitchAPI.GetUnityKeys(0, 0);
 
-                        if (unityKeys != null)
+                        if (unityKeys == null)
                         {
-                            // 키 리스트 초기화 및 서버 데이터 반영
-                            popupUnityKeys.Clear();
-                            
-                            
-                            foreach (var key in unityKeys)
-                            {
-                                popupUnityKeys.Add($"{key.pathName} (made by {key.creatorNickName})");
-                            }
-                            
-                            AdminConfig.UnityKeyIndex = 0;
-                            
-                            UnityEngine.GUI.enabled = true;
+                            EditorUtility.DisplayDialog("Witch Creator Toolkit", "Unity Key를 조회할 수 없습니다", "OK");
                             isProcessing = false;
-                            
+                            return;
                         }
+                        // 키 리스트 초기화 및 서버 데이터 반영
+                        popupUnityKeys.Clear();
+                        
+                        foreach (var key in unityKeys)
+                        {
+                            popupUnityKeys.Add($"{key.pathName} (made by {key.creatorNickName})");
+                        }
+                        
+                        AdminConfig.UnityKeyIndex = 0;
+                        isProcessing = false;
                     }
                 }
             }
@@ -102,14 +97,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     if (GUILayout.Button("Select", GUILayout.Width(100)))
                     {
                         AdminConfig.ThumbnailPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "jpg");
-                    
                     }
                 } 
 
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
                     // 정규식에 맞지 않을 경우 이전 값으로 되돌림
-                    var prePathName = _pathName;
                     _pathName = EditorGUILayout.TextField("path name", AdminConfig.PathName);
 
                     if (check.changed)
@@ -144,8 +137,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             if (GUILayout.Button("Publish"))
             {
-                CustomWindow.IsInputDisable = true;
-
                 var report = AdminPublishValidatior.ValidationCheck();
                 if (report.errors.Count > 0)
                 {
@@ -153,9 +144,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     foreach (var error in report.errors)
                     {
                         message += error.message + "\n";
-                        Debug.Log(error.message);
                     }
-                    EditorUtility.DisplayDialog("Publish Failed", message, "OK");
+                    EditorUtility.DisplayDialog("Witch Creator Toolkit", $"Publish Failed\n\n{message}", "OK");
                 }
                 else
                 {
@@ -170,14 +160,15 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     };
                     
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server....", 1.0f);
+                    CustomWindow.IsInputDisable = true;
                     var result = await WitchAPI.UploadBlock(blockData);
+                    CustomWindow.IsInputDisable = false;
                     EditorUtility.ClearProgressBar();
 
                     var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 }
                 
-                CustomWindow.IsInputDisable = false;
             }
         }
     }

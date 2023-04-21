@@ -98,7 +98,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 // 입력 제한
                 CustomWindow.IsInputDisable = true;
-                
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
                 
                 if (buildReport.result == JBuildReport.Result.Success)
@@ -116,9 +115,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 }
-
                 // 입력 제한 해제
                 CustomWindow.IsInputDisable = false;
+
+                
             }
         }
         
@@ -172,13 +172,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var manifests = new Dictionary<string, JManifest>();
             foreach (var bundleType in bundleTypes)
             {
-                var manifest = new JManifest()
+                var manifest = new JManifest();
+                var crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey);
+                if (crc != null)
                 {
-                    unityVersion = ToolkitConfig.UnityVersion,
-                    toolkitVersion = ToolkitConfig.WitchToolkitVersion,
-                    crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey)
-                };
-                
+                    manifest.unityVersion = ToolkitConfig.UnityVersion;
+                    manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion;
+                    manifest.crc = crc;
+                }
                 manifests.Add(bundleType, manifest);
             }
             
