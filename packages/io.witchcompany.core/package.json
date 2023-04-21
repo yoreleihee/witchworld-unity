@@ -1,6 +1,6 @@
 {
   "name": "io.witchcompany.core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Witchcompany core functions",
   "displayName": "Witch Core",
   "unity": "2021.3",

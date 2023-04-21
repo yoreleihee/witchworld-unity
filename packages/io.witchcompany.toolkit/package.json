@@ -10,7 +10,8 @@
     "url": "https://witchwitch.io"
   },
   "dependencies": {
-    "com.cysharp.unitask": "2.3.1"
+    "com.cysharp.unitask": "2.3.1",
+    "io.witchcompany.core": "2.3.1"
   },
   "keywords": [
     "witch",

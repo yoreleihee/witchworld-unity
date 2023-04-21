@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using WitchCompany.Core;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
@@ -14,21 +15,41 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 
         public override int MaximumCount => 64;
 
-        [Header("점프 파워"), SerializeField, Range(0.01f,100f)] 
-        private float jumpForce;
-
-        public float JumpForce => jumpForce;
         
+        [Header("로컬 좌표 사용 여부"), SerializeField]
+        private bool useLocalSpace = true;
+        [Header("점프 파워"), SerializeField, Range(3f,30f)] 
+        private float jumpVelocity = 8f;
+        [Header("방향"), SerializeField]
+        private Vector3 direction = Vector3.up;
+
+        public Vector3 JumpVector => (useLocalSpace ? transform.TransformDirection(direction) : direction) * jumpVelocity;
+
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
             if (!TryGetComponent<Collider>(out var col))
                 return NullError("Collider");
 
-            if (!col.isTrigger)
-                return TriggerError(col);
+            if (col.isTrigger) return TriggerError(col);
 
             return null;
+        }
+        
+        private void OnDrawGizmos()
+        {
+            var dir = useLocalSpace ? transform.TransformDirection(direction) : direction;
+            var post = transform.position;
+            var len = Mathf.Clamp(jumpVelocity/4f, 0.5f, 10f);
+            
+            CustomGizmo.DrawArrow(post, post + dir * len, Color.red);
+        }
+
+        private void OnValidate()
+        {
+            if(Application.isPlaying) return;
+            
+            direction.Normalize();
         }
 #endif
     }
