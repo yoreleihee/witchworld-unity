@@ -2,18 +2,14 @@
 using WitchCompany.Core;
 using WitchCompany.Toolkit.Validation;
 
-namespace WitchCompany.Toolkit.Module.PhysicsEffect
+namespace WitchCompany.Toolkit.Module.PhysicsEnvironment
 {
-    [DisallowMultipleComponent, RequireComponent(typeof(Collider))]
-    public class WitchJumpPlatform : WitchPhysicsEffectBase
+    public class WitchJumpPlatform : WitchPhysicsEnvironmentBase
     {
-        public override string BehaviourName => "물리효과: 점프 플랫폼";
-
-        public override string Description => "플레이어가 해당 플랫폼을 밟으면 점프합니다. isTrigger 체크가 된 콜라이더가 필요합니다.";
-
+        public override string BehaviourName => "물리 오브젝트: 점프 플랫폼";
+        public override string Description => "플레이어가 해당 플랫폼을 밟으면 점프합니다.";
         public override string DocumentURL => "";
-
-        public override int MaximumCount => 64;
+        public override int MaximumCount => 32;
 
         
         [Header("로컬 좌표 사용 여부"), SerializeField]
@@ -26,15 +22,6 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public Vector3 JumpVector => (useLocalSpace ? transform.TransformDirection(direction) : direction) * jumpVelocity;
 
 #if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
-        {
-            if (!TryGetComponent<Collider>(out var col))
-                return NullError("Collider");
-
-            if (col.isTrigger) return TriggerError(col);
-
-            return null;
-        }
         
         private void OnDrawGizmos()
         {

@@ -90,7 +90,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             foreach (var behaviour in manager.Behaviours)
             {
                 if (behaviour.GetType() == typeof(WitchBlockManager))
-                    return report.Append("BlockManager는 하나만 있을 수 있습니다.", ValidationTag.Script, behaviour);
+                    return report.Append("BlockManager는 하나만 있을 수 있습니다.", ValidationTag.TagScript, behaviour);
             }
 
             // 개별 요소 검증
@@ -100,12 +100,12 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
             // 최소 포함요소 검증
             if (!manager.BehaviourCounter.ContainsKey(typeof(WitchSpawnPoint)))
-                report.Append("최소 하나 이상의 SpawnPoint를 포함해야 합니다.", ValidationTag.Script, manager);
+                report.Append("최소 하나 이상의 SpawnPoint를 포함해야 합니다.", ValidationTag.TagScript, manager);
             
             // 요소 개수 검증
             foreach (var (obj, count) in manager.BehaviourCounter.Values)
                 if (obj.MaximumCount > 0 && obj.MaximumCount < count)
-                    report.Append($"[{obj.BehaviourName}]를 너무 많이 배치했습니다. (현재:{count}개, 최대:{obj.MaximumCount}개)", ValidationTag.Script, manager);
+                    report.Append($"[{obj.BehaviourName}]를 너무 많이 배치했습니다. (현재:{count}개, 최대:{obj.MaximumCount}개)", ValidationTag.TagScript, manager);
 
             return report;
         }

@@ -39,7 +39,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
                 return TriggerError(playerEnterTrigger);
 
             if (targetDoor.gameObject.isStatic)
-                return new ValidationError($"{name}의 움직일 문({targetDoor.name})은 Static일 수 없습니다.", ValidationTag.Script, targetDoor);
+                return new ValidationError($"{name}의 움직일 문({targetDoor.name})은 Static일 수 없습니다.", ValidationTag.TagScript, targetDoor);
         
             return null;
         }
