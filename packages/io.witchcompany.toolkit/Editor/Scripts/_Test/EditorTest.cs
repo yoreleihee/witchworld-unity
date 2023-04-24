@@ -12,17 +12,10 @@ namespace WitchCompany.Toolkit.Editor
 {
     public static class EditorTest
     {
-        // [MenuItem("WitchToolkit/API Test")]
-        // public static async void Test()
-        // {
-        //     var response = await WitchAPI.GetBlock("ranking");
-        //
-        //     Debug.Log(JsonConvert.SerializeObject(response, Formatting.Indented));
-        // }
-        // [MenuItem("WitchToolkit/ViewAuth")]
-        // public static void GetAuth()
-        // {
-        //     Debug.Log(AuthConfig.Auth.accessToken);
-        // }
+        [MenuItem("WitchToolkit/View Auth")]
+        public static void GetAuth()
+        {
+            Debug.Log(AuthConfig.Auth.accessToken);
+        }
     }
 }

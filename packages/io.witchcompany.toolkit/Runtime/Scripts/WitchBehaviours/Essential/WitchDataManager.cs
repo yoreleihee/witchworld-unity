@@ -15,13 +15,13 @@ namespace WitchCompany.Toolkit.Module
                                               "한 씬에 하나만 배치할 수 있습니다.\n";
         public override string DocumentURL => "";
 
-        [HideInInspector] public UnityEvent<GetValueData> getValue = new();
-        [HideInInspector] public UnityEvent<GetValuesData> getValues = new();
-        [HideInInspector] public UnityEvent<SetValueData> setValue = new();
-        
-        public void GetValue(GetValueData data) => getValue.Invoke(data);
-        public void GetValues(GetValuesData data) => getValues.Invoke(data);
-        public void SetValue(SetValueData data) => setValue.Invoke(data);
+        // [HideInInspector] public UnityEvent<GetValueData> getValue = new();
+        // [HideInInspector] public UnityEvent<GetValuesData> getValues = new();
+        // [HideInInspector] public UnityEvent<SetValueData> setValue = new();
+        //
+        // public void GetValue(GetValueData data) => getValue.Invoke(data);
+        // public void GetValues(GetValuesData data) => getValues.Invoke(data);
+        // public void SetValue(SetValueData data) => setValue.Invoke(data);
 
     }
 }
