@@ -5,7 +5,7 @@ using WitchCompany.Toolkit.Validation;
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
     [DisallowMultipleComponent]
-    public class WitchDoorEffect : WitchPhysicsEffectBase
+    public class WitchDoorEffect : WitchBehaviour
     {
         public override string BehaviourName => "물리효과: 열리는 문";
         public override string Description => "플레이어가 특정 구역에 들어서면, 문이 열립니다.";

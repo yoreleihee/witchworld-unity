@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
-    public class WitchSmoothTransitionEffect : WitchPhysicsEffectBase
+    public class WitchSmoothTransitionEffect : WitchBehaviour
     {
         public override string BehaviourName => "효과: 부드럽게 변하기";
 
