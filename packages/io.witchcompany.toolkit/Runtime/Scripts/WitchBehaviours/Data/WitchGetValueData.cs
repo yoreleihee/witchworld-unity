@@ -1,3 +1,4 @@
+using UnityEngine;
 using WitchCompany.Toolkit.Runtime.Scripts.Base;
 using WitchCompany.Toolkit.Runtime.Scripts.Enum;
 
@@ -11,5 +12,7 @@ namespace WitchCompany.Toolkit.Runtime.Scripts
         
         public Owner owner;
         public string key;
+
+        [Header("바프 임시 데이터")] public int blockId;
     }
 }
