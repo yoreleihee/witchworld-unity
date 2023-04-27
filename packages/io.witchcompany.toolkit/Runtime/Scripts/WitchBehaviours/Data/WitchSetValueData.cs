@@ -1,3 +1,5 @@
+using UnityEditor;
+using UnityEngine;
 using WitchCompany.Toolkit.Runtime.Scripts.Base;
 using WitchCompany.Toolkit.Runtime.Scripts.Enum;
 
@@ -11,7 +13,11 @@ namespace WitchCompany.Toolkit.Runtime.Scripts
         
         public Owner owner;
         public string key;
-        public int value;
-        public OperatorType operatorType;
+        public string value;
+
+        public string pathName;
+        //public OperatorType operatorType;
     }
+
+    
 }

@@ -71,6 +71,23 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "WitchBehaviour",
             // 파티클 에셋
             //"CFXR_Effect"
+            // bifrost
+            "FaceCamera",
+            "DialogueIndicator",
+            "BifrostIndicator",
+            "DialogueButtonSystem",
+            "DOTweenVisualManager",
+            "DOTweenAnimation",
+            "DialogueTriggerClick",
+            "DialogueSystem",
+            "BifrostQuiz",
+            "BifrostServiceIntroduction",
+            "OnClickOpenLink",
+            "MoveCamera",
+            "TrueShadow",
+            "EventTrigger",
+            "Logic_ConditionChecker",
+            "EggDataManager"
         };
         public static ValidationReport ValidationCheck()
         {

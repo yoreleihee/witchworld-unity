@@ -19,13 +19,13 @@ namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
 
         [Header("마우스 포인터 이벤트: Enter"), SerializeField]
         public UnityEvent pointerEnter;
-        
+
         [Header("마우스 포인터 이벤트: Click"), SerializeField]
         public UnityEvent pointerClick;
         
         [Header("마우스 포인터 이벤트: Exit"), SerializeField]
         public UnityEvent pointerExit;
-        
+
         public bool ActiveOutline => activeOutline;
         
 #if UNITY_EDITOR

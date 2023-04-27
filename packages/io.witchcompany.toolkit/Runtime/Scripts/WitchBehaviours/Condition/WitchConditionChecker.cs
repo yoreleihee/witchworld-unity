@@ -17,11 +17,12 @@ namespace WitchCompany.Toolkit.Runtime.Scripts
         [Header("조건"), SerializeField]
         private WitchCondition condition;
         [Header("조건이 참일 때 실행되는 이벤트: True"), SerializeField]
-        private UnityEvent onTrue;
+        public UnityEvent onTrue;
         [Header("조건이 거짓일 때 실행되는 이벤트: False"), SerializeField]
-        private UnityEvent onFalse;
+        public UnityEvent onFalse;
         
         [HideInInspector] public UnityEvent onCheckCondition;
+        
 
         public WitchCondition Condition => condition;
         public void OnTrue() => onTrue.Invoke();
