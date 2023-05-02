@@ -12,14 +12,9 @@ namespace WitchCompany.Toolkit.Runtime
         
         [Header("오브젝트의 SphereCollider"), SerializeField]
         private SphereCollider collider;
-        private Transform targetTransform;
         
         public SphereCollider Collider => collider;
-        public Transform TargetTransform
-        {
-            get => targetTransform;
-            set => targetTransform = value;
-        }
+
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
@@ -29,7 +24,7 @@ namespace WitchCompany.Toolkit.Runtime
             if (!TryGetComponent(out SphereCollider col))
                 return NullError("SphereCollider");
             if (col.radius <= 0)
-                return Error("텔리포트 입구의 크기는 0보다 커야 합니다.");
+                return Error("텔레포트 입구의 크기는 0보다 커야 합니다.");
             if (!col.isTrigger)
                 return TriggerError(col);
 

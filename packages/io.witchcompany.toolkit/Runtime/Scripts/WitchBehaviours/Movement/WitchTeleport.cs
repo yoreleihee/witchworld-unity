@@ -13,7 +13,7 @@ namespace WitchCompany.Toolkit.Runtime
 
         public override string Description => "블록 내부에서 A 지점에서 B 지점 또는 B 지점에서 A 지점으로 순간 이동할 수 있는 요소입니다.\n" +
                                               "텔레포트의 A, B 지점에는 WitchTeleportCollider 컴포넌트가 필요합니다.\n" +
-                                              "텔레포트의 두 지점은 텔레포트의 자식 오브젝트여야 합니다.";
+                                              "텔레포트의 두 지점은 WitchTeleport의 자식 오브젝트여야 합니다.";
         public override string DocumentURL => "";
 
 
@@ -23,15 +23,10 @@ namespace WitchCompany.Toolkit.Runtime
         private WitchTeleportCollider teleportA;
         [Header("B 지점"), SerializeField]
         private WitchTeleportCollider teleportB;
-        [Header("텔레포트 활성화 시간"), SerializeField, Range(3f, 100f)]
-        private float timer;
-        
-        
+
         public bool IsOneWay => isOneWay;
         public WitchTeleportCollider TeleportA => teleportA;
         public WitchTeleportCollider TeleportB => teleportB;
-        public float Timer => timer;
-        
         
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
