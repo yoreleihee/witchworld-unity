@@ -9,7 +9,7 @@ namespace WitchCompany.Toolkit.Runtime
 {
     public class WitchTeleport : WitchMovementBase
     {
-        public override string BehaviourName => "움직임: 텔레포트";
+        public override string BehaviourName => "이동: 텔레포트";
 
         public override string Description => "블록 내부에서 A 지점에서 B 지점 또는 B 지점에서 A 지점으로 순간 이동할 수 있는 요소입니다.\n" +
                                               "텔레포트의 A, B 지점에는 WitchTeleportCollider 컴포넌트가 필요합니다.\n" +
