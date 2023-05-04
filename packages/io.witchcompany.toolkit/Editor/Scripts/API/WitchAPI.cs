@@ -254,11 +254,10 @@ namespace WitchCompany.Toolkit.Editor.API
             var response = await Request<JBlockData>(new RequestHelper
             {
                 Method = "GET",
-                Uri = ApiConfig.URL($"v2/toolkits/blocks/{{path-name}}?path-name={pathName}")
+                Uri = ApiConfig.URL($"v2/toolkits/blocks/{pathName}")
             });
 
             return response.success ? response.payload : null;
-
         }
     }
 
