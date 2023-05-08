@@ -12,10 +12,10 @@ namespace WitchCompany.Toolkit.Editor
 {
     public static class EditorTest
     {
-        [MenuItem("WitchToolkit/View Auth")]
-        public static void GetAuth()
-        {
-            Debug.Log(AuthConfig.Auth.accessToken);
-        }
+        // [MenuItem("WitchToolkit/View Auth")]
+        // public static void GetAuth()
+        // {
+        //     Debug.Log(AuthConfig.Auth.accessToken);
+        // }
     }
 }

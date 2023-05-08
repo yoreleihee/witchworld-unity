@@ -4,9 +4,11 @@ namespace WitchCompany.Toolkit.Editor.Configs
 {
     public static class ApiConfig
     {
+        public static string APIUrl => ToolkitConfig.DeveloperMode ? "dev" : "prod";
+        
         /// <summary>서버 URL 가져오기</summary>
         public static string URL(string url) => 
-            "https://dev-go.witchworld.io/services/api/" + url;
+            $"https://{APIUrl}-go.witchworld.io/services/api/" + url;
 
         /// <summary>토큰 헤더 가져오기</summary>
         public static Dictionary<string, string> TokenHeader(string token) =>

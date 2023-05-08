@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.API;
@@ -19,8 +15,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
     {
         private static BuildTargetGroup blockPlatform;
         private static JBuildReport buildReport;
-        private static UploadState uploadResult = UploadState.None;
-        
+
         private static string[] bundleTypes =
         {
             AssetBundleConfig.Standalone,
@@ -29,14 +24,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
             AssetBundleConfig.Ios
         };
         
-        private enum UploadState
-        {
-            None,
-            Uploading,
-            Success,
-            Failed
-        }
-
         public static void ShowPublish()
         {
             // 빌드 정보
@@ -47,8 +34,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
             if (buildReport != null)
             {
                 DrawReport();
-                GUILayout.Space(10);
-                DrawUpload();
             }
         }
 
@@ -67,9 +52,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
             
-            // todo : 현재 씬 지정 버튼
             // todo : blockscene 에디터 저장
-
             using (new EditorGUILayout.HorizontalScope())
             {
                 using (var check = new EditorGUI.ChangeCheckScope())
@@ -96,6 +79,16 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Publish"))
             {
+                // 업로드 권한 확인
+                var permission = await WitchAPI.CheckPermission();
+                
+                if (permission < 0)
+                {
+                    var permissionMsg = permission > -2 ? AssetBundleConfig.AuthMsg : AssetBundleConfig.PermissionMsg;
+                    EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
+                    return;
+                }
+
                 // 입력 제한
                 CustomWindow.IsInputDisable = true;
                 buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
@@ -108,12 +101,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     
                     // 업로드
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
+                    
                     var result = await Upload();
-                    EditorUtility.ClearProgressBar();
-
                     var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
                     
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
+                    EditorUtility.ClearProgressBar();
                 }
                 // 입력 제한 해제
                 CustomWindow.IsInputDisable = false;
@@ -131,7 +124,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         /// </summary>
         private static void DrawReport()
         {
-            GUILayout.Label("Report", EditorStyles.boldLabel);
+            GUILayout.Label("Bundle Report", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
             
             EditorGUILayout.LabelField("Result", buildReport.result.ToString());
@@ -146,22 +139,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 // 종료시간
                 EditorGUILayout.LabelField("EndTime", buildReport.BuildEndedAt.ToString());
                 // 소요시간 
-
                 var time = buildReport.BuildEndedAt - buildReport.BuildStatedAt;
                 EditorGUILayout.LabelField("Duration", (int)time.TotalSeconds + "s");;
 
             }
             
-            EditorGUILayout.EndVertical();
-        }
-
-        private static void DrawUpload()
-        {
-            GUILayout.Label("Upload", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("box");
-            
-            EditorGUILayout.LabelField("Result", uploadResult.ToString());
-
             EditorGUILayout.EndVertical();
         }
 
@@ -183,9 +165,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 manifests.Add(bundleType, manifest);
             }
             
-            uploadResult = UploadState.Uploading;
-            
             var response = await WitchAPI.UploadBundle(option, manifests);
+            
             return response;
         }
     }

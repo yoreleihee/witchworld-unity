@@ -34,7 +34,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.LabelField("Developer Mode", EditorStyles.boldLabel);
             
             EditorGUILayout.BeginVertical("box");
-            ToolkitConfig.DeveloperMode = EditorGUILayout.Toggle("Debug", ToolkitConfig.DeveloperMode);
+            ToolkitConfig.DeveloperMode = EditorGUILayout.Toggle("IsDev", ToolkitConfig.DeveloperMode);
             EditorGUILayout.EndVertical();
             
         }
