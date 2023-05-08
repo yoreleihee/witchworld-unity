@@ -45,13 +45,17 @@ namespace WitchCompany.Toolkit.Editor.GUI
             GUILayout.Label("Account", EditorStyles.boldLabel);
             
             EditorGUILayout.BeginVertical("box");
-
-            email = EditorGUILayout.TextField("E-Mail", email);
-            password = EditorGUILayout.PasswordField("Password", password);
             
-            // test
-            // email = EditorGUILayout.TextField("E-Mail", "kmkim@witchcompany.io");
-            // password = EditorGUILayout.PasswordField("Password", "Witch00!");
+            if (ToolkitConfig.DeveloperMode)
+            {
+                email = EditorGUILayout.TextField("E-Mail", "kmkim@witchcompany.io");
+                password = EditorGUILayout.PasswordField("Password", "Witch00!");
+            }
+            else
+            {
+                email = EditorGUILayout.TextField("E-Mail", email);
+                password = EditorGUILayout.PasswordField("Password", password);
+            }
             
             EditorGUILayout.EndVertical();
 
