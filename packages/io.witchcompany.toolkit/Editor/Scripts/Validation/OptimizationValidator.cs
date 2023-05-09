@@ -251,7 +251,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         public static ValidationReport ValidateRealtimeLight()
         {
             var report = new ValidationReport();
-            var lights = GameObject.FindObjectsOfType<Light>(true);
+            var lights = Object.FindObjectsOfType<Light>(true);
             var realtimeLights = new List<Light>();
             
             foreach (var light in lights)
