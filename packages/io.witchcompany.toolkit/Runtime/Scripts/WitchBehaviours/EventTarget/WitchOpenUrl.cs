@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Module;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Runtime
 {
@@ -20,5 +21,15 @@ namespace WitchCompany.Toolkit.Runtime
         
         public string TargetUrl => targetUrl;
         public void OpenUrl() => openUrlEvent.Invoke();
+        
+#if UNITY_EDITOR
+        public override ValidationError ValidationCheck()
+        {
+            if (string.IsNullOrEmpty(targetUrl))
+                return Error("targetUrl이 비었습니다.");
+
+            return base.ValidationCheck();
+        }
+#endif
     }
 }
