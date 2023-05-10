@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
+using WitchCompany.Toolkit.Extension;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEffect
 {
@@ -19,7 +20,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         private float speed = 10f; // 회전 각도의 기본 값은 10.0으로 초기화
         // 오브젝트의 회전 방향을 Vector3 형식으로 저장
         [Header("회전 방향"), SerializeField]
-        private Vector3 direction = Vector3.forward;
+        private Vector3 direction = Vector3.up;
 
         // 입력받은 값을 Logic으로 넘겨주기 위해 public 값으로 저장
         public Transform OrbitPivot => orbitPivot;
@@ -27,12 +28,44 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public Vector3 Direction => direction;
 
 #if UNITY_EDITOR // 유니티 에디터에서
+        public override ValidationError ValidationCheck()
+        {
+            if (orbitPivot == null)
+                return NullError("orbitPivot");
+            if (!transform.HasChild(orbitPivot, false))
+                return ChildError("orbitPivot");
+            if (orbitPivot.GetComponents<MonoBehaviour>().Length > 1)
+                return Error("회전 축은 다른 컴포넌트를 가질 수 없습니다.");
+
+            return base.ValidationCheck();
+        }
+        
+        private void OnDrawGizmos()
+        {
+            // 회전 축이 될 오브젝트가 없으면
+            if(orbitPivot == null) return;
+            
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(orbitPivot.position, direction);
+            Gizmos.DrawRay(orbitPivot.position, -direction);
+        }
+        
         private void OnValidate()
         {
             if(Application.isPlaying) return; // 애플리케이션 실행중이 아니면
 
             direction.Normalize(); // 회전 방향 값을 실시간으로 정규화
             // Logic의 RotateAround() 함수에 사용되는 Vector3 angle값은 position값보다 Rotation값에 가깝기 때문에 정규화된 값 사용
+        }
+
+        private void Reset()
+        {
+            if (orbitPivot == null && transform.childCount == 0)
+            {
+                orbitPivot = new GameObject("Pivot").transform;
+                orbitPivot.parent = transform;
+                orbitPivot.localPosition = Vector3.forward;
+            }
         }
 #endif
     }
