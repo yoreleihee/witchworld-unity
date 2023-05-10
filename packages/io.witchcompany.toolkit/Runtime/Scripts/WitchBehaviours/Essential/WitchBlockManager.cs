@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Validation;
 
@@ -25,11 +26,15 @@ namespace WitchCompany.Toolkit.Module
         [SerializeField] private AudioClip defaultBGM;
         [Header("중력값")]
         [SerializeField, Range(0.1f, 1f)] private float gravity = 1f;
+        
+        [HideInInspector] public UnityEvent respawnEvent;
 
         public AudioClip DefaultBGM => defaultBGM;
         public float GravityRatio => gravity;
         public Transform SpawnPoint => spawnPoint.transform;
         public List<WitchBehaviour> Behaviours => behaviours;
+
+        public void Respawn() => respawnEvent.Invoke();
 
 #if UNITY_EDITOR
         /// <summary>위치 요소를 카운팅한 딕셔너리</summary>

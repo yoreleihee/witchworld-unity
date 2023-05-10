@@ -52,6 +52,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "VerticalLayoutGroup",
             "ContentSizeFitter",
             "LayoutElement",
+            "TextMesh",
             // Text Mesh Pro
             "InlineGraphic",
             "InlineGraphicManager",
@@ -72,22 +73,22 @@ namespace WitchCompany.Toolkit.Editor.Validation
             // 파티클 에셋
             //"CFXR_Effect"
             // bifrost
-            "FaceCamera",
-            "DialogueIndicator",
-            "BifrostIndicator",
-            "DialogueButtonSystem",
-            "DOTweenVisualManager",
-            "DOTweenAnimation",
-            "DialogueTriggerClick",
-            "DialogueSystem",
-            "BifrostQuiz",
-            "BifrostServiceIntroduction",
-            "OnClickOpenLink",
-            "MoveCamera",
-            "TrueShadow",
-            "EventTrigger",
-            "Logic_ConditionChecker",
-            "EggDataManager"
+            // "FaceCamera",
+            // "DialogueIndicator",
+            // "BifrostIndicator",
+            // "DialogueButtonSystem",
+            // "DOTweenVisualManager",
+            // "DOTweenAnimation",
+            // "DialogueTriggerClick",
+            // "DialogueSystem",
+            // "BifrostQuiz",
+            // "BifrostServiceIntroduction",
+            // "OnClickOpenLink",
+            // "MoveCamera",
+            // "TrueShadow",
+            // "EventTrigger",
+            // "Logic_ConditionChecker",
+            // "EggDataManager"
         };
         public static ValidationReport ValidationCheck()
         {
