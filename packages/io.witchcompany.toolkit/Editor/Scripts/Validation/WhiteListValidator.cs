@@ -70,6 +70,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "TMP_Dropdown",
             // 툴킷
             "WitchBehaviour",
+            // 포스트 프로세싱
+            "PostProcessVolume",
             // 파티클 에셋
             //"CFXR_Effect"
             // bifrost
