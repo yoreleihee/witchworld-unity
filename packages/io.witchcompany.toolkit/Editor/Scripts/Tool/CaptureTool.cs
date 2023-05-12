@@ -23,7 +23,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
             //화면 캡쳐
             //카메라 view rt 저장
-            var rt = new RenderTexture(Screen.width, Screen.height, 32);
+            var rt = new RenderTexture(1920, 1080, 32);
             cam.targetTexture = rt;
             cam.Render();
             
