@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Runtime.Base;
 using WitchCompany.Toolkit.Validation;
 
@@ -11,17 +12,20 @@ namespace WitchCompany.Toolkit.Runtime
                                               "오브젝트에 isTrigger가 활성화 된 SphereCollider가 필요합니다.";
         public override string DocumentURL => "";
         
-        [Header("오브젝트의 SphereCollider"), SerializeField]
-        private SphereCollider collider;
         
-        public SphereCollider Collider => collider;
+        [Header("오브젝트의 SphereCollider")]
+        [FormerlySerializedAs("collider")]
+        [SerializeField]
+        private SphereCollider sphereCollider;
+        
+        public SphereCollider SphereCollider => sphereCollider;
 
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (collider == null)
-                return NullError(nameof(collider));
+            if (sphereCollider == null)
+                return NullError(nameof(sphereCollider));
             if (!TryGetComponent(out SphereCollider col))
                 return NullError("SphereCollider");
             if (col.radius <= 0)

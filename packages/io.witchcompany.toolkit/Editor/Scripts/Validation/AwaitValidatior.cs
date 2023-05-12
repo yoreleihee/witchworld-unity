@@ -5,6 +5,7 @@ using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Runtime;
 using WitchCompany.Toolkit.Validation;
+#pragma warning disable CS1998
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {

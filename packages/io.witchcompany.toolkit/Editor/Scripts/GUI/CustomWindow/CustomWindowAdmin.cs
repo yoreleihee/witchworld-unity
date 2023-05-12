@@ -27,15 +27,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
         
         public static void ShowAdmin()
         {
-            
             DrawUnityKey();
 
             GUILayout.Space(10);
             
-            DrawBlockConfig();
-            
+            DrawBlockConfig().Forget();
         }
-        private static bool isProcessing = false;
+        private static bool _isProcessing = false;
         private static void DrawUnityKey()
         {
             GUILayout.Label("Unity Key", EditorStyles.boldLabel);
@@ -54,12 +52,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 }
                 
 
-                using (new EditorGUI.DisabledScope(isProcessing))
+                using (new EditorGUI.DisabledScope(_isProcessing))
                 {
                     // unity key list 조회
                     if (GUILayout.Button("Refresh", GUILayout.Width(100)))
                     {
-                        isProcessing = true;
+                        _isProcessing = true;
                         
                         GetUnityKey().Forget();
                     }
@@ -163,7 +161,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             if (unityKeys == null)
             {
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", "Unity Key를 조회할 수 없습니다", "OK");
-                isProcessing = false;
+                _isProcessing = false;
                 return;
             }
             
@@ -174,7 +172,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 popupUnityKeys.Add($"{key.pathName} (made by {key.creatorNickName})");
 
             AdminConfig.UnityKeyIndex = 0;
-            isProcessing = false;
+            _isProcessing = false;
         }
     }
 }

@@ -42,7 +42,7 @@ namespace WitchCompany.Toolkit.Runtime
                 return ChildError(nameof(teleportB));
             
             var distance = Vector3.Distance(teleportA.transform.position, teleportB.transform.position);
-            if (distance < Math.Max(teleportA.Collider.radius, teleportB.Collider.radius) + 1)
+            if (distance < Math.Max(teleportA.SphereCollider.radius, teleportB.SphereCollider.radius) + 1)
                 return Error($"텔레포트 {gameObject.name}의 두 지점이 겹칩니다. 최소 1m 이상 떨어지게 해 주세요.");
 
             return base.ValidationCheck();
