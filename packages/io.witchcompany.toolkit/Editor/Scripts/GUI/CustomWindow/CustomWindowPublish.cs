@@ -27,7 +27,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         public static void ShowPublish()
         {
             // 빌드 정보
-            DrawPublish();
+            DrawPublish().Forget();
             
             GUILayout.Space(10);
 
