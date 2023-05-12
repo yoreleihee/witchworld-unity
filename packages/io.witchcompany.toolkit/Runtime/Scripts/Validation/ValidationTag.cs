@@ -13,7 +13,10 @@
         public const string TagLightmap = "Light Map";
         public const string TagMeshCollider = "Mesh Collider";
         public const string TagRigidbody = "Rigidbody";
-        public const string TagRealtimeLight = "Realtime Light ";
+        public const string TagDirectionalLight = "Directional";
+        public const string TagPointLight = "Point";
+        public const string TagRealtime = "Realtime";
+        public const string TagBaked = "Baked";
         public const string TagReflectionProbe = "Reflection Probe";
         
         // 유효성 검사

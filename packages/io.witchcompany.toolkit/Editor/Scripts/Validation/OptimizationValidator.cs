@@ -246,43 +246,77 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             return report;
         }
-        
-        /// <summary> Realtime Light 개수 검출 </summary>
-        public static ValidationReport ValidateRealtimeLight()
+
+        /// <summary>
+        /// Realtime Light 개수 검출
+        /// - Directional light 1개, Point light 2개로 light 개수 제한
+        /// </summary>
+        private static ValidationReport ValidateRealtimeLight()
         {
             var report = new ValidationReport();
             var lights = Object.FindObjectsOfType<Light>(true);
             var realtimeLights = new List<Light>();
-            
+            var directionalLights = new List<Light>();
+            var pointLights = new List<Light>();
+            var disabledBakedLights = new List<Light>();
+
+            // light 검출
             foreach (var light in lights)
             {
-                if(light.lightmapBakeType != LightmapBakeType.Baked)
+                if (light.lightmapBakeType == LightmapBakeType.Baked)
                 {
+                    if (light.gameObject.activeSelf)
+                        disabledBakedLights.Add(light);
+                    continue;
+                }
+                
+                if (light.type == LightType.Directional)
+                    directionalLights.Add(light);
+                else if (light.type == LightType.Point)
+                    pointLights.Add(light);
+                else
                     realtimeLights.Add(light);
-                }
             }
 
-            if (realtimeLights.Count > OptimizationConfig.MaxRealtimeLight)
-            {
-                var errorMessage =
-                    $"Realtime Light의 최대 개수는 {OptimizationConfig.MaxRealtimeLight}개입니다." +
-                    $"({realtimeLights.Count} / {OptimizationConfig.MaxRealtimeLight})\n" +
-                    $"Scene 내에 적용된 Realtime Light의 수를 조절해주세요.";
-                report.Append(new ValidationError(errorMessage, ValidationTag.TagRealtimeLight));
-
-                foreach (var light in realtimeLights)
-                {
-                    // todo : 라이트 오브젝트 나열
-                    report.Append(new ValidationError($"Object : {light.name}", ValidationTag.TagRealtimeLight, light));
-                }
-            }
+            LightTypeErrorMessage(report, directionalLights, ValidationTag.TagDirectionalLight,OptimizationConfig.MaxDirectionalLight);
+            LightTypeErrorMessage(report, pointLights, ValidationTag.TagPointLight,OptimizationConfig.MaxPointLight);
+            
+            var realTimeErrorMsg = "Directional Light와 Point Light를 제외한 Light의 Mode는 RealTime 일 수 없습니다.";
+            var BakedErrorMsg = "Light의 Mode가 Baked인 오브젝트는 비활성화 되어야 합니다.";
+            
+            LightModeErrorMessage(report, realtimeLights, ValidationTag.TagRealtime, realTimeErrorMsg);
+            LightModeErrorMessage(report, disabledBakedLights, ValidationTag.TagBaked, BakedErrorMsg);
             
             return report;
+        }
+
+        private static void LightTypeErrorMessage(ValidationReport report, List<Light> lights, string tag, uint maxCount)
+        {
+            if (lights.Count <= maxCount) return;
+            
+            var errorMessage =
+                $"{tag} Light의 최대 개수는 {maxCount}개입니다. " +
+                $"({lights.Count} / {maxCount})\n" +
+                $"Scene 내에 적용된 {tag} Light의 수를 조절해주세요.";
+            report.Append(new ValidationError(errorMessage, tag));
+
+            foreach (var light in lights)
+                report.Append(new ValidationError($"Object : {light.name}", "Light Type : " + tag, light));
+        }
+        
+        private static void LightModeErrorMessage(ValidationReport report, List<Light> lights, string tag, string msg)
+        {
+            if (lights.Count <= 0) return;
+            
+            report.Append(new ValidationError(msg, tag));
+
+            foreach (var light in lights)
+                report.Append(new ValidationError($"Object : {light.name}", "Light Mode : " + tag, light));
         }
         
         
         /// <summary> Reflection Probe 용량 검사 </summary>
-        public static ValidationReport ValidateReflectionProbe()
+        private static ValidationReport ValidateReflectionProbe()
         {
             var report = new ValidationReport();
             
@@ -309,5 +343,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             return report;
         }
+        
+        
     }
 }
