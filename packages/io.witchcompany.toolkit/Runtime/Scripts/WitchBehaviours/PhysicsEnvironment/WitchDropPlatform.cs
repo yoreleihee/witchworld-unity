@@ -5,7 +5,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEnvironment
     public class WitchDropPlatform : WitchPhysicsEnvironmentBase
     {
         public override string BehaviourName => "물리 오브젝트: 추락 플랫폼";
-        public override string Description => "플레이어가 해당 플랫폼을 밟으면 점프합니다.";
+        public override string Description => "플레이어가 해당 플랫폼을 밟으면 플랫폼이 낙하합니다.";
         public override string DocumentURL => "";
         public override int MaximumCount => 32;
         
