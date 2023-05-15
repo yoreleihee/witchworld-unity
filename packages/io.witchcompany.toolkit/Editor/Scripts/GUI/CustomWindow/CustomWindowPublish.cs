@@ -27,14 +27,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
         public static void ShowPublish()
         {
             // 빌드 정보
-            DrawPublish().Forget();
+            DrawPublish();
             
             GUILayout.Space(10);
 
             if (buildReport != null)
-            {
                 DrawReport();
-            }
         }
 
         public static BlockPublishOption GetOption()
@@ -44,10 +42,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         /// <summary>
         /// 빌드 설정
-        /// - Scriptable Object 적용 칸
-        /// - 빌드 버튼
         /// </summary>
-        private static async UniTaskVoid DrawPublish()
+        private static void DrawPublish()
         {
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
@@ -79,40 +75,66 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
             if (GUILayout.Button("Publish"))
             {
-                // 업로드 권한 확인
-                var permission = await WitchAPI.CheckPermission();
-                
-                if (permission < 0)
-                {
-                    var permissionMsg = permission > -2 ? AssetBundleConfig.AuthMsg : AssetBundleConfig.PermissionMsg;
-                    EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
-                    return;
-                }
-
-                // 입력 제한
-                CustomWindow.IsInputDisable = true;
-                buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
-                
-                if (buildReport.result == JBuildReport.Result.Success)
-                {
-                    // 썸네일 캡쳐
-                    var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, GetOption().ThumbnailKey);
-                    CaptureTool.CaptureAndSave(thumbnailPath);
-                    
-                    // 업로드
-                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
-                    
-                    var result = await Upload();
-                    var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
-                    
-                    EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
-                    EditorUtility.ClearProgressBar();
-                }
-                // 입력 제한 해제
-                CustomWindow.IsInputDisable = false;
-
-                
+                OnClickPublish().Forget();
             }
+        }
+
+        private static async UniTaskVoid OnClickPublish()
+        {
+            // 업로드 권한 확인
+            var permission = await WitchAPI.CheckPermission();
+                
+            if (permission < 0)
+            {
+                var permissionMsg = permission > -2 ? AssetBundleConfig.AuthMsg : AssetBundleConfig.PermissionMsg;
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
+                return;
+            }
+
+            // 입력 제한
+            CustomWindow.IsInputDisable = true;
+            buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
+                
+            if (buildReport.result == JBuildReport.Result.Success)
+            {
+                // 썸네일 캡쳐
+                var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, GetOption().ThumbnailKey);
+                CaptureTool.CaptureAndSave(thumbnailPath);
+                    
+                // 업로드
+                EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
+                    
+                var result = await Upload();
+                var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
+                    
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
+                EditorUtility.ClearProgressBar();
+            }
+            // 입력 제한 해제
+            CustomWindow.IsInputDisable = false;
+        }
+        
+        private static async UniTask<int> Upload()
+        {
+            var option = GetOption();
+
+            var manifests = new Dictionary<string, JManifest>();
+            foreach (var bundleType in bundleTypes)
+            {
+                var manifest = new JManifest();
+                var crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey);
+                if (crc != null)
+                {
+                    manifest.unityVersion = ToolkitConfig.UnityVersion;
+                    manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion;
+                    manifest.crc = crc;
+                }
+                manifests.Add(bundleType, manifest);
+            }
+            
+            var response = await WitchAPI.UploadBundle(option, manifests);
+            
+            return response;
         }
         
         /// <summary>
@@ -143,31 +165,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 EditorGUILayout.LabelField("Duration", (int)time.TotalSeconds + "s");;
 
             }
-            
             EditorGUILayout.EndVertical();
-        }
-
-        private static async UniTask<int> Upload()
-        {
-            var option = GetOption();
-
-            var manifests = new Dictionary<string, JManifest>();
-            foreach (var bundleType in bundleTypes)
-            {
-                var manifest = new JManifest();
-                var crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey);
-                if (crc != null)
-                {
-                    manifest.unityVersion = ToolkitConfig.UnityVersion;
-                    manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion;
-                    manifest.crc = crc;
-                }
-                manifests.Add(bundleType, manifest);
-            }
-            
-            var response = await WitchAPI.UploadBundle(option, manifests);
-            
-            return response;
         }
     }
 }
