@@ -11,6 +11,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         public string ThumbnailKey => Key + ".jpg";
 
         public SceneAsset targetScene;
-        public BlockTheme theme;
+        public BundleTheme theme;
     }
 }

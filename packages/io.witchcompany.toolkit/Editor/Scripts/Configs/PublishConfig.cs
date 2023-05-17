@@ -17,9 +17,9 @@ namespace WitchCompany.Toolkit.Editor.Configs
             set => EditorPrefs.SetString(Prefs_Scene, AssetDatabase.GetAssetPath(value));
         }
         
-        public static BlockTheme Theme
+        public static BundleTheme Theme
         {
-            get => (BlockTheme)EditorPrefs.GetInt(Prefs_Theme, 0);
+            get => (BundleTheme)EditorPrefs.GetInt(Prefs_Theme, 0);
             set => EditorPrefs.SetInt(Prefs_Theme, (int)value);
         }
     }

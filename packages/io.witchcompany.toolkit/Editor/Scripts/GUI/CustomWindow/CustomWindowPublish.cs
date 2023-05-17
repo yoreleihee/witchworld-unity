@@ -66,7 +66,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                var blockTheme = (BlockTheme)EditorGUILayout.EnumPopup("Theme", (BlockTheme)PublishConfig.Theme);
+                var blockTheme = (BundleTheme)EditorGUILayout.EnumPopup("Theme", (BundleTheme)PublishConfig.Theme);
 
                 if (check.changed)
                     PublishConfig.Theme = blockTheme;

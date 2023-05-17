@@ -75,13 +75,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 using (new GUILayout.HorizontalScope())
                 {
                     // todo : 썸네일 미리보기
+                    // 썸네일
                     EditorGUILayout.LabelField("thumbnail", AdminConfig.ThumbnailPath, EditorStyles.textField);
                     if (GUILayout.Button("Select", GUILayout.Width(100)))
                     {
                         AdminConfig.ThumbnailPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "jpg");
                     }
                 } 
-
+                // pathName
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
                     // 정규식에 맞지 않을 경우 이전 값으로 되돌림
@@ -90,7 +91,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     if (check.changed)
                         AdminConfig.PathName = _pathName;
                 }
-
+                // 블록 이름(한글)
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
                     // 최대 글자수 넘으면 이전값으로 되돌림
@@ -99,7 +100,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     if (check.changed)
                         AdminConfig.BlockNameKr = _blockName.kr;
                 }
-
+                // 블록 이름(영문)
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
                     _blockName.en = EditorGUILayout.TextField("block name (영문)", AdminConfig.BlockNameEn);
@@ -107,14 +108,40 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     if (check.changed)
                         AdminConfig.BlockNameEn = _blockName.en; 
                 }
-
+                // 설명(한글)
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
-                    var blockType = (BlockType)EditorGUILayout.EnumPopup("type", AdminConfig.Type);
+                    var blockDesc = EditorGUILayout.TextField("description (한글)", AdminConfig.BlockDescriptionKr);
 
                     if (check.changed)
-                        AdminConfig.Type = blockType;
-                } 
+                        AdminConfig.BlockDescriptionKr = blockDesc;
+                }
+                // 설명(영문)
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var blockDesc = EditorGUILayout.TextField("description (영문)", AdminConfig.BlockDescriptionEn);
+
+                    if (check.changed)
+                        AdminConfig.BlockDescriptionEn = blockDesc;
+                }
+                // 테마
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var blockTheme = (BlockTheme)EditorGUILayout.EnumPopup("theme", AdminConfig.BlockTheme);
+
+                    if (check.changed)
+                        AdminConfig.BlockTheme = blockTheme;
+                }
+
+                if (AdminConfig.BlockTheme == BlockTheme.Game)
+                {
+                    // 난이도
+                    using var check = new EditorGUI.ChangeCheckScope();
+                    var blockLevel = (BlockLevel)EditorGUILayout.EnumPopup("level", AdminConfig.BlockLevel);
+
+                    if (check.changed)
+                        AdminConfig.BlockLevel = blockLevel;
+                }
             }
 
             if (GUILayout.Button("Publish"))
@@ -124,35 +151,46 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 {
                     var message = "";
                     foreach (var error in report.errors)
-                    {
                         message += error.message + "\n";
-                    }
+                    
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", $"Publish Failed\n\n{message}", "OK");
                 }
                 else
                 {
-                    var selectUnityKey = unityKeys[AdminConfig.UnityKeyIndex];
-                    var blockData = new JBlockData()
-                    {
-                        unityKeyId = selectUnityKey.unityKeyId,
-                        pathName = AdminConfig.PathName,
-                        ownerNickname = AuthConfig.NickName,
-                        blockName = new JLanguageString(AdminConfig.BlockNameEn, AdminConfig.BlockNameKr),
-                        blockType = AdminConfig.Type.ToString().ToLower()
-                    };
-                    
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server....", 1.0f);
                     CustomWindow.IsInputDisable = true;
-                    var result = await WitchAPI.UploadBlock(blockData);
+                    
+                    var result = await OnPublish();
+                    var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
+                    
                     CustomWindow.IsInputDisable = false;
                     EditorUtility.ClearProgressBar();
-
-                    var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
                     EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 }
-                
             }
         }
+
+        private static async UniTask<int> OnPublish()
+        {
+            var selectedKey = unityKeys[AdminConfig.UnityKeyIndex];
+            var blockLevel = AdminConfig.BlockTheme != BlockTheme.Game ? null : AdminConfig.BlockLevel.ToString().ToLower();
+            var blockData = new JBlockData()
+            {
+                unityKeyId = selectedKey.unityKeyId,
+                pathName = AdminConfig.PathName,
+                ownerNickname = AuthConfig.NickName,
+                blockName = new JLanguageString(AdminConfig.BlockNameEn, AdminConfig.BlockNameKr),
+                blockType = AdminConfig.BlockType.ToString().ToLower(),
+                blockTheme = AdminConfig.BlockTheme.ToString().ToLower(),
+                blockLevel = blockLevel,
+                blockDescription = new JLanguageString(AdminConfig.BlockDescriptionKr, AdminConfig.BlockDescriptionEn),
+            };
+                
+            var result = await WitchAPI.UploadBlock(blockData);
+
+            return result;
+        }
+        
         /// <summary> 유니티 키 조회 api 호출 </summary>
         private static async UniTaskVoid GetUnityKey()
         {

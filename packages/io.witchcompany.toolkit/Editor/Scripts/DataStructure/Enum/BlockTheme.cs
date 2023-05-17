@@ -2,6 +2,9 @@
 {
     public enum BlockTheme
     {
-        Outdoor = 0, Indoor
+        Game,
+        Store,
+        Brand,
+        Social
     }
 }

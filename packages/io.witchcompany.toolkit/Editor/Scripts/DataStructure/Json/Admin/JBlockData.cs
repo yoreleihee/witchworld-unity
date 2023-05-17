@@ -11,6 +11,9 @@ namespace WitchCompany.Toolkit.Editor.DataStructure.Admin
         public string ownerNickname;
         public JLanguageString blockName;
         public string blockType;
+        public string blockTheme;
+        public string blockLevel;
+        public JLanguageString blockDescription;
         
         public int blockId;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
