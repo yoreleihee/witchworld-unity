@@ -78,6 +78,7 @@ namespace WitchCompany.Toolkit.Module
         private void OnValidate()
         {
             if(!Application.isPlaying) FindWitchBehaviours();
+            
         }
         private void Reset()
         {

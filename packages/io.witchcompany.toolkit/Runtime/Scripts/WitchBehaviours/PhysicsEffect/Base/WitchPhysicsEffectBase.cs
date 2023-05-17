@@ -14,6 +14,9 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public override ValidationError ValidationCheck()
         {
             var rb = transform.GetComponentInChildren<Rigidbody>(true);
+
+            if (allowPlayerCollision && GetComponent<Collider>() == null)
+                return NullError("Collider");
             
             if (rb != null && rb.gameObject != gameObject)
                 return new ValidationError("자식에 RigidBody는 있을 수 없습니다.", ValidationTag.TagRigidbody, this);

@@ -91,6 +91,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
             // "EventTrigger",
             // "Logic_ConditionChecker",
             // "EggDataManager"
+            
+            "SoftMaskable",
+            "UIGradient",
+            "SoftMask",
+            "GridLayoutGroup",
         };
         public static ValidationReport ValidationCheck()
         {
