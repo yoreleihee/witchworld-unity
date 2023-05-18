@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEngine;
 using WitchCompany.Toolkit.Editor.DataStructure;
 
 namespace WitchCompany.Toolkit.Editor.Configs

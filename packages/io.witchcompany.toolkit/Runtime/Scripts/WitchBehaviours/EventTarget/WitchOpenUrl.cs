@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 
-namespace WitchCompany.Toolkit.Runtime
+namespace WitchCompany.Toolkit.Module
 {
     public class WitchOpenUrl : WitchBehaviour
     {

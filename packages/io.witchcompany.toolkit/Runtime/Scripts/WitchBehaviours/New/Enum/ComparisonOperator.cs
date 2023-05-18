@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using UnityEngine;
 
-namespace WitchCompany.Toolkit.Runtime.Scripts.Enum
+namespace WitchCompany.Toolkit.Module
 {
     public enum ComparisonOperator
     {

@@ -7,7 +7,7 @@ using WitchCompany.Toolkit.Module.Base;
 using WitchCompany.Toolkit.Module.PhysicsEffect;
 using WitchCompany.Toolkit.Validation;
 
-namespace WitchCompany.Toolkit.Runtime
+namespace WitchCompany.Toolkit.Module
 {
     [RequireComponent(typeof(WitchDoor))]
     [RequireComponent(typeof(WitchDoorEffect))]

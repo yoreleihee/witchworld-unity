@@ -1,6 +1,4 @@
-using WitchCompany.Toolkit.Module;
-
-namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event.Base
+namespace WitchCompany.Toolkit.Module
 {
     public abstract class WitchEventBase : WitchBehaviour
     {

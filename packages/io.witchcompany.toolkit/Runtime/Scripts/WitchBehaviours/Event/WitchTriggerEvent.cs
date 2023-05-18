@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
-using WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event.Base;
 using WitchCompany.Toolkit.Validation;
 
-namespace WitchCompany.Toolkit.Runtime.Scripts.WitchBehaviours.Event
+namespace WitchCompany.Toolkit.Module
 {
     public class WitchTriggerEvent: WitchEventBase
     {

@@ -1,6 +1,6 @@
 using WitchCompany.Toolkit.Module;
 
-namespace WitchCompany.Toolkit.Runtime.Base
+namespace WitchCompany.Toolkit.Module.Base
 {
     public abstract class WitchMovementBase : WitchBehaviour
     {

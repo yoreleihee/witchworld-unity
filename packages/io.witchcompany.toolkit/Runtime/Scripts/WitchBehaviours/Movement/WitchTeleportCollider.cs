@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Serialization;
-using WitchCompany.Toolkit.Runtime.Base;
+using WitchCompany.Toolkit.Module.Base;
 using WitchCompany.Toolkit.Validation;
 
-namespace WitchCompany.Toolkit.Runtime
+namespace WitchCompany.Toolkit.Module
 {
     public class WitchTeleportCollider : WitchMovementBase
     {

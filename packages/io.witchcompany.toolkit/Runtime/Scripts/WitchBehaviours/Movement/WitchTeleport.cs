@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Extension;
-using WitchCompany.Toolkit.Runtime.Base;
+using WitchCompany.Toolkit.Module.Base;
 using WitchCompany.Toolkit.Validation;
 
-namespace WitchCompany.Toolkit.Runtime
+namespace WitchCompany.Toolkit.Module
 {
     public class WitchTeleport : WitchMovementBase
     {
