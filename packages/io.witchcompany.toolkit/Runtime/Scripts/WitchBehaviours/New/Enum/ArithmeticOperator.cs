@@ -6,9 +6,11 @@ namespace WitchCompany.Toolkit.Module
     {
         [InspectorName("+")] 
         Add,
-        [InspectorName("*")] 
+        [InspectorName("x")] 
         Multiply,
-        [InspectorName("=")] 
+        [InspectorName(@"÷")]
+        Divide,
+        [InspectorName("=")]
         Assignment
     }
 }

@@ -12,8 +12,8 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
-        [HideInInspector] public UnityEvent<WitchDataChanger> onChangeValue = new();
+        [HideInInspector] public UnityEvent<WitchDataChangerSO> onChangeValue = new();
         
-        public void ChangeValue(WitchDataChanger data) => onChangeValue.Invoke(data);
+        public void ChangeValue(WitchDataChangerSO data) => onChangeValue.Invoke(data);
     }
 }
