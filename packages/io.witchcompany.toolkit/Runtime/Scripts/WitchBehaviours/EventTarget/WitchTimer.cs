@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
@@ -13,28 +14,15 @@ namespace WitchCompany.Toolkit.Module
 
         public override int MaximumCount => 1;
 
-        [Header("타이머 키값")] 
-        [SerializeField] private string key = "timer";
         [Header("서버 저장 여부")] 
         [SerializeField] private bool saveResultToServer = true;
         
         [HideInInspector] public UnityEvent timerStartEvent;
         [HideInInspector] public UnityEvent timerEndEvent;
 
-        public string Key => key;
         public bool SaveResultToServer => saveResultToServer;
 
         public void StartTimer() => timerStartEvent.Invoke();
         public void EndTimer() => timerEndEvent.Invoke();
-        
-#if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
-        {
-            if (string.IsNullOrEmpty(key))
-                return Error("timer의 key가 비었습니다.");
-
-            return base.ValidationCheck();
-        }
-#endif
     }
 }

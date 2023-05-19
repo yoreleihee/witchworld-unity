@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Module
         Add,
         [InspectorName("x")] 
         Multiply,
-        [InspectorName(@"÷")]
+        [InspectorName("÷")]
         Divide,
         [InspectorName("=")]
         Assignment
