@@ -1,10 +1,8 @@
-using WitchCompany.Toolkit.Module;
-
 namespace WitchCompany.Toolkit.Module
 {
     public class WitchRankingBoard : WitchBehaviour
     {
-        public override string BehaviourName => "블록 랭킹 보드";
+        public override string BehaviourName => "데이터 통신: 랭킹 보드";
         public override string Description => "블록의 랭킹을 나타냅니다.\n" +
                                               "블록의 랭킹에 필요한 키 값을 넣어 랭킹을 불러옵니다.\n" +
                                               "WitchDataManager가 같은 씬에 있어야 합니다.\n";

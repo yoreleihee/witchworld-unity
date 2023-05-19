@@ -14,15 +14,29 @@ namespace WitchCompany.Toolkit.Module
 
         public override int MaximumCount => 1;
 
-        [Header("서버 저장 여부")] 
+        [Header("서버에 결과를 저장할지 여부")] 
         [SerializeField] private bool saveResultToServer = true;
-        
-        [HideInInspector] public UnityEvent timerStartEvent;
-        [HideInInspector] public UnityEvent timerEndEvent;
-
         public bool SaveResultToServer => saveResultToServer;
+        
+        [Header("리스폰시 처리 방식")] 
+        [SerializeField] private RespawnMode mode;
+        public RespawnMode Mode => mode;
 
+        [HideInInspector] public UnityEvent timerStartEvent = new ();
+        [HideInInspector] public UnityEvent timerEndEvent = new();
+        [HideInInspector] public UnityEvent timerCancelEvent = new ();
+        [HideInInspector] public UnityEvent timerResetEvent = new();
+        
         public void StartTimer() => timerStartEvent.Invoke();
         public void EndTimer() => timerEndEvent.Invoke();
+        public void CancelTimer() => timerCancelEvent.Invoke();
+        public void ResetTimer() => timerResetEvent.Invoke();
+
+        public enum RespawnMode
+        {
+            KeepOnRespawn = 0,
+            ResetOnRespawn,
+            CancelOnRespawn
+        }
     }
 }
