@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace WitchCompany.Toolkit.Module
 {
-    [CreateAssetMenu(fileName = "DataChanger-", menuName = "WitchToolkit/DataChanger")]
+    [CreateAssetMenu(fileName = "DataChanger - ", menuName = "WitchToolkit/Data/Changer")]
     public class WitchDataChangerSO : ScriptableObject
     {
         [Header("키")]

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace WitchCompany.Toolkit.Module
 {
-    [CreateAssetMenu(fileName = "DataComparator-", menuName = "WitchToolkit/DataComparator")]
+    [CreateAssetMenu(fileName = "DataComparator - ", menuName = "WitchToolkit/Data/Comparator")]
     public class WitchDataComparatorSO : ScriptableObject
     {
         [Header("키")]

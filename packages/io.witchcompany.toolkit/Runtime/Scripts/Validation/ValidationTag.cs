@@ -23,5 +23,8 @@
         public const string TagComponent = "Component";
         public const string TagBadObject = "Bad Object";
         public const string TagBatchingStatic = "Batching Static";
+        
+        // 기타
+        public const string TagDialogue = "Dialogue";
     }
 }
