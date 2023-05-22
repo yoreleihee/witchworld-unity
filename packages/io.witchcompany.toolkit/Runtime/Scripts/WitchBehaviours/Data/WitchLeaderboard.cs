@@ -15,7 +15,7 @@ namespace WitchCompany.Toolkit.Module
 
         public override int MaximumCount => 8;
 
-        [Header("불러올 랭킹 키 값(최대 3개)")] 
+        [Header("보여줄 랭킹 키 값(최대 3개, 타이머:@timer)")] 
         [SerializeField] private List<string> rankingKeys;
 
         [Header("어디의 랭킹을 불러올지")]

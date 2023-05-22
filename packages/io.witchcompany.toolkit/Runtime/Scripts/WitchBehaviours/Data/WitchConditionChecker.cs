@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Module
     [DisallowMultipleComponent]
     public class WitchConditionChecker : WitchDataBase
     {
-        public override string BehaviourName => "데이터 통신: 오브젝트 활성화";
+        public override string BehaviourName => "데이터 통신: 조건 이벤트";
 
         public override string Description => "Key에 해당하는 값을 읽어와\n" +
                                               "조건을 만족할 경우 이벤트를 발생 시키는 기능입니다.\n" +

@@ -1,5 +1,5 @@
 {
-    "name": "WitchCompany.Toolkit",
+    "name": "WitchCompany.Toolkit.Runtime",
     "rootNamespace": "WitchCompany.Toolkit",
     "references": [
         "UniTask",
