@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using UnityEditor;
-using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.DataStructure.Admin;
@@ -201,7 +197,7 @@ namespace WitchCompany.Toolkit.Editor.API
         
         /// <summary>
         /// 유니티 키로 블록 생성
-        /// 성공(1), 실패(-1), pathName 중복(-2)
+        /// 성공(blockId), 실패(-1), pathName 중복(-2)
         /// </summary>
         public static async UniTask<int> UploadBlock(JBlockData blockData)
         {
@@ -228,9 +224,30 @@ namespace WitchCompany.Toolkit.Editor.API
                 FormSections = form
             });
             
-            if (response.statusCode == 200) return 1;
+            if (response.statusCode == 200) return response.payload.blockId;
             if (response.statusCode == 409) return -2;
             return -1;
+        }
+        
+        /// <summary>
+        /// 랭킹보드 keys 업로드
+        /// </summary>
+        /// <param name="rankingData"></param>
+        /// <returns></returns>
+        public static async UniTask<bool> SetRankingKeys(JRanking rankingData)
+        {
+            var auth = AuthConfig.Auth;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return false;
+
+            var response = await Request<JRanking>(new RequestHelper
+            {
+                Method = "POST",
+                Uri = ApiConfig.URL("v2/blocks/rank/keys"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken),
+                BodyString = JsonConvert.SerializeObject(rankingData)
+            });
+            
+            return response.success;
         }
 
         public static async UniTask<bool> CheckValidItem(int itemKey)

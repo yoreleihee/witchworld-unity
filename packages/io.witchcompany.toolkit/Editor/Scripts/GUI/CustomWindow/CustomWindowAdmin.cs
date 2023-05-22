@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.API;
@@ -10,6 +11,7 @@ using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.DataStructure.Admin;
 using WitchCompany.Toolkit.Editor.Validation;
+using WitchCompany.Toolkit.Module;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
@@ -160,8 +162,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server....", 1.0f);
                     CustomWindow.IsInputDisable = true;
                     
-                    var result = await OnPublish();
-                    var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
+                    var resultMsg = await OnPublish();
                     
                     CustomWindow.IsInputDisable = false;
                     EditorUtility.ClearProgressBar();
@@ -170,7 +171,25 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
         }
 
-        private static async UniTask<int> OnPublish()
+        private static async UniTask<string> OnPublish()
+        {
+            // 블록 업로드
+            var resultBlock = await UploadBlock();
+            var resultMsg = resultBlock > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
+            
+            if (resultBlock < 0) return resultMsg;
+            
+            // 랭킹 키값 설정
+            var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
+            var resultKey = false;
+            
+            if(dataManager != null && dataManager.RankingKeys.Count > 0)
+                resultKey = await SetRankingKeys(resultBlock, dataManager.RankingKeys);
+
+            return resultKey ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedKeyMsg;
+        }
+
+        private static async UniTask<int> UploadBlock()
         {
             var selectedKey = unityKeys[AdminConfig.UnityKeyIndex];
             var blockLevel = AdminConfig.BlockTheme != BlockTheme.Game ? null : AdminConfig.BlockLevel.ToString().ToLower();
@@ -188,6 +207,18 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 
             var result = await WitchAPI.UploadBlock(blockData);
 
+            return result;
+        }
+
+        private static async UniTask<bool> SetRankingKeys(int blockId, List<string> rankingKeys)
+        {
+            var rankingData = new JRanking()
+            {
+                blockId = blockId,
+                rankingKeys = rankingKeys
+            };
+            
+            var result = await WitchAPI.SetRankingKeys(rankingData);
             return result;
         }
         
