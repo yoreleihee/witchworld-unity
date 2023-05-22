@@ -16,13 +16,20 @@ namespace WitchCompany.Toolkit.Module
         public override int MaximumCount => 1;
 
         [Header("랭킹보드에서 사용할 키값 (최대 3개, 타이머: @timer)")]
-        [SerializeField] private List<string> rankingKeys;
+        [SerializeField] private List<KeyGroup> rankingKeys;
 
-        public List<string> RankingKeys => rankingKeys;
+        public List<KeyGroup> RankingKeys => rankingKeys;
         
         [HideInInspector] public UnityEvent<WitchDataChangerSO> onChangeValue = new();
         
         public void ChangeValue(WitchDataChangerSO data) => onChangeValue.Invoke(data);
+
+        [System.Serializable]
+        public class KeyGroup
+        {
+            public string key;
+            public Alignment alignment;
+        }
         
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()

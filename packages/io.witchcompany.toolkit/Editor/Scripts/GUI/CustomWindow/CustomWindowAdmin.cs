@@ -183,8 +183,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
             var resultKey = false;
             
-            if(dataManager != null && dataManager.RankingKeys.Count > 0)
-                resultKey = await SetRankingKeys(resultBlock, dataManager.RankingKeys);
+            // TODO: 주석처리
+            // if(dataManager != null && dataManager.RankingKeys.Count > 0)
+            //     resultKey = await SetRankingKeys(resultBlock, dataManager.RankingKeys);
 
             return resultKey ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedKeyMsg;
         }
