@@ -183,10 +183,21 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
             var resultKey = false;
             
-            // TODO: 주석처리
-            // if(dataManager != null && dataManager.RankingKeys.Count > 0)
-            //     resultKey = await SetRankingKeys(resultBlock, dataManager.RankingKeys);
-
+            if (dataManager != null && dataManager.RankingKeys.Count > 0)
+            {
+                var rankingDatas = new List<JRankingData>();
+                foreach (var keyGroup in dataManager.RankingKeys)
+                {
+                    var rankingData = new JRankingData()
+                    {
+                        rankingKey = keyGroup.key,
+                        rankingKeyType = keyGroup.alignment.ToString().ToLower()
+                    };
+                    rankingDatas.Add(rankingData);
+                }
+                resultKey = await SetRankingKeys(resultBlock, rankingDatas);
+            }
+            
             return resultKey ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedKeyMsg;
         }
 
@@ -211,13 +222,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
             return result;
         }
 
-        private static async UniTask<bool> SetRankingKeys(int blockId, List<string> rankingKeys)
+        private static async UniTask<bool> SetRankingKeys(int blockId, List<JRankingData> rankingKeys)
         {
             var rankingData = new JRanking()
             {
                 blockId = blockId,
                 rankingKeys = rankingKeys
             };
+            Debug.Log(JsonConvert.SerializeObject(rankingData, Formatting.Indented));
             
             var result = await WitchAPI.SetRankingKeys(rankingData);
             return result;

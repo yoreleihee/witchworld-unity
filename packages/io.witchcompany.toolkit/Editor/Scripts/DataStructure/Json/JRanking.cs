@@ -5,6 +5,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     public class JRanking
     {
         public int blockId;
-        public List<string> rankingKeys;
+        public List<JRankingData> rankingKeys;
     }
 }
