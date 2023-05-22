@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -12,8 +15,23 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
+        [Header("랭킹보드에서 사용할 키값 (최대 3개, 타이머: @timer)")]
+        [SerializeField] private List<string> rankingKeys;
+
+        public List<string> RankingKeys => rankingKeys;
+        
         [HideInInspector] public UnityEvent<WitchDataChangerSO> onChangeValue = new();
         
         public void ChangeValue(WitchDataChangerSO data) => onChangeValue.Invoke(data);
+        
+#if UNITY_EDITOR
+        public override ValidationError ValidationCheck()
+        {
+            if (rankingKeys.Count > 3)
+                return Error("랭킹보드에서 보여줄 수 있는 키값의 개수는 최대 3개입니다.");
+
+            return base.ValidationCheck();
+        }
+#endif
     }
 }
