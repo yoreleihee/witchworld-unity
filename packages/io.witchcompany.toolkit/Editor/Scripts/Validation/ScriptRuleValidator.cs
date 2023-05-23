@@ -94,8 +94,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
             // 개별 요소 검증
             report.Append(manager.ValidationCheck());
-            foreach (var behaviour in manager.Behaviours) 
+            foreach (var behaviour in manager.Behaviours)
+            {
                 report.Append(behaviour.ValidationCheck());
+                report.Append(behaviour.ValidationCheckReport());
+            }
 
             // 최소 포함요소 검증
             if (!manager.BehaviourCounter.ContainsKey(typeof(WitchSpawnPoint)))

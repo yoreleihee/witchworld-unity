@@ -20,6 +20,7 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         /// <summary>유효성 검사</summary>
         public virtual ValidationError ValidationCheck() => null;
+        public virtual ValidationReport ValidationCheckReport() => null;
 
         protected ValidationError Error(string msg) => new(msg, ValidationTag.TagScript, this);
         protected ValidationError NullError(string scriptName) => Error($"{name}의 {scriptName}를 설정해주세요.");

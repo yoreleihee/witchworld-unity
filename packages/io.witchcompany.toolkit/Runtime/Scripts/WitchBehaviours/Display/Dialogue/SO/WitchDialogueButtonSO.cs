@@ -29,22 +29,26 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         }
         
 #if UNITY_EDITOR
-        public ValidationReport ValidationCheck()
+        public override void ValidationCheck(ref ValidationReport report)
         {
-            if(Buttons.Count is <= 0 or > 10)
-                return new ValidationReport().Append($"{name}: 대화 버튼은 최소 하나, 최대 열개까지 가능합니다.", ValidationTag.TagDialogue, this);
+            base.ValidationCheck(ref report);
 
-            var report = new ValidationReport();
-            
+            if (Buttons.Count is <= 0 or > 10)
+            {
+                report.Append(Error($"'{name}'의 대화 버튼은 최소 하나, 최대 열개까지 가능합니다."));
+                return;
+            }
+
             foreach (var btn in Buttons)
             {
                 if (string.IsNullOrEmpty(btn.content))
-                    report.Append($"{name}: 대화 버튼의 내용이 비었습니다.", ValidationTag.TagDialogue, this);
+                    report.Append(Error($"{name}: 대화 버튼의 content를 설정해주세요."));
                 if(btn.openUrl && string.IsNullOrEmpty(btn.url))
-                    report.Append($"{name}: 대화 버튼의 URL이 잘못되었습니다.", ValidationTag.TagDialogue, this);
+                    report.Append(Error($"{name}: 대화 버튼의 URL을 설정해주세요."));
+                
+                if(btn.nextDialogue != null)
+                    btn.nextDialogue.ValidationCheck(ref report);
             }
-
-            return report;
         }
 #endif
     }

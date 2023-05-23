@@ -23,17 +23,21 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         [field: SerializeField] public UnityEvent OnResultFalse { get; private set; }
         
 #if UNITY_EDITOR
-        public ValidationError ValidationCheck()
+        public override void ValidationCheck(ref ValidationReport report)
         {
+            base.ValidationCheck(ref report);
+            
             if (Comparators is not {Count: > 0})
-                return new ValidationError("비교할 값을 설정해주세요!");
+                report.Append(NullError(nameof(Comparators)));
+            
             for (var i = 0; i < Comparators.Count; i++)
-            {
-                var comp = Comparators[i];
-                if (comp == null) return  new ValidationError($"{i}번째 비교자가 null입니다.");
-            }
+                if (Comparators[i] == null)
+                    report.Append(Error($"'{name}'의 {i}번째 비교자가 null입니다."));
 
-            return null;
+            if (NextDialogueWhenTrue != null)
+                NextDialogueWhenTrue.ValidationCheck(ref report);
+            if (NextDialogueWhenFalse != null)
+                NextDialogueWhenFalse.ValidationCheck(ref report);
         }
 #endif
     }
