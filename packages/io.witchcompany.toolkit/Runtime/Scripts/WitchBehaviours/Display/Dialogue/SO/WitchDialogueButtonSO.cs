@@ -29,9 +29,10 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         }
         
 #if UNITY_EDITOR
-        public override void ValidationCheck(ref ValidationReport report)
+        public override void ValidationCheck(ref ValidationReport report, ref List<WitchDialogueSOBase> list)
         {
-            base.ValidationCheck(ref report);
+            if (list.Contains(this)) return;
+            base.ValidationCheck(ref report, ref list);
 
             if (Buttons.Count is <= 0 or > 10)
             {
@@ -45,9 +46,12 @@ namespace WitchCompany.Toolkit.Module.Dialogue
                     report.Append(Error($"{name}: 대화 버튼의 content를 설정해주세요."));
                 if(btn.openUrl && string.IsNullOrEmpty(btn.url))
                     report.Append(Error($"{name}: 대화 버튼의 URL을 설정해주세요."));
-                
-                if(btn.nextDialogue != null)
-                    btn.nextDialogue.ValidationCheck(ref report);
+
+                if (btn.nextDialogue != null && btn.nextDialogue != this)
+                {
+                     btn.nextDialogue.ValidationCheck(ref report, ref list);
+                    //Debug.Log($"같냐? {btn.nextDialogue.name} == {this.name} ? {btn.nextDialogue == this}");
+                }
             }
         }
 #endif

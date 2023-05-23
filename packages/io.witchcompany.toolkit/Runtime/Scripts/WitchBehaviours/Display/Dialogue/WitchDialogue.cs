@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using WitchCompany.Toolkit.Validation;
 
@@ -35,7 +36,8 @@ namespace WitchCompany.Toolkit.Module.Dialogue
             if(GetComponent<WitchPointerEvent>() == null)
                 return report.Append(NullError("Collider"));
 
-            InitialDialogue.ValidationCheck(ref report);
+            var list = new List<WitchDialogueSOBase>();
+            InitialDialogue.ValidationCheck(ref report, ref list);
             return report;
         }
 #endif

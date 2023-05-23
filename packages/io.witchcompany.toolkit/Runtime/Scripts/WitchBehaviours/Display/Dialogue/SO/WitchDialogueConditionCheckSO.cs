@@ -23,9 +23,10 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         [field: SerializeField] public UnityEvent OnResultFalse { get; private set; }
         
 #if UNITY_EDITOR
-        public override void ValidationCheck(ref ValidationReport report)
+        public override void ValidationCheck(ref ValidationReport report, ref List<WitchDialogueSOBase> list)
         {
-            base.ValidationCheck(ref report);
+            if (list.Contains(this)) return;
+            base.ValidationCheck(ref report, ref list);
             
             if (Comparators is not {Count: > 0})
                 report.Append(NullError(nameof(Comparators)));
@@ -34,10 +35,10 @@ namespace WitchCompany.Toolkit.Module.Dialogue
                 if (Comparators[i] == null)
                     report.Append(Error($"'{name}'의 {i}번째 비교자가 null입니다."));
 
-            if (NextDialogueWhenTrue != null)
-                NextDialogueWhenTrue.ValidationCheck(ref report);
-            if (NextDialogueWhenFalse != null)
-                NextDialogueWhenFalse.ValidationCheck(ref report);
+            if (NextDialogueWhenTrue != null && NextDialogueWhenTrue != this)
+                NextDialogueWhenTrue.ValidationCheck(ref report, ref list);
+            if (NextDialogueWhenFalse != null && NextDialogueWhenFalse != this)
+                NextDialogueWhenFalse.ValidationCheck(ref report, ref list);
         }
 #endif
     }

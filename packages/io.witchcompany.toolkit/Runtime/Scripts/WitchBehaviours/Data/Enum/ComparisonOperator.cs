@@ -4,17 +4,17 @@ namespace WitchCompany.Toolkit.Module
 {
     public enum ComparisonOperator
     {
-        [InspectorName("is")] 
+        [InspectorName("Equal to")] 
         EqualTo,
-        [InspectorName("is not")]
+        [InspectorName("Not equal to")]
         NotEqualTo,
-        [InspectorName("bigger than")]
+        [InspectorName("Greater than")]
         GreaterThan,
-        [InspectorName("smaller than")]
+        [InspectorName("Less than")]
         LessThan,
-        [InspectorName("equal or bigger than")]
-        GreaterThanOrEqualTo,
-        [InspectorName("equal or smaller than")]
-        LessThanEqualTo
+        [InspectorName("Greater or equal")]
+        GreaterThanEqual,
+        [InspectorName("Less or equal")]
+        LessThanEqual
     }
 }

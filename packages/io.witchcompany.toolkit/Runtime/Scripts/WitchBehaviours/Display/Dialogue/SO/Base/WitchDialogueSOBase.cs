@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using WitchCompany.Toolkit.Validation;
@@ -12,11 +13,15 @@ namespace WitchCompany.Toolkit.Module.Dialogue
 
         [field: Header("대사")]
         [field: TextArea, SerializeField] public string Message { get; private set; }
+
+        public virtual bool ShouldWait() => true;
         
 #if UNITY_EDITOR
         /// <summary>유효성 검사</summary>
-        public virtual void ValidationCheck(ref ValidationReport report)
+        public virtual void ValidationCheck(ref ValidationReport report, ref List<WitchDialogueSOBase> list)
         {
+            list.Add(this);
+
             report ??= new ValidationReport();
 
             if (string.IsNullOrEmpty(Message))
