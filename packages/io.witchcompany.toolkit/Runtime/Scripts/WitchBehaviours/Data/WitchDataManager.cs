@@ -34,7 +34,7 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (rankingKeys.Count > 3)
+            if (rankingKeys is {Count: > 3})
                 return Error("랭킹보드에서 보여줄 수 있는 키값의 개수는 최대 3개입니다.");
 
             return base.ValidationCheck();

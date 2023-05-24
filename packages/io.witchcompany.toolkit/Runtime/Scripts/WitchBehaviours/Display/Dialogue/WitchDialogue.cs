@@ -34,7 +34,7 @@ namespace WitchCompany.Toolkit.Module.Dialogue
             if(CamPos == null)
                 return report.Append(NullError(nameof(CamPos)));
             if(GetComponent<WitchPointerEvent>() == null)
-                return report.Append(NullError("Collider"));
+                return report.Append(NullError(nameof(WitchPointerEvent)));
 
             var list = new List<WitchDialogueSOBase>();
             InitialDialogue.ValidationCheck(ref report, ref list);

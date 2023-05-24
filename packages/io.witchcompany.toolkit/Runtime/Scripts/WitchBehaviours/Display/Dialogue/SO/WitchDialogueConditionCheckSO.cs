@@ -27,7 +27,13 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         {
             if (list.Contains(this)) return;
             base.ValidationCheck(ref report, ref list);
-            
+
+            if (FindObjectOfType<WitchDataManager>() == null)
+            {
+                report.Append(NullError(nameof(WitchDataManager)));
+                return;
+            }
+
             if (Comparators is not {Count: > 0})
                 report.Append(NullError(nameof(Comparators)));
             
