@@ -185,17 +185,17 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             if (dataManager != null && dataManager.RankingKeys.Count > 0)
             {
-                var rankingDatas = new List<JRankingData>();
+                var list = new List<JRankingData>();
                 foreach (var keyGroup in dataManager.RankingKeys)
                 {
-                    var rankingData = new JRankingData()
+                    var data = new JRankingData()
                     {
                         rankingKey = keyGroup.key,
                         rankingKeyType = keyGroup.alignment.ToString().ToLower()
                     };
-                    rankingDatas.Add(rankingData);
+                    list.Add(data);
                 }
-                resultKey = await SetRankingKeys(resultBlock, rankingDatas);
+                resultKey = await SetRankingKeys(resultBlock, list);
             }
             
             return resultKey ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedKeyMsg;
@@ -224,7 +224,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static async UniTask<bool> SetRankingKeys(int blockId, List<JRankingData> rankingKeys)
         {
-            var rankingData = new JRanking()
+            var rankingData = new JRanking
             {
                 blockId = blockId,
                 rankingKeys = rankingKeys

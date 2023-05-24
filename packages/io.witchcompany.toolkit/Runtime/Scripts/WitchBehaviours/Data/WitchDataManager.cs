@@ -15,7 +15,7 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
-        [field: Header("랭킹보드에서 사용할 키값 (최대 3개, 타이머: @timer)")]
+        [field: Header("랭킹보드에서 사용할 키값 (최대 3개, 타이머: @timer, 경과시간: @timespan)")]
         [field: SerializeField] public List<KeyGroup> RankingKeys { get; private set; }
         
         [field: Header("데이터 변경 등록")]

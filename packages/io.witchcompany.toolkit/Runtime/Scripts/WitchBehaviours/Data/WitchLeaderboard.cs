@@ -15,14 +15,10 @@ namespace WitchCompany.Toolkit.Module
 
         public override int MaximumCount => 8;
 
-        [Header("보여줄 랭킹 키 값(최대 3개, 타이머:@timer)")] 
-        [SerializeField] private List<string> rankingKeys;
-
         [Header("어디의 랭킹을 불러올지")]
         [SerializeField] private Mode mode;
         [ShowIf(nameof(mode), Mode.OtherBlock), SerializeField] private string blockPathName = "chichi";
 
-        public List<string> RankingKeys => rankingKeys;
         public Mode RankingMode => mode;
         public string BlockPathName => blockPathName;
 
@@ -30,15 +26,5 @@ namespace WitchCompany.Toolkit.Module
         {
             MyBlock, OtherBlock
         }
-        
-#if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
-        {
-            if (rankingKeys.Count > 3)
-                return Error("리더보드에서 보여줄 수 있는 키값의 개수는 최대 3개입니다.");
-
-            return base.ValidationCheck();
-        }
-#endif
     }
 }
