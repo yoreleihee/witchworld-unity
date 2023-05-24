@@ -15,15 +15,12 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
-        [Header("랭킹보드에서 사용할 키값 (최대 3개, 타이머: @timer)")]
-        [SerializeField] private List<KeyGroup> rankingKeys;
-
-        public List<KeyGroup> RankingKeys => rankingKeys;
+        [field: Header("랭킹보드에서 사용할 키값 (최대 3개, 타이머: @timer)")]
+        [field: SerializeField] public List<KeyGroup> RankingKeys { get; private set; }
         
-        [HideInInspector] public UnityEvent<WitchDataChangerSO> onChangeValue = new();
+        [field: Header("데이터 변경 등록")]
+        [field: SerializeField] public List<WitchDataChangerSO> DataChangers { get; private set; }
         
-        public void ChangeValue(WitchDataChangerSO data) => onChangeValue.Invoke(data);
-
         [System.Serializable]
         public class KeyGroup
         {
@@ -34,7 +31,7 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (rankingKeys is {Count: > 3})
+            if (RankingKeys is {Count: > 3})
                 return Error("랭킹보드에서 보여줄 수 있는 키값의 개수는 최대 3개입니다.");
 
             return base.ValidationCheck();

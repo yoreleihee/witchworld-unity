@@ -30,7 +30,7 @@ namespace WitchCompany.Toolkit.Module.Dialogue
 
             if (FindObjectOfType<WitchDataManager>() == null)
             {
-                report.Append(NullError(nameof(WitchDataManager)));
+                report.Append(Error($"씬에 {nameof(WitchDataManager)}가 필요합니다."));
                 return;
             }
 

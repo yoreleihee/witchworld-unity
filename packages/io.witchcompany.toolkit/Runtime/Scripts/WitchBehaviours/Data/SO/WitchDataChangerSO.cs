@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -11,5 +12,9 @@ namespace WitchCompany.Toolkit.Module
         [Header("연산할 값")]
         public ArithmeticOperator valueOperator = ArithmeticOperator.Assignment;
         public int value = 0;
+
+        [HideInInspector] public UnityEvent<WitchDataChangerSO> onEvent = new();
+        
+        public void Invoke() => onEvent.Invoke(this);
     }
 }
