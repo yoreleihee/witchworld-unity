@@ -7,7 +7,8 @@ namespace WitchCompany.Toolkit.Module
     {
         public override string BehaviourName => "타이머";
         public override string Description => "타이머를 시작, 종료할 수 있는 요소입니다.\n" +
-                                              "mm:ss:ms 로 표시됩니다.";
+                                              "timer는 mm:ss.ms로 표시됩니다.\n" +
+                                              "timespan은 hh:mm:ss로 표시됩니다.";
         public override string DocumentURL => "";
 
         public override int MaximumCount => 1;
@@ -25,6 +26,8 @@ namespace WitchCompany.Toolkit.Module
         
         [HideInInspector] public UnityEvent timespanResetEvent = new();
         [HideInInspector] public UnityEvent timespanRecordEvent = new();
+        [HideInInspector] public UnityEvent timespanOpenEvent = new();
+        [HideInInspector] public UnityEvent timespanCloseEvent = new();
         
         public void StartTimer() => timerStartEvent.Invoke();
         public void EndTimer() => timerEndEvent.Invoke();
@@ -33,6 +36,8 @@ namespace WitchCompany.Toolkit.Module
 
         public void ResetTimespan() => timespanResetEvent.Invoke();
         public void RecordTimespan() => timespanRecordEvent.Invoke();
+        public void OpenTimespan() => timespanOpenEvent.Invoke();
+        public void CloseTimespan() => timespanCloseEvent.Invoke();
 
         public enum RespawnMode
         {
