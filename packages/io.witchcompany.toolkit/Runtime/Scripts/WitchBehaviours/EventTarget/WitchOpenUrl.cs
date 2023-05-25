@@ -12,10 +12,9 @@ namespace WitchCompany.Toolkit.Module
 
         [Header("새 탭에서 열 URL")]
         [SerializeField, TextArea] private string targetUrl;
-        [HideInInspector] public UnityEvent openUrlEvent;
-        
-        public string TargetUrl => targetUrl;
-        public void OpenUrl() => openUrlEvent.Invoke();
+
+        public UnityAction<string> OpenUrlAction;
+        public void OpenUrl() => OpenUrlAction?.Invoke(targetUrl);
         
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
