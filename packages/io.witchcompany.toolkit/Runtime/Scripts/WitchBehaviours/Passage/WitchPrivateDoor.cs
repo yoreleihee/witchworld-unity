@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
-using WitchCompany.Toolkit.Module;
-using WitchCompany.Toolkit.Module.Base;
 using WitchCompany.Toolkit.Module.PhysicsEffect;
 using WitchCompany.Toolkit.Validation;
 
@@ -12,6 +8,7 @@ namespace WitchCompany.Toolkit.Module
     [RequireComponent(typeof(WitchDoor))]
     [RequireComponent(typeof(WitchDoorEffect))]
     [DisallowMultipleComponent]
+    [Obsolete("더이상 사용되지 않는 기능입니다.", true)]
     public class WitchPrivateDoor : WitchBehaviour
     {
         public override string BehaviourName => "통로: 프라이빗 문";
@@ -36,16 +33,7 @@ namespace WitchCompany.Toolkit.Module
         
 
 #if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
-        {
-            if (string.IsNullOrEmpty(popupDescriptionTitle))
-                return Error("프라이빗 도어의 [설명 제목]을 설정해주세요.");
-            
-            if (string.IsNullOrEmpty(popupDescription))
-                return Error("프라이빗 도어의 [설명]을 설정해주세요.");
-            
-            return null;
-        }
+        public override ValidationError ValidationCheck() => Error("더이상 사용되지 않는 기능입니다.");
 #endif
     }
 }

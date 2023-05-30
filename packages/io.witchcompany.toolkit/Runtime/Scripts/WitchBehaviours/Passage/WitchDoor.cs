@@ -1,8 +1,5 @@
 ﻿using System;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
-using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Module.Base;
 using WitchCompany.Toolkit.Module.PhysicsEffect;
 using WitchCompany.Toolkit.Validation;
@@ -10,6 +7,7 @@ using WitchCompany.Toolkit.Validation;
 namespace WitchCompany.Toolkit.Module
 {
     [RequireComponent(typeof(WitchDoorEffect))]
+    [Obsolete("더이상 사용되지 않는 기능입니다.", true)]
     public class WitchDoor : WitchPassageBase
     {
         public override string BehaviourName => "통로: 문";
@@ -20,13 +18,7 @@ namespace WitchCompany.Toolkit.Module
         public override int MaximumCount => 4;
 
 #if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
-        {
-            if(!TryGetComponent<WitchDoorEffect>(out _))
-                return NullError(nameof(WitchDoorEffect));
-            
-            return base.ValidationCheck();
-        }
+        public override ValidationError ValidationCheck() => Error("더이상 사용되지 않는 기능입니다.");
 #endif
     }
 }

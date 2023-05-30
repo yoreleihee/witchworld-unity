@@ -26,19 +26,19 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             var report = new ValidationReport();
             
-            var privateDoors = GameObject.FindObjectsOfType<WitchPrivateDoor>(true);
+            //var privateDoors = GameObject.FindObjectsOfType<WitchPrivateDoor>(true);
 
-            foreach (var door in privateDoors)
-            {
-                // var item = await WitchAPI.GetValidItem(door.ItemKey);
-                //
-                // if (item == false)
-                // {
-                //     var error = new ValidationError($"Object : {door.gameObject.name}\n" +
-                //                                     $"Witch Private Door의 item key({door.ItemKey})로 등록된 상품이 없습니다.", ValidationTag.Script, door);
-                //     report.Append(error);
-                // }
-            }
+            // foreach (var door in privateDoors)
+            // {
+            //     // var item = await WitchAPI.GetValidItem(door.ItemKey);
+            //     //
+            //     // if (item == false)
+            //     // {
+            //     //     var error = new ValidationError($"Object : {door.gameObject.name}\n" +
+            //     //                                     $"Witch Private Door의 item key({door.ItemKey})로 등록된 상품이 없습니다.", ValidationTag.Script, door);
+            //     //     report.Append(error);
+            //     // }
+            // }
             return report;
         }
     }
