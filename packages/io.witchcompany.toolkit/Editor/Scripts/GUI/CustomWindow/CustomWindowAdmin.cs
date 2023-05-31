@@ -237,7 +237,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 blockLevel = blockLevel,
                 blockDescription = new JLanguageString(AdminConfig.BlockDescriptionKr, AdminConfig.BlockDescriptionEn),
                 isPrivate = AdminConfig.IsPrivate,
-                itemCA = AdminConfig.ItemCA
+                itemCA = AdminConfig.IsPrivate ? AdminConfig.ItemCA : ""
             };
                 
             var result = await WitchAPI.UploadBlock(blockData);
