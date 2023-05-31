@@ -16,6 +16,8 @@ namespace WitchCompany.Toolkit.Editor.Configs
         private const string Prefs_Level = "admin_level";
         private const string Prefs_DescriptionKr = "admin_description_kr";
         private const string Prefs_DescriptionEn = "admin_description_en";
+        private const string Prefs_IsPrivate = "admin_is_private";
+        private const string Prefs_ItemCA = "admin_item_ca";
 
         public static int UnityKeyIndex
         {
@@ -75,6 +77,18 @@ namespace WitchCompany.Toolkit.Editor.Configs
         {
             get => EditorPrefs.GetString(Prefs_DescriptionEn, "");
             set => EditorPrefs.SetString(Prefs_DescriptionEn, value);
+        }
+        
+        public static bool IsPrivate
+        {
+            get => EditorPrefs.GetBool(Prefs_IsPrivate, false);
+            set => EditorPrefs.SetBool(Prefs_IsPrivate, value);
+        }
+        
+        public static string ItemCA
+        {
+            get => EditorPrefs.GetString(Prefs_ItemCA, "");
+            set => EditorPrefs.SetString(Prefs_ItemCA, value);
         }
         
         // public static string UnityKeyList

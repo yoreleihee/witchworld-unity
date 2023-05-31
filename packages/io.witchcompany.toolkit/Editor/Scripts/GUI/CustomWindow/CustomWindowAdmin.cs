@@ -144,6 +144,23 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     if (check.changed)
                         AdminConfig.BlockLevel = blockLevel;
                 }
+
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var blockDesc = EditorGUILayout.Toggle("private block option", AdminConfig.IsPrivate);
+                    
+                    if (check.changed)
+                        AdminConfig.IsPrivate = blockDesc;
+                }
+                
+                if (AdminConfig.IsPrivate)
+                {
+                    using var check = new EditorGUI.ChangeCheckScope();
+                    var itemCA = EditorGUILayout.TextField("itemCA", AdminConfig.ItemCA);
+
+                    if (check.changed)
+                        AdminConfig.ItemCA = itemCA;
+                }
             }
 
             if (GUILayout.Button("Publish"))
@@ -181,9 +198,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             // 랭킹 키값 설정
             var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
+
+            // 데이터 매니저 없으면 랭킹 키값 확인 안함
+            if (dataManager == null)
+                return AssetBundleConfig.SuccessMsg;
+                
             var resultKey = false;
-            
-            if (dataManager != null && dataManager.RankingKeys.Count > 0)
+            if (dataManager.RankingKeys.Count > 0)
             {
                 var list = new List<JRankingData>();
                 foreach (var keyGroup in dataManager.RankingKeys)
@@ -215,6 +236,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 blockTheme = AdminConfig.BlockTheme.ToString().ToLower(),
                 blockLevel = blockLevel,
                 blockDescription = new JLanguageString(AdminConfig.BlockDescriptionKr, AdminConfig.BlockDescriptionEn),
+                isPrivate = AdminConfig.IsPrivate,
+                itemCA = AdminConfig.ItemCA
             };
                 
             var result = await WitchAPI.UploadBlock(blockData);
