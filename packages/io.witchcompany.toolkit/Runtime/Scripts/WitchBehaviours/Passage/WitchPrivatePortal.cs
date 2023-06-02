@@ -13,6 +13,8 @@ namespace WitchCompany.Toolkit.Module
                                               "입구와 출구는 겹치면 안됩니다.";
         public override string DocumentURL => "";
         
+        public override int MaximumCount => 10;
+        
         [Header("출구"), SerializeField]
         private Transform exit;
         

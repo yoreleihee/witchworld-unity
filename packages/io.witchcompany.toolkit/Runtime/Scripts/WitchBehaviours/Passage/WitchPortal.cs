@@ -12,7 +12,7 @@ namespace WitchCompany.Toolkit.Module
                                               "입구로 사용될 SphereCollider가 필요합니다.(IsTrigger 필요).\n" +
                                               "입구와 출구는 겹치면 안됩니다.";
         public override string DocumentURL => "";
-        public override int MaximumCount => 4;
+        public override int MaximumCount => 10;
 
         [Header("출구"), SerializeField] private Transform exit;
         public Transform Exit => exit;
