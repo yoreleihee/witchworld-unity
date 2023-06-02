@@ -66,10 +66,18 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                var blockTheme = (BundleTheme)EditorGUILayout.EnumPopup("Theme", (BundleTheme)PublishConfig.Theme);
+                var blockTheme = (BundleTheme)EditorGUILayout.EnumPopup("Theme", PublishConfig.Theme);
 
                 if (check.changed)
                     PublishConfig.Theme = blockTheme;
+            } 
+            
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                var platformType = (PlatformType)EditorGUILayout.EnumFlagsField("Platform", PublishConfig.Platform);
+
+                if (check.changed)
+                    PublishConfig.Platform = platformType;
             } 
 
             EditorGUILayout.EndVertical();
@@ -93,6 +101,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             // 입력 제한
             CustomWindow.IsInputDisable = true;
+            // 번들 추출
             buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
                 
             if (buildReport.result == JBuildReport.Result.Success)

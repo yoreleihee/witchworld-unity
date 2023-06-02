@@ -73,10 +73,19 @@ namespace WitchCompany.Toolkit.Editor.Tool
             try
             {
                 var result = new Dictionary<string, string[]>();
+                var platform = PublishConfig.Platform;
 
-                // WebGL 빌드
-                result.Add(AssetBundleConfig.WebGL, BuildBundle(AssetBundleConfig.WebGL, BuildTarget.WebGL));
-                result.Add(AssetBundleConfig.Standalone, BuildBundle(AssetBundleConfig.Standalone, BuildTarget.StandaloneWindows64));
+                if(platform.HasFlag(PlatformType.Standalone))
+                    result.Add(AssetBundleConfig.Standalone, BuildBundle(AssetBundleConfig.Standalone, BuildTarget.StandaloneWindows64));
+                
+                if(platform.HasFlag(PlatformType.Webgl))
+                    result.Add(AssetBundleConfig.WebGL, BuildBundle(AssetBundleConfig.WebGL, BuildTarget.WebGL));
+                
+                if(platform.HasFlag(PlatformType.Android))
+                    result.Add(AssetBundleConfig.Android, BuildBundle(AssetBundleConfig.Android, BuildTarget.Android));
+                
+                if(platform.HasFlag(PlatformType.Ios))
+                    result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTarget.iOS));
 
                 return result;
             }

@@ -10,6 +10,7 @@ namespace WitchCompany.Toolkit.Editor.Configs
     {
         private const string Prefs_Scene = "publish_scene";
         private const string Prefs_Theme = "publish_theme";
+        private const string Prefs_Platform = "publish_platform";
 
         public static SceneAsset Scene
         {
@@ -21,6 +22,12 @@ namespace WitchCompany.Toolkit.Editor.Configs
         {
             get => (BundleTheme)EditorPrefs.GetInt(Prefs_Theme, 0);
             set => EditorPrefs.SetInt(Prefs_Theme, (int)value);
+        }
+        
+        public static PlatformType Platform
+        {
+            get => (PlatformType)EditorPrefs.GetInt(Prefs_Platform, (int)PlatformType.None);
+            set => EditorPrefs.SetInt(Prefs_Platform, (int)value);
         }
     }
 }
