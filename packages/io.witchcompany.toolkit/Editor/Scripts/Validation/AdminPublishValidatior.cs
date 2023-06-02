@@ -1,8 +1,10 @@
 using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.GUI;
+using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
@@ -15,7 +17,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 .Append(ValidatePathName())
                 .Append(ValidateBlockName(AdminConfig.BlockNameKr, true))
                 .Append(ValidateBlockName(AdminConfig.BlockNameEn, false))
-                .Append( ValidateUnityKey());
+                .Append(ValidateUnityKey());
         }
         
         private static ValidationReport ValidatePathName()
@@ -60,6 +62,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
 
             return report;
+        }
+
+        public static WitchDataManager ValidateDataManager()
+        {
+            var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
+
+            return dataManager;
         }
     }
 }

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.API;
@@ -176,14 +178,19 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 }
                 else
                 {
-                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server....", 1.0f);
-                    CustomWindow.IsInputDisable = true;
-                    
-                    var resultMsg = await OnPublish();
-                    
-                    CustomWindow.IsInputDisable = false;
-                    EditorUtility.ClearProgressBar();
-                    EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
+                    var result = EditorUtility.DisplayDialog("Witch Creator Toolkit", AlertMsg(), "OK");
+
+                    if (result)
+                    {
+                        EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server...", 1.0f);
+                        CustomWindow.IsInputDisable = true;
+                        
+                        var resultMsg = await OnPublish();
+                        
+                        CustomWindow.IsInputDisable = false;
+                        EditorUtility.ClearProgressBar();
+                        EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
+                    }
                 }
             }
         }
@@ -278,6 +285,33 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             AdminConfig.UnityKeyIndex = 0;
             _isProcessing = false;
+        }
+
+        private static string AlertMsg()
+        {
+            var dataManager = AdminPublishValidatior.ValidateDataManager();
+            var keyStr = new StringBuilder();
+            var message =  "랭킹보드를 사용하지 않습니다. 진행하시겠습니까?";
+
+            if (dataManager)
+            {
+                if (dataManager.RankingKeys.Count <= 0)
+                {
+                    message = "랭킹보드에 지정된 키가 없습니다. 진행하시겠습니까?";
+                }
+                else
+                {
+                    var keys = new List<string>();
+                    foreach (var keyGroup in dataManager.RankingKeys)
+                    {
+                        keys.Add(keyGroup.key);
+                    }
+                    keyStr.AppendJoin(", ", keys);
+                    message = $"랭킹보드에 [{keyStr}]를 사용합니다. 진행하시겠습니까?";
+                }
+            }
+
+            return message;
         }
     }
 }
