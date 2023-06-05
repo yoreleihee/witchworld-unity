@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Tool;
@@ -9,48 +10,63 @@ namespace WitchCompany.Toolkit.Editor.GUI
     public static class CustomWindowValidation
     {
         private static ValidationReport validationReport;
-        
+        private static Vector2 scrollPos = Vector2.zero;
+
         public static void ShowValidation()
         {
             DrawSceneVital();
             GUILayout.Space(10);
 
+            if (GUILayout.Button("Check"))
+            {
+                OnClickCheck().Forget();
+                // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()
+                CustomWindow.InitialStyles();
+            }
+            
             if (validationReport != null) 
                 DrawReport();
         }
 
-        private static async void DrawSceneVital()
+        private static void DrawSceneVital()  
         {
-
             GUILayout.Label("Scene Vital", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
-            // validation tap에서 계속 확인
+            
             EditorGUILayout.LabelField("Vertex", OptimizationValidator.GetAllMeshes().Item2.ToString());
             EditorGUILayout.LabelField("Unique Material", OptimizationValidator.GetUniqueMaterialCount().ToString());
             EditorGUILayout.LabelField("Texture", OptimizationValidator.GetTextureMB()+ " MB");
             EditorGUILayout.LabelField("Light Map", OptimizationValidator.GetLightMapMB()+ " MB");
 
             EditorGUILayout.EndVertical();
-            if (GUILayout.Button("Check"))
-            {
-                validationReport = OptimizationValidator.ValidationCheck();
-                validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
-                validationReport.Append(ObjectValidator.ValidationCheck());
-                validationReport.Append(WhiteListValidator.ValidationCheck());
-                validationReport.Append(await AwaitValidator.ValidationCheck());
-                
-                // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()
-                CustomWindow.InitialStyles();
-            }
         }
-        
-        private static Vector2 scrollPos = Vector2.zero;
+
+        private static async UniTask ValidationCheck()
+        {
+            validationReport = OptimizationValidator.ValidationCheck();
+            validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
+            validationReport.Append(ObjectValidator.ValidationCheck());
+            validationReport.Append(WhiteListValidator.ValidationCheck());
+            validationReport.Append(await AwaitValidator.ValidationCheck());
+        }
+
+
+        private static async UniTask OnClickCheck()
+        {
+            // 업로드
+            CustomWindow.IsInputDisable = true;
+            EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Checking to validation...", 1.0f);
+
+            await ValidationCheck();
+                    
+            EditorUtility.ClearProgressBar();
+            CustomWindow.IsInputDisable = false;
+        }
         
         private static void DrawReport()
         {
             // Scene 변경사항 실시간 반영됨
             // validationReport = OptimizationValidator.ValidationCheck();
-            
             
             GUILayout.Label("Report", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
@@ -85,7 +101,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
                             {
                                 StaticRevertTool.ClearBatchingStatics();
                             }
-                            
                             
                             EditorGUILayout.EndHorizontal();
                             

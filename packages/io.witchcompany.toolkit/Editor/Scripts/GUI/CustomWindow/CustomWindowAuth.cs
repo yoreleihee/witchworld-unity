@@ -46,16 +46,16 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             EditorGUILayout.BeginVertical("box");
             
-            // if (ToolkitConfig.DeveloperMode)
-            // {
-            //     email = EditorGUILayout.TextField("E-Mail", "kmkim@witchcompany.io");
-            //     password = EditorGUILayout.PasswordField("Password", "Witch00!");
-            // }
-            // else
-            // {
+            if (ToolkitConfig.DeveloperMode)
+            {
+                email = EditorGUILayout.TextField("E-Mail", "kmkim@witchcompany.io");
+                password = EditorGUILayout.PasswordField("Password", "Witch00!");
+            }
+            else
+            {
                 email = EditorGUILayout.TextField("E-Mail", email);
                 password = EditorGUILayout.PasswordField("Password", password);
-            // }
+            }
             
             EditorGUILayout.EndVertical();
 

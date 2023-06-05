@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,32 +15,45 @@ namespace WitchCompany.Toolkit.Editor.Validation
     {
         public static async UniTask<ValidationReport> ValidationCheck()
         {
-            var scene = SceneManager.GetActiveScene();
-
             return new ValidationReport()
-                .Append(await ValidatePrivateItem());
+                .Append(await ValidateHasBlock());
         }
-        
-        // validation check 시 api 호출해야 함
-        // await로 결과 기다려야 함
-        // validation check도 비동기 함수로 바꿔야 하는가..??
-        private static async UniTask<ValidationReport> ValidatePrivateItem()
+
+        // 블록 존재 여부 확인
+        private static async UniTask<ValidationReport> ValidateHasBlock()
         {
             var report = new ValidationReport();
+            var portals = GameObject.FindObjectsOfType<WitchPortal>();
+            var privatePortals = GameObject.FindObjectsOfType<WitchPrivatePortal>();
             
-            //var privateDoors = GameObject.FindObjectsOfType<WitchPrivateDoor>(true);
+            // 포탈
+            foreach (var portal in portals)
+            {
+                // 패스네임으로 블록 조회 
+                var result = await WitchAPI.GetBlock(portal.TargetUrl);
 
-            // foreach (var door in privateDoors)
-            // {
-            //     // var item = await WitchAPI.GetValidItem(door.ItemKey);
-            //     //
-            //     // if (item == false)
-            //     // {
-            //     //     var error = new ValidationError($"Object : {door.gameObject.name}\n" +
-            //     //                                     $"Witch Private Door의 item key({door.ItemKey})로 등록된 상품이 없습니다.", ValidationTag.Script, door);
-            //     //     report.Append(error);
-            //     // }
-            // }
+                if (result == null)
+                {
+                    var error = new ValidationError(
+                        $"Object : {portal.gameObject.name}\ntargetUrl [{portal.TargetUrl}]은 존재하지 않는 블록입니다.", ValidationTag.TagPortal, portal);
+                    report.Append(error);
+                }
+            }
+
+            // 프라이빗 포탈
+            foreach (var privatePortal in privatePortals)
+            {
+                // 패스네임으로 블록 조회 
+                var result = await WitchAPI.GetBlock(privatePortal.TargetUrl);
+
+                if (result == null)
+                {
+                    var error = new ValidationError(
+                        $"Object : {privatePortal.gameObject.name}\ntargetUrl [{privatePortal.TargetUrl}]은 존재하지 않는 블록입니다.", ValidationTag.TagPortal, privatePortal);
+                    report.Append(error);
+                }
+            }
+
             return report;
         }
     }

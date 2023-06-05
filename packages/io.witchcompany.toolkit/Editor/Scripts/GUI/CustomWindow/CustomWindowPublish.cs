@@ -30,6 +30,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
             DrawPublish();
             
             GUILayout.Space(10);
+            
+            if (GUILayout.Button("Publish"))
+            {
+                OnClickPublish().Forget();
+            }
 
             if (buildReport != null)
                 DrawReport();
@@ -48,7 +53,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
             GUILayout.Label("Publish", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
             
-            // todo : blockscene 에디터 저장
             using (new EditorGUILayout.HorizontalScope())
             {
                 using (var check = new EditorGUI.ChangeCheckScope())
@@ -81,10 +85,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
             } 
 
             EditorGUILayout.EndVertical();
-            if (GUILayout.Button("Publish"))
-            {
-                OnClickPublish().Forget();
-            }
         }
 
         private static async UniTaskVoid OnClickPublish()
