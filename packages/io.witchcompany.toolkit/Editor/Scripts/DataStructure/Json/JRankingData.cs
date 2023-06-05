@@ -4,5 +4,6 @@
     {
         public string rankingKey;
         public string rankingKeyType;
+        public string rankingKeyDataType;
     }
 }

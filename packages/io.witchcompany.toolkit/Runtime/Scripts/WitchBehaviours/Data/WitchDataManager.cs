@@ -26,6 +26,7 @@ namespace WitchCompany.Toolkit.Module
         {
             public string key;
             public Alignment alignment;
+            public RankingDataType dataType;
         }
         
 #if UNITY_EDITOR

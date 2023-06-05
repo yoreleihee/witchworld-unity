@@ -219,7 +219,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     var data = new JRankingData()
                     {
                         rankingKey = keyGroup.key,
-                        rankingKeyType = keyGroup.alignment.ToString().ToLower()
+                        rankingKeyType = keyGroup.alignment.ToString().ToLower(),
+                        rankingKeyDataType = keyGroup.dataType.ToString().ToLower()
                     };
                     list.Add(data);
                 }
