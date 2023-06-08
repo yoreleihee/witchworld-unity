@@ -19,7 +19,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static string[] bundleTypes =
         {
             AssetBundleConfig.Standalone,
-            AssetBundleConfig.WebGL,
+            AssetBundleConfig.Webgl,
             AssetBundleConfig.Android,
             AssetBundleConfig.Ios
         };
@@ -42,7 +42,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         public static BlockPublishOption GetOption()
         {
-            return new BlockPublishOption { targetScene = PublishConfig.Scene, theme = PublishConfig.Theme };
+            return new BlockPublishOption { targetScene = PublishConfig.Scene, theme = PublishConfig.Theme};
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     
                 var result = await Upload();
-                var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedBlockMsg : AssetBundleConfig.DuplicationBlockMsg;
+                var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedPublishMsg : AssetBundleConfig.DuplicationPublishMsg;
                     
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 EditorUtility.ClearProgressBar();

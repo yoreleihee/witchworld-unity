@@ -9,7 +9,9 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         public JBlock blockData;
         public JBundleData standalone;
         public JBundleData webgl;
+        public JBundleData webglMobile;
         public JBundleData android;
         public JBundleData ios;
+        public JBundleData vr;
     }
 }

@@ -19,7 +19,14 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 .Append(ValidateBlockName(AdminConfig.BlockNameEn, false))
                 .Append(ValidateUnityKey());
         }
-        
+
+        public static ValidationReport ValidationUpdateCheck()
+        {
+            return new ValidationReport()
+                .Append(ValidateBlockName(AdminConfig.BlockNameKr, true))
+                .Append(ValidateBlockName(AdminConfig.BlockNameEn, false));
+        }
+
         private static ValidationReport ValidatePathName()
         {
             var report = new ValidationReport();

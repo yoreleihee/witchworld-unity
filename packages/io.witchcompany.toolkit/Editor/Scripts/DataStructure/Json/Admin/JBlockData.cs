@@ -15,6 +15,7 @@ namespace WitchCompany.Toolkit.Editor.DataStructure.Admin
         public string blockTheme;
         public string blockType;
         public string blockLevel;
+        public int blockStatus;
         public bool isPrivate;
         public string itemCA;
         

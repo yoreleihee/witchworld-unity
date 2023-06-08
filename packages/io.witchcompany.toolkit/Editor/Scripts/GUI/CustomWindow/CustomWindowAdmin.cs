@@ -14,6 +14,7 @@ using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.DataStructure.Admin;
 using WitchCompany.Toolkit.Editor.Validation;
 using WitchCompany.Toolkit.Module;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
@@ -180,29 +181,87 @@ namespace WitchCompany.Toolkit.Editor.GUI
             if (GUILayout.Button("Publish"))
             {
                 var report = AdminPublishValidatior.ValidationCheck();
-                if (report.errors.Count > 0)
-                {
-                    var message = "";
-                    foreach (var error in report.errors)
-                        message += error.message + "\n";
-                    
-                    EditorUtility.DisplayDialog("Witch Creator Toolkit", $"Publish Failed\n\n{message}", "OK");
-                }
-                else
-                {
-                    var result = EditorUtility.DisplayDialog("Witch Creator Toolkit", AlertMsg(), "OK");
+                await DrawDisplayDialog(report, true);
 
-                    if (result)
-                    {
-                        EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server...", 1.0f);
-                        CustomWindow.IsInputDisable = true;
-                        
-                        var resultMsg = await OnPublish();
-                        
-                        CustomWindow.IsInputDisable = false;
-                        EditorUtility.ClearProgressBar();
-                        EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
-                    }
+                // if (report.errors.Count > 0)
+                // {
+                //     var message = new StringBuilder();
+                //     foreach (var error in report.errors)
+                //         message.Append(error.message + "\n");
+                //     
+                //     EditorUtility.DisplayDialog("Witch Creator Toolkit", $"Publish Failed\n\n{message}", "OK");
+                // }
+                // else
+                // {
+                //     var result = EditorUtility.DisplayDialog("Witch Creator Toolkit", RankingAlertMsg(), "OK");
+                //
+                //     if (result)
+                //     {
+                //         EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server...", 1.0f);
+                //         CustomWindow.IsInputDisable = true;
+                //         
+                //         var resultMsg = await OnPublish();
+                //         
+                //         CustomWindow.IsInputDisable = false;
+                //         EditorUtility.ClearProgressBar();
+                //         EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
+                //     }
+                // }
+            }
+
+            if (GUILayout.Button("Update"))
+            {
+                var report = AdminPublishValidatior.ValidationUpdateCheck();
+                await DrawDisplayDialog(report, false);
+                // if (report.errors.Count > 0)
+                // {
+                //     var message = new StringBuilder();
+                //     foreach (var error in report.errors)
+                //         message.Append(error.message + "\n");
+                //     
+                //     EditorUtility.DisplayDialog("Witch Creator Toolkit", $"Update Failed\n\n{message}", "OK");
+                // }
+                // else
+                // {
+                //     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Updating from server...", 1.0f);
+                //     CustomWindow.IsInputDisable = true;
+                //         
+                //     var alertMsg = await OnUpdate();
+                //         
+                //     CustomWindow.IsInputDisable = false;
+                //     EditorUtility.ClearProgressBar();
+                //     EditorUtility.DisplayDialog("Witch Creator Toolkit", alertMsg, "OK");
+                // }
+            }
+        }
+
+        private static async UniTask DrawDisplayDialog(ValidationReport report, bool isPublish)
+        {
+            if (report.errors.Count > 0)
+            {
+                var message = new StringBuilder();
+                foreach (var error in report.errors)
+                    message.Append(error.message + "\n");
+                
+                var alertMsg = isPublish ? AssetBundleConfig.FailedPublishMsg : AssetBundleConfig.FailedUpdateMsg;
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", $"{alertMsg}\n\n{message}", "OK");
+            }
+            else
+            {
+                var result = true;
+                if (isPublish)
+                    result = EditorUtility.DisplayDialog("Witch Creator Toolkit", RankingAlertMsg(), "OK");
+                
+                if (result)
+                {
+                    EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server...", 1.0f);
+                    CustomWindow.IsInputDisable = true;
+                            
+                    var alertMsg = isPublish ? await OnPublish() : await OnUpdate();
+                            
+                    CustomWindow.IsInputDisable = false;
+                    EditorUtility.ClearProgressBar();
+                    EditorUtility.DisplayDialog("Witch Creator Toolkit", alertMsg, "OK");
                 }
             }
         }
@@ -210,43 +269,50 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static async UniTask<string> OnPublish()
         {
             // 블록 업로드
-            var resultBlockId = await UploadBlock();
-            var resultMsg = resultBlockId > -2 ? AssetBundleConfig.FailedBlockMsg : AssetBundleConfig.DuplicationBlockMsg;
+            var blockData = CreateBlockData(true);
+            var resultBlockId = await WitchAPI.UploadBlock(blockData);
+            var resultMsg = resultBlockId > -2 ? AssetBundleConfig.FailedPublishMsg : AssetBundleConfig.DuplicationPublishMsg;
             
             if (resultBlockId < 0) return resultMsg;
 
             // 랭킹 키값 설정
             var resultKey = await UploadRankingKeys(resultBlockId);
             
-            if (!resultKey) return AssetBundleConfig.FailedKeyMsg;
-            
-            // 블록 상태 변경
-            var resultBlockStatus = await WitchAPI.UpdateBlockStatus(AdminConfig.PathName);
-
-            return resultBlockStatus ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedBlockStatusMsg;
+            return resultKey ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedKeyMsg;
         }
 
-        private static async UniTask<int> UploadBlock()
+        private static async UniTask<string> OnUpdate()
         {
-            var selectedKey = unityKeys[AdminConfig.UnityKeyIndex];
-            var blockLevel = AdminConfig.BlockTheme != BlockTheme.Game ? null : AdminConfig.BlockLevel.ToString().ToLower();
+            var blockData = CreateBlockData(false);
+            var result = await WitchAPI.UpdateBlockData(blockData);
+
+            return result ? AssetBundleConfig.SuccessUpdateMsg : AssetBundleConfig.FailedUpdateMsg;
+        }
+
+        private static JBlockData CreateBlockData(bool isPublish)
+        {
             var blockData = new JBlockData()
             {
-                unityKeyId = selectedKey.unityKeyId,
                 pathName = AdminConfig.PathName,
-                ownerNickname = AuthConfig.NickName,
                 blockName = new JLanguageString(AdminConfig.BlockNameEn, AdminConfig.BlockNameKr),
-                blockType = AdminConfig.BlockType.ToString().ToLower(),
                 blockTheme = AdminConfig.BlockTheme.ToString().ToLower(),
-                blockLevel = blockLevel,
+                blockLevel = AdminConfig.BlockTheme != BlockTheme.Game ? null : AdminConfig.BlockLevel.ToString().ToLower(),
                 blockDescription = new JLanguageString(AdminConfig.BlockDescriptionKr, AdminConfig.BlockDescriptionEn),
+                blockStatus = (int)AdminConfig.BlockStatus,
                 isPrivate = AdminConfig.IsPrivate,
                 itemCA = AdminConfig.IsPrivate ? AdminConfig.ItemCA : ""
             };
-                
-            var result = await WitchAPI.UploadBlock(blockData);
 
-            return result;
+            Debug.Log("업데이트 블록 정보\n" + JsonConvert.SerializeObject(blockData));
+            if (!isPublish) return blockData;
+
+            blockData.unityKeyId = unityKeys[AdminConfig.UnityKeyIndex].unityKeyId;
+            blockData.blockType = AdminConfig.BlockType.ToString().ToLower();
+            blockData.ownerNickname = AuthConfig.NickName;
+            Debug.Log("업로드 블록 정보\n" + JsonConvert.SerializeObject(blockData));
+
+            
+            return blockData;
         }
 
         private static async UniTask<bool> UploadRankingKeys(int blockId)
@@ -299,7 +365,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             _isProcessing = false;
         }
 
-        private static string AlertMsg()
+        private static string RankingAlertMsg()
         {
             var dataManager = AdminPublishValidatior.ValidateDataManager();
             var keyStr = new StringBuilder();
@@ -325,6 +391,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             return message;
         }
+
+        
     }
-    
 }

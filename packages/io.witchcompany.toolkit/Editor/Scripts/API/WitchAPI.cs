@@ -120,14 +120,18 @@ namespace WitchCompany.Toolkit.Editor.API
             
             // bundle
             var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
-            var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebGL, option.BundleKey);
+            var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Webgl, option.BundleKey);
+            var webglMobileBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebglMobile, option.BundleKey);
             var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
             var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
+            var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
 
             var standaloneBundleData = await GetByte(standaloneBundlePath);
             var webglBundleData = await GetByte(webglBundlePath);
+            var webglMobileBundleData = await GetByte(webglMobileBundlePath);
             var androidBundleData = await GetByte(androidBundlePath);
             var iosBundleData = await GetByte(iosBundlePath);
+            var vrBundleData = await GetByte(vrBundlePath);
             
             // thumbnail
             var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
@@ -136,16 +140,18 @@ namespace WitchCompany.Toolkit.Editor.API
             var blockData = new JBlock
             {
                 pathName = option.Key,
-                theme = option.theme.ToString().ToLower()
+                theme = option.theme.ToString().ToLower(),
             };
 
             var bundleData = new JBundle
             {
                 blockData = blockData,
                 standalone = new JBundleData{manifest = manifests[AssetBundleConfig.Standalone]},
-                webgl = new JBundleData{manifest = manifests[AssetBundleConfig.WebGL]},
+                webgl = new JBundleData{manifest = manifests[AssetBundleConfig.Webgl]},
+                webglMobile = new JBundleData{manifest = manifests[AssetBundleConfig.WebglMobile]},
                 android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
-                ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]}
+                ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]},
+                vr = new JBundleData{manifest = manifests[AssetBundleConfig.Vr]},
             };
 
             var jsonBundleData = JsonConvert.SerializeObject(bundleData);
@@ -160,11 +166,15 @@ namespace WitchCompany.Toolkit.Editor.API
             if(standaloneBundleData != null)
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""));
             if(webglBundleData != null)
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.WebGL, webglBundleData, option.BundleKey, ""));
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""));
+            if(webglMobileBundleData != null)
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, webglMobileBundleData, option.BundleKey, ""));
             if(androidBundleData != null)
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
             if(iosBundleData != null)
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
+            if(vrBundleData != null)
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, vrBundleData, option.BundleKey, ""));
              
             var response = await Request<JPublishResponse>(new RequestHelper
             {
@@ -228,6 +238,39 @@ namespace WitchCompany.Toolkit.Editor.API
             if (response.statusCode == 409) return -2;
             return -1;
         }
+
+        /// <summary>
+        /// 블록 정보 수정
+        /// </summary>
+        /// <param name="blockData"></param>
+        public static async UniTask<bool> UpdateBlockData(JBlockData blockData)
+        {
+            var auth = AuthConfig.Auth;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return false;
+            
+            
+            var thumbnailData = await GetByte(AdminConfig.ThumbnailPath);
+            var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
+            
+            
+            var form = new List<IMultipartFormSection> {
+                new MultipartFormDataSection("json", JsonConvert.SerializeObject(blockData), "application/json"),
+            };
+            
+            if(thumbnailData != null)
+                form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
+
+            var response = await Request<JBlockData>(new RequestHelper
+            {
+                Method = "POST",
+                Uri = ApiConfig.URL("v2/blocks/update/blockdata"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken),
+                FormSections = form
+            });
+
+            return response is { success: true };
+        }
+        
         
         /// <summary>
         /// 랭킹보드 keys 업로드

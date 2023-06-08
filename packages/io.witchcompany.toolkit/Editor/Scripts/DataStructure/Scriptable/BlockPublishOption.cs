@@ -9,7 +9,7 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         public string Key => targetScene.name;
         public string BundleKey => Key + ".bundle";
         public string ThumbnailKey => Key + ".jpg";
-
+        
         public SceneAsset targetScene;
         public BundleTheme theme;
     }

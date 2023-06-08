@@ -7,5 +7,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     {
         public string pathName;
         public string theme;
+        public string platform;
     }
 }
