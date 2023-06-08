@@ -121,17 +121,17 @@ namespace WitchCompany.Toolkit.Editor.API
             // bundle
             var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
             var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Webgl, option.BundleKey);
-            var webglMobileBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebglMobile, option.BundleKey);
-            var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
-            var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
-            var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
+            // var webglMobileBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebglMobile, option.BundleKey);
+            // var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
+            // var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
+            // var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
 
             var standaloneBundleData = await GetByte(standaloneBundlePath);
             var webglBundleData = await GetByte(webglBundlePath);
-            var webglMobileBundleData = await GetByte(webglMobileBundlePath);
-            var androidBundleData = await GetByte(androidBundlePath);
-            var iosBundleData = await GetByte(iosBundlePath);
-            var vrBundleData = await GetByte(vrBundlePath);
+            // var webglMobileBundleData = await GetByte(webglMobileBundlePath);
+            // var androidBundleData = await GetByte(androidBundlePath);
+            // var iosBundleData = await GetByte(iosBundlePath);
+            // var vrBundleData = await GetByte(vrBundlePath);
             
             // thumbnail
             var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
@@ -148,10 +148,10 @@ namespace WitchCompany.Toolkit.Editor.API
                 blockData = blockData,
                 standalone = new JBundleData{manifest = manifests[AssetBundleConfig.Standalone]},
                 webgl = new JBundleData{manifest = manifests[AssetBundleConfig.Webgl]},
-                webglMobile = new JBundleData{manifest = manifests[AssetBundleConfig.WebglMobile]},
-                android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
-                ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]},
-                vr = new JBundleData{manifest = manifests[AssetBundleConfig.Vr]},
+                // webglMobile = new JBundleData{manifest = manifests[AssetBundleConfig.WebglMobile]},
+                // android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
+                // ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]},
+                // vr = new JBundleData{manifest = manifests[AssetBundleConfig.Vr]},
             };
 
             var jsonBundleData = JsonConvert.SerializeObject(bundleData);
@@ -167,14 +167,14 @@ namespace WitchCompany.Toolkit.Editor.API
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""));
             if(webglBundleData != null)
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""));
-            if(webglMobileBundleData != null)
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, webglMobileBundleData, option.BundleKey, ""));
-            if(androidBundleData != null)
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
-            if(iosBundleData != null)
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
-            if(vrBundleData != null)
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, vrBundleData, option.BundleKey, ""));
+            // if(webglMobileBundleData != null)
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, webglMobileBundleData, option.BundleKey, ""));
+            // if(androidBundleData != null)
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
+            // if(iosBundleData != null)
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
+            // if(vrBundleData != null)
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, vrBundleData, option.BundleKey, ""));
              
             var response = await Request<JPublishResponse>(new RequestHelper
             {

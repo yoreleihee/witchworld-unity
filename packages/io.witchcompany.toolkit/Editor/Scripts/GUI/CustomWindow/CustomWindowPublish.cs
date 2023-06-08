@@ -118,7 +118,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 EditorUtility.ClearProgressBar();
-            }
+            }   
             // 입력 제한 해제
             CustomWindow.IsInputDisable = false;
         }
