@@ -76,17 +76,28 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 var platform = PublishConfig.Platform;
 
                 if(platform.HasFlag(PlatformType.Standalone))
-                    result.Add(AssetBundleConfig.Standalone, BuildBundle(AssetBundleConfig.Standalone, BuildTarget.StandaloneWindows64));
+                    result.Add(AssetBundleConfig.Standalone, BuildBundle(AssetBundleConfig.Standalone, BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+
+                if (platform.HasFlag(PlatformType.Webgl))
+                {
+                    EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.DXT;
+                    result.Add(AssetBundleConfig.Webgl, BuildBundle(AssetBundleConfig.Webgl, BuildTargetGroup.WebGL, BuildTarget.WebGL));
+                }
+
+                if (platform.HasFlag(PlatformType.WebglMobile))
+                {
+                    EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
+                    result.Add(AssetBundleConfig.Webgl, BuildBundle(AssetBundleConfig.WebglMobile, BuildTargetGroup.WebGL, BuildTarget.WebGL));
+                }
                 
-                if(platform.HasFlag(PlatformType.Webgl))
-                    result.Add(AssetBundleConfig.WebGL, BuildBundle(AssetBundleConfig.WebGL, BuildTarget.WebGL));
-                
-                if(platform.HasFlag(PlatformType.Android))
-                    result.Add(AssetBundleConfig.Android, BuildBundle(AssetBundleConfig.Android, BuildTarget.Android));
+                if (platform.HasFlag(PlatformType.Android))
+                    result.Add(AssetBundleConfig.Android, BuildBundle(AssetBundleConfig.Android, BuildTargetGroup.Android,BuildTarget.Android));
                 
                 if(platform.HasFlag(PlatformType.Ios))
-                    result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTarget.iOS));
-
+                    result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTargetGroup.iOS,BuildTarget.iOS));
+                
+                    
+                
                 return result;
             }
             catch (Exception e)
@@ -96,7 +107,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
             }
         }
 
-        private static string[] BuildBundle(string targetName, BuildTarget target)
+        private static string[] BuildBundle(string targetName, BuildTargetGroup targetGroup, BuildTarget target)
         {
             try
             {
@@ -108,7 +119,10 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
                 // 빌드
+                // EditorUserBuildSettings.SwitchActiveBuildTarget(targetGroup, target);
+                
                 var result = BuildPipeline.BuildAssetBundles(path, option, target);
+                
 
                 // 삭제
                 File.Delete(Path.Combine(path, targetName));
