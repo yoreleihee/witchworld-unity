@@ -234,12 +234,18 @@ namespace WitchCompany.Toolkit.Editor.API
         /// </summary>
         /// <param name="rankingData"></param>
         /// <returns></returns>
-        public static async UniTask<bool> SetRankingKeys(JRanking rankingData)
+        public static async UniTask<bool> SetRankingKeys(int blockId, List<JRankingKey> rankingKeys)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return false;
 
-            var response = await Request<JRanking>(new RequestHelper
+            var rankingData = new JRankingData
+            {
+                blockId = blockId,
+                rankingKeys = rankingKeys
+            };
+            
+            var response = await Request<JRankingData>(new RequestHelper
             {
                 Method = "POST",
                 Uri = ApiConfig.URL("v2/blocks/rank/keys"),
@@ -277,9 +283,45 @@ namespace WitchCompany.Toolkit.Editor.API
             return response.success ? response.payload : null;
         }
         
+        /// <summary> 블록 존재 여부 조회 </summary>
+        /// <param name="pathName"></param>
+        /// <returns></returns>
+        public static async UniTask<JExistBlock> CheckExistBlock(string pathName)
+        {
+            var result = await Request<JExistBlock>(new RequestHelper
+            {
+                Method = "GET",
+                Uri = ApiConfig.URL($"v2/blocks/check/accessible/{pathName}")
+            });
+
+            return result.success ? result.payload : null;
+        }
+
+        public static async UniTask<bool> UpdateBlockStatus(string pathName)
+        {
+            var auth = AuthConfig.Auth;
+
+            var blockStatusData = new JBlockStatus
+            {
+                pathname = pathName,
+                status = (int)AdminConfig.BlockStatus
+            };
+
+            var response = await Request<JBlockStatus>(new RequestHelper
+            {
+                Method = "POST",
+                Uri = ApiConfig.URL("v2/blocks/status/change"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken),
+                BodyString = JsonConvert.SerializeObject(blockStatusData)
+            });
+
+             Debug.Log(JsonConvert.SerializeObject(blockStatusData));
+            
+            return response != null && response.success;
+        }
+
     }
     
-
     public static partial class WitchAPI
     {
         private static async UniTask<JResponse<T>> AuthSafeRequest<T>(RequestHelper helper)

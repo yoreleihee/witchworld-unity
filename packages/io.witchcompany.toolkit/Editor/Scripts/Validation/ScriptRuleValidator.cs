@@ -1,17 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
-using Cysharp.Threading.Tasks;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
-using Object = UnityEngine.Object;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
@@ -131,43 +127,5 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             return report;
         }
-
-        // // 블록 존재 여부 확인
-        // private static async UniTask<ValidationReport> ValidateHasBlock()
-        // {
-        //     var report = new ValidationReport();
-        //
-        //     var portals = GameObject.FindObjectsOfType<WitchPortal>();
-        //     var privatePortals = GameObject.FindObjectsOfType<WitchPrivatePortal>();
-        //     
-        //     // 포탈
-        //     foreach (var portal in portals)
-        //     {
-        //         // 패스네임으로 블록 조회 
-        //         var result = await WitchAPI.GetBlock(portal.TargetUrl);
-        //
-        //         if (result == null)
-        //         {
-        //             var error = new ValidationError(
-        //                 $"Object : {portal.gameObject.name}\ntargetUrl {portal.TargetUrl}은 존재하지 않는 블록입니다.");
-        //             report.Append(error);
-        //         }
-        //     }
-        //
-        //     // 프라이빗 포탈
-        //     foreach (var privatePortal in privatePortals)
-        //     {
-        //         var result = await WitchAPI.GetBlock(privatePortal.TargetUrl);
-        //
-        //         if (result == null)
-        //         {
-        //             var error = new ValidationError(
-        //                 $"Object : {privatePortal.gameObject.name}\ntargetUrl {privatePortal.TargetUrl}은 존재하지 않는 블록입니다.");
-        //             report.Append(error);
-        //         }
-        //     }
-        //
-        //     return report;
-        // }
     }
 }

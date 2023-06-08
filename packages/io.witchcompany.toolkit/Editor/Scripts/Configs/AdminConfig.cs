@@ -1,3 +1,4 @@
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEditor;
 using WitchCompany.Toolkit.Editor.DataStructure;
 
@@ -16,6 +17,7 @@ namespace WitchCompany.Toolkit.Editor.Configs
         private const string Prefs_Level = "admin_level";
         private const string Prefs_DescriptionKr = "admin_description_kr";
         private const string Prefs_DescriptionEn = "admin_description_en";
+        private const string Prefs_Status = "admin_status";
         private const string Prefs_IsPrivate = "admin_is_private";
         private const string Prefs_ItemCA = "admin_item_ca";
 
@@ -89,6 +91,13 @@ namespace WitchCompany.Toolkit.Editor.Configs
         {
             get => EditorPrefs.GetString(Prefs_ItemCA, "");
             set => EditorPrefs.SetString(Prefs_ItemCA, value);
+        }
+
+        public static BlockStatus BlockStatus
+        {
+            get => (BlockStatus)EditorPrefs.GetInt(Prefs_Status, 1);
+            set => EditorPrefs.SetInt(Prefs_Status, (int)value);
+        
         }
         
         // public static string UnityKeyList

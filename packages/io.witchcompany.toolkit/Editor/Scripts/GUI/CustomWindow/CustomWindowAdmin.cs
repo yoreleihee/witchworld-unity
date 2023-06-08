@@ -137,6 +137,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                         AdminConfig.BlockTheme = blockTheme;
                 }
 
+                // 게임 블록 난이도
                 if (AdminConfig.BlockTheme == BlockTheme.Game)
                 {
                     // 난이도
@@ -146,7 +147,17 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     if (check.changed)
                         AdminConfig.BlockLevel = blockLevel;
                 }
+                
+                // 블록 조회 상태
+                using (var check = new EditorGUI.ChangeCheckScope())
+                {
+                    var blockStatus = (BlockStatus)EditorGUILayout.EnumPopup("status", AdminConfig.BlockStatus);
 
+                    if (check.changed)
+                        AdminConfig.BlockStatus = blockStatus;
+                }
+
+                // 프라이빗 블록 여부
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
                     var blockDesc = EditorGUILayout.Toggle("private block option", AdminConfig.IsPrivate);
@@ -155,6 +166,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                         AdminConfig.IsPrivate = blockDesc;
                 }
                 
+                // 프라이빗 블록 itemCA
                 if (AdminConfig.IsPrivate)
                 {
                     using var check = new EditorGUI.ChangeCheckScope();
@@ -198,36 +210,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static async UniTask<string> OnPublish()
         {
             // 블록 업로드
-            var resultBlock = await UploadBlock();
-            var resultMsg = resultBlock > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
+            var resultBlockId = await UploadBlock();
+            var resultMsg = resultBlockId > -2 ? AssetBundleConfig.FailedBlockMsg : AssetBundleConfig.DuplicationBlockMsg;
             
-            if (resultBlock < 0) return resultMsg;
-            
-            // 랭킹 키값 설정
-            var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
+            if (resultBlockId < 0) return resultMsg;
 
-            // 데이터 매니저 없으면 랭킹 키값 확인 안함
-            if (dataManager == null)
-                return AssetBundleConfig.SuccessMsg;
-                
-            var resultKey = false;
-            if (dataManager.RankingKeys.Count > 0)
-            {
-                var list = new List<JRankingData>();
-                foreach (var keyGroup in dataManager.RankingKeys)
-                {
-                    var data = new JRankingData()
-                    {
-                        rankingKey = keyGroup.key,
-                        rankingKeyType = keyGroup.alignment.ToString().ToLower(),
-                        rankingKeyDataType = keyGroup.dataType.ToString().ToLower()
-                    };
-                    list.Add(data);
-                }
-                resultKey = await SetRankingKeys(resultBlock, list);
-            }
+            // 랭킹 키값 설정
+            var resultKey = await UploadRankingKeys(resultBlockId);
             
-            return resultKey ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedKeyMsg;
+            if (!resultKey) return AssetBundleConfig.FailedKeyMsg;
+            
+            // 블록 상태 변경
+            var resultBlockStatus = await WitchAPI.UpdateBlockStatus(AdminConfig.PathName);
+
+            return resultBlockStatus ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedBlockStatusMsg;
         }
 
         private static async UniTask<int> UploadBlock()
@@ -253,16 +249,31 @@ namespace WitchCompany.Toolkit.Editor.GUI
             return result;
         }
 
-        private static async UniTask<bool> SetRankingKeys(int blockId, List<JRankingData> rankingKeys)
+        private static async UniTask<bool> UploadRankingKeys(int blockId)
         {
-            var rankingData = new JRanking
+            // 랭킹 키값 설정
+            var result = true;
+            var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
+
+            // 데이터 매니저 없으면 랭킹 키값 확인 안함
+            if (dataManager != null)
             {
-                blockId = blockId,
-                rankingKeys = rankingKeys
-            };
-            Debug.Log(JsonConvert.SerializeObject(rankingData, Formatting.Indented));
-            
-            var result = await WitchAPI.SetRankingKeys(rankingData);
+                if (dataManager.RankingKeys.Count > 0)
+                {
+                    var keys = new List<JRankingKey>();
+                    foreach (var keyGroup in dataManager.RankingKeys)
+                    {
+                        var data = new JRankingKey()
+                        {
+                            rankingKey = keyGroup.key,
+                            rankingKeyType = keyGroup.alignment.ToString().ToLower(),
+                            rankingKeyDataType = keyGroup.dataType.ToString().ToLower()
+                        };
+                        keys.Add(data);
+                    }
+                    result = await WitchAPI.SetRankingKeys(blockId, keys);
+                }
+            }
             return result;
         }
         
@@ -315,4 +326,5 @@ namespace WitchCompany.Toolkit.Editor.GUI
             return message;
         }
     }
+    
 }

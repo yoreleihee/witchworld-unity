@@ -114,7 +114,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     
                 var result = await Upload();
-                var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedMsg : AssetBundleConfig.DuplicationMsg;
+                var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedBlockMsg : AssetBundleConfig.DuplicationBlockMsg;
                     
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
                 EditorUtility.ClearProgressBar();

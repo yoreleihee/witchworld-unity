@@ -1,9 +1,10 @@
-﻿namespace WitchCompany.Toolkit.Editor.DataStructure
+﻿using System.Collections.Generic;
+
+namespace WitchCompany.Toolkit.Editor.DataStructure
 {
     public class JRankingData
     {
-        public string rankingKey;
-        public string rankingKeyType;
-        public string rankingKeyDataType;
+        public int blockId;
+        public List<JRankingKey> rankingKeys;
     }
 }
