@@ -182,56 +182,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 var report = AdminPublishValidatior.ValidationCheck();
                 await DrawDisplayDialog(report, true);
-
-                // if (report.errors.Count > 0)
-                // {
-                //     var message = new StringBuilder();
-                //     foreach (var error in report.errors)
-                //         message.Append(error.message + "\n");
-                //     
-                //     EditorUtility.DisplayDialog("Witch Creator Toolkit", $"Publish Failed\n\n{message}", "OK");
-                // }
-                // else
-                // {
-                //     var result = EditorUtility.DisplayDialog("Witch Creator Toolkit", RankingAlertMsg(), "OK");
-                //
-                //     if (result)
-                //     {
-                //         EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading from server...", 1.0f);
-                //         CustomWindow.IsInputDisable = true;
-                //         
-                //         var resultMsg = await OnPublish();
-                //         
-                //         CustomWindow.IsInputDisable = false;
-                //         EditorUtility.ClearProgressBar();
-                //         EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
-                //     }
-                // }
             }
 
             if (GUILayout.Button("Update"))
             {
                 var report = AdminPublishValidatior.ValidationUpdateCheck();
                 await DrawDisplayDialog(report, false);
-                // if (report.errors.Count > 0)
-                // {
-                //     var message = new StringBuilder();
-                //     foreach (var error in report.errors)
-                //         message.Append(error.message + "\n");
-                //     
-                //     EditorUtility.DisplayDialog("Witch Creator Toolkit", $"Update Failed\n\n{message}", "OK");
-                // }
-                // else
-                // {
-                //     EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Updating from server...", 1.0f);
-                //     CustomWindow.IsInputDisable = true;
-                //         
-                //     var alertMsg = await OnUpdate();
-                //         
-                //     CustomWindow.IsInputDisable = false;
-                //     EditorUtility.ClearProgressBar();
-                //     EditorUtility.DisplayDialog("Witch Creator Toolkit", alertMsg, "OK");
-                // }
             }
         }
 
@@ -297,7 +253,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 blockName = new JLanguageString(AdminConfig.BlockNameEn, AdminConfig.BlockNameKr),
                 blockTheme = AdminConfig.BlockTheme.ToString().ToLower(),
                 blockLevel = AdminConfig.BlockTheme != BlockTheme.Game ? null : AdminConfig.BlockLevel.ToString().ToLower(),
-                blockDescription = new JLanguageString(AdminConfig.BlockDescriptionKr, AdminConfig.BlockDescriptionEn),
+                blockDescription = new JLanguageString(AdminConfig.BlockDescriptionEn, AdminConfig.BlockDescriptionKr),
                 blockStatus = (int)AdminConfig.BlockStatus,
                 isPrivate = AdminConfig.IsPrivate,
                 itemCA = AdminConfig.IsPrivate ? AdminConfig.ItemCA : ""
