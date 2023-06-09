@@ -168,11 +168,8 @@ namespace WitchCompany.Toolkit.Editor.API
             if(webglBundleData != null)
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""));
             if (webglMobileBundleData != null)
-            {
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, ""));
-                
-                Debug.Log(webglMobileBundlePath);
-            }
+            
             // if(androidBundleData != null)
             //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
             // if(iosBundleData != null)
