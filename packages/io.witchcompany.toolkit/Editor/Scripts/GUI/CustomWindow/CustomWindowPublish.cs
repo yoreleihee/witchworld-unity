@@ -15,13 +15,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
     {
         private static BuildTargetGroup blockPlatform;
         private static JBuildReport buildReport;
-
         private static string[] bundleTypes =
         {
             AssetBundleConfig.Standalone,
             AssetBundleConfig.Webgl,
+            AssetBundleConfig.WebglMobile,
             AssetBundleConfig.Android,
-            AssetBundleConfig.Ios
+            AssetBundleConfig.Ios,
+            AssetBundleConfig.Vr
         };
         
         public static void ShowPublish()
@@ -111,19 +112,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 CaptureTool.CaptureAndSave(thumbnailPath);
                     
                 // 업로드
-                EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
+                // EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     
-                var result = await Upload();
+                var result = await UploadBundle();
                 var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedPublishMsg : AssetBundleConfig.DuplicationPublishMsg;
                     
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
-                EditorUtility.ClearProgressBar();
+                // EditorUtility.DisplayDialog("Witch Creator Toolkit", AssetBundleConfig.SuccessMsg, "OK");
+                // EditorUtility.ClearProgressBar();
             }   
             // 입력 제한 해제
             CustomWindow.IsInputDisable = false;
         }
         
-        private static async UniTask<int> Upload()
+        private static async UniTask<int> UploadBundle()
         {
             var option = GetOption();
 

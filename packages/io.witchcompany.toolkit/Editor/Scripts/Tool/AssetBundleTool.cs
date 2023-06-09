@@ -87,7 +87,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 if (platform.HasFlag(PlatformType.WebglMobile))
                 {
                     EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
-                    result.Add(AssetBundleConfig.Webgl, BuildBundle(AssetBundleConfig.WebglMobile, BuildTargetGroup.WebGL, BuildTarget.WebGL));
+                    result.Add(AssetBundleConfig.WebglMobile, BuildBundle(AssetBundleConfig.WebglMobile, BuildTargetGroup.WebGL, BuildTarget.WebGL));
                 }
                 
                 if (platform.HasFlag(PlatformType.Android))
