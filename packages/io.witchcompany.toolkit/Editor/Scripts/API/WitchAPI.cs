@@ -118,25 +118,6 @@ namespace WitchCompany.Toolkit.Editor.API
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
             
-            // bundle
-            var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
-            var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Webgl, option.BundleKey);
-            var webglMobileBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebglMobile, option.BundleKey);
-            var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
-            var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
-            var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
-
-            var standaloneBundleData = await GetByte(standaloneBundlePath);
-            var webglBundleData = await GetByte(webglBundlePath);
-            var webglMobileBundleData = await GetByte(webglMobileBundlePath);
-            var androidBundleData = await GetByte(androidBundlePath);
-            var iosBundleData = await GetByte(iosBundlePath);
-            var vrBundleData = await GetByte(vrBundlePath);
-            
-            // thumbnail
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
-            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
-            
             var blockData = new JBlock
             {
                 pathName = option.Key,
@@ -153,31 +134,77 @@ namespace WitchCompany.Toolkit.Editor.API
                 // ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]},
                 // vr = new JBundleData{manifest = manifests[AssetBundleConfig.Vr]},
             };
-
-            var jsonBundleData = JsonConvert.SerializeObject(bundleData);
             
+            // Json
+            var jsonBundleData = JsonConvert.SerializeObject(bundleData);
+
+            
+            // thumbnail
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
+            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
+
             var form = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("json", jsonBundleData, "application/json"),
                 new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg"),
             };
             
-            // 번들 파일 있을 때만 보냄
-            if(standaloneBundleData != null)
+            // bundle
+            var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
+            var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Webgl, option.BundleKey);
+            var webglMobileBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebglMobile, option.BundleKey);
+            var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
+            var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
+            var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
+            var platform = PublishConfig.Platform;
+            
+            if (platform.HasFlag(PlatformType.Standalone))
+            {
+                var standaloneBundleData = await GetByte(standaloneBundlePath);
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""));
-            if(webglBundleData != null)
+                Debug.Log("standalone 번들 포함됨");
+            }
+
+            if (platform.HasFlag(PlatformType.Webgl))
+            {
+                var webglBundleData = await GetByte(webglBundlePath);
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""));
-            if (webglMobileBundleData != null)
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, ""));
+                Debug.Log("webgl 번들 포함됨");
+            }
+
+            if (platform.HasFlag(PlatformType.WebglMobile))
+            {
+                var webglMobileBundleData = await GetByte(webglMobileBundlePath);
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglMobileBundleData, option.BundleKey, ""));
+                Debug.Log("webgl mobile 번들 포함됨");
+            }
+
+            #region Android, Ios, VR
+
+            // if (platform.HasFlag(PlatformType.Android))
+            // {
+            //     var androidBundleData = await GetByte(androidBundlePath);
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, androidBundleData, option.BundleKey, ""));
+            // }
+            //
+            // if (platform.HasFlag(PlatformType.Ios))
+            // {
+            //     var iosBundleData = await GetByte(iosBundlePath);
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, iosBundleData, option.BundleKey, ""));
+            // }
+            //
+            // if (platform.HasFlag(PlatformType.Vr))
+            // {
+            //     var vrBundleData = await GetByte(vrBundlePath);
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, vrBundleData, option.BundleKey, ""));
+            // }
             
-            // if(androidBundleData != null)
-            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
-            // if(iosBundleData != null)
-            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
-            // if(vrBundleData != null)
-            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Vr, vrBundleData, option.BundleKey, ""));
+            #endregion
             
-            Debug.Log(JsonConvert.SerializeObject(bundleData));
+            
+            Debug.Log(JsonConvert.SerializeObject(bundleData, Formatting.Indented));
+            Debug.Log(JsonConvert.SerializeObject(form.Count));
+            
             
             var response = await Request<JPublishResponse>(new RequestHelper
             {

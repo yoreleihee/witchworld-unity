@@ -112,14 +112,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 CaptureTool.CaptureAndSave(thumbnailPath);
                     
                 // 업로드
-                // EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
+                EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     
                 var result = await UploadBundle();
                 var resultMsg = result > 0 ? AssetBundleConfig.SuccessMsg : result > -2 ? AssetBundleConfig.FailedPublishMsg : AssetBundleConfig.DuplicationPublishMsg;
                     
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", resultMsg, "OK");
-                // EditorUtility.DisplayDialog("Witch Creator Toolkit", AssetBundleConfig.SuccessMsg, "OK");
-                // EditorUtility.ClearProgressBar();
+                EditorUtility.ClearProgressBar();
             }   
             // 입력 제한 해제
             CustomWindow.IsInputDisable = false;
