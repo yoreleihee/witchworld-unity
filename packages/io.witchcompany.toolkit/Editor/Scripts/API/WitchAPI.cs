@@ -175,7 +175,7 @@ namespace WitchCompany.Toolkit.Editor.API
             if (platform.HasFlag(PlatformType.WebglMobile))
             {
                 var webglMobileBundleData = await GetByte(webglMobileBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglMobileBundleData, option.BundleKey, ""));
+                form.Add(new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, ""));
                 Debug.Log("webgl mobile 번들 포함됨");
             }
 
@@ -184,19 +184,19 @@ namespace WitchCompany.Toolkit.Editor.API
             // if (platform.HasFlag(PlatformType.Android))
             // {
             //     var androidBundleData = await GetByte(androidBundlePath);
-            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, androidBundleData, option.BundleKey, ""));
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
             // }
             //
             // if (platform.HasFlag(PlatformType.Ios))
             // {
             //     var iosBundleData = await GetByte(iosBundlePath);
-            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, iosBundleData, option.BundleKey, ""));
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
             // }
             //
             // if (platform.HasFlag(PlatformType.Vr))
             // {
             //     var vrBundleData = await GetByte(vrBundlePath);
-            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, vrBundleData, option.BundleKey, ""));
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Vr, vrBundleData, option.BundleKey, ""));
             // }
             
             #endregion
