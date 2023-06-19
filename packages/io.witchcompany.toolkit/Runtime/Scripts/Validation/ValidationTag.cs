@@ -14,8 +14,8 @@
         public const string TagMeshCollider = "Mesh Collider";
         public const string TagRigidbody = "Rigidbody";
         public const string TagDirectionalLight = "Directional";
-        public const string TagPointLight = "Point";
-        public const string TagRealtime = "Realtime";
+        public const string TagRealtimeLight = "Point, Spot";
+        public const string TagEtcRealtimeLight = "Realtime";
         public const string TagBaked = "Baked";
         public const string TagReflectionProbe = "Reflection Probe";
         
