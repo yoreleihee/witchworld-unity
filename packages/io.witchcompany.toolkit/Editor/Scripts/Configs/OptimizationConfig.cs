@@ -11,7 +11,7 @@
         public const uint MaxUniqueMaterials = 80;
         public const uint MaxSharedTextureMb = 200;
         public const uint MaxDirectionalLight = 1;
-        public const uint MaxPointLight = 2;
+        public const uint MaxRealtimeLight = 2;
         public const uint MaxLightmapMb = 200;
         public const uint MaxReflectionProbeMb = 200;
 

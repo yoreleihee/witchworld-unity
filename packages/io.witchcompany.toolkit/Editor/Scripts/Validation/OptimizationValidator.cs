@@ -249,7 +249,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
         /// <summary>
         /// Light 유효성 검사
-        /// - Directional light 1개, Point light 2개로 light 개수 제한
+        /// - Directional light 1개, Point, Spot light 총합 2개로 light 개수 제한
         /// - directional, point light를 제외한 realtime light 검출
         /// - light mode가 baked인 light 중 활성화 된 오브젝트 검출
         /// </summary>
@@ -258,12 +258,12 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var report = new ValidationReport();
             var lights = Object.FindObjectsOfType<Light>(true);
             var directionalLights = new List<Light>();
-            var pointLights = new List<Light>();
             var realtimeLights = new List<Light>();
+            var etcLights = new List<Light>();
             var disabledBakedLights = new List<Light>();
 
-            var realTimeLightErrorMsg = "Directional Light와 Point Light를 제외한 Light의 Mode를 RealTime으로 지정할 수 없습니다.";
-            var bakedLightErrorMsg = "Light의 Mode가 Baked인 오브젝트는 비활성화 되어야 합니다.";
+            const string realTimeLightErrorMsg = "Directional, Point, Spot Light를 제외한 Light의 Mode를 RealTime으로 지정할 수 없습니다.";
+            const string bakedLightErrorMsg = "Light의 Mode가 Baked인 오브젝트는 비활성화 되어야 합니다.";
             
             // light 검출
             foreach (var light in lights)
@@ -274,19 +274,28 @@ namespace WitchCompany.Toolkit.Editor.Validation
                         disabledBakedLights.Add(light);
                     continue;
                 }
-                
-                if (light.type == LightType.Directional)
-                    directionalLights.Add(light);
-                else if (light.type == LightType.Point)
-                    pointLights.Add(light);
-                else
-                    realtimeLights.Add(light);
+
+                switch (light.type)
+                {
+                    case LightType.Directional:
+                        directionalLights.Add(light);
+                        break;
+                    case LightType.Point:
+                        realtimeLights.Add(light);
+                        break;
+                    case LightType.Spot:
+                        realtimeLights.Add(light);
+                        break;
+                    default:
+                        etcLights.Add(light);
+                        break;
+                }
             }
 
             LightTypeErrorMessage(report, directionalLights, ValidationTag.TagDirectionalLight,OptimizationConfig.MaxDirectionalLight);
-            LightTypeErrorMessage(report, pointLights, ValidationTag.TagPointLight,OptimizationConfig.MaxPointLight);
+            LightTypeErrorMessage(report, realtimeLights, ValidationTag.TagRealtimeLight,OptimizationConfig.MaxRealtimeLight);
             
-            LightModeErrorMessage(report, realtimeLights, ValidationTag.TagRealtime, realTimeLightErrorMsg);
+            LightModeErrorMessage(report, etcLights, ValidationTag.TagEtcRealtimeLight, realTimeLightErrorMsg);
             LightModeErrorMessage(report, disabledBakedLights, ValidationTag.TagBaked, bakedLightErrorMsg);
             
             return report;
