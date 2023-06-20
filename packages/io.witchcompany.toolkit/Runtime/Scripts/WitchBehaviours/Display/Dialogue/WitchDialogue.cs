@@ -13,11 +13,15 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         public override int MaximumCount => 10;
 
         [field: Header("NPC 이름, 목소리")]
-        [field: SerializeField] public string NpcName { get; private set; }
+        [field: SerializeField] public string NpcNameKr { get; private set; }
+        [field: SerializeField] public string NpcNameEn { get; private set; }
         [field: SerializeField] public NpcVoiceType VoiceType { get; private set; }
 
         [field: Header("시작 대사")]
         [field: SerializeField] public WitchDialogueSOBase InitialDialogue { get; private set; }
+        
+        [field: Header("번역 여부")]
+        [field: SerializeField] public DialogueLanguage Language { get; private set; }
         
         [field: Header("대화 시작 시 카메라 위치")]
         [field: SerializeField] public Transform CamPos { get; private set; }
@@ -27,8 +31,8 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         {
             var report = new ValidationReport();
             
-            if (string.IsNullOrEmpty(NpcName))
-                return report.Append(NullError(nameof(NpcName)));
+            if (string.IsNullOrEmpty(NpcNameKr) || string.IsNullOrEmpty(NpcNameEn))
+                return report.Append(NullError($"{nameof(NpcNameKr)} 또는 {nameof(NpcNameEn)}"));
             if (InitialDialogue == null)
                 return report.Append(NullError(nameof(InitialDialogue)));
             if(CamPos == null)
