@@ -11,8 +11,12 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         [field: SerializeField] public UnityEvent OnStart { get; private set; }
         [field: SerializeField] public UnityEvent OnEnd { get; private set; }
 
+        [field: Header("대사 번역 키 값")]
+        //[field: SerializeField] public string localizeKey { get; private set; }
+        
         [field: Header("대사")]
-        [field: TextArea, SerializeField] public string Message { get; private set; }
+        [field: TextArea, SerializeField] public string MessageKr { get; private set; }
+        [field: TextArea, SerializeField] public string MessageEn { get; private set; }
 
         public virtual bool ShouldWait() => true;
         
@@ -24,8 +28,8 @@ namespace WitchCompany.Toolkit.Module.Dialogue
 
             report ??= new ValidationReport();
 
-            if (string.IsNullOrEmpty(Message))
-                report.Append(NullError(nameof(Message)));
+            if (string.IsNullOrEmpty(MessageKr) || string.IsNullOrEmpty(MessageEn))
+                report.Append(NullError($"{nameof(MessageKr)} 또는 {nameof(MessageEn)}"));
         }
         
         protected ValidationError Error(string msg) => new(msg, ValidationTag.TagDialogue, this);
