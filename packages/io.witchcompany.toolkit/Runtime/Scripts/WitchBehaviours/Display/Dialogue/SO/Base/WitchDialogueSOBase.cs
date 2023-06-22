@@ -30,7 +30,7 @@ namespace WitchCompany.Toolkit.Module.Dialogue
 
             report ??= new ValidationReport();
 
-            if (string.IsNullOrEmpty(MessageKr) || string.IsNullOrEmpty(MessageEn))
+            if (string.IsNullOrEmpty(MessageKr) && string.IsNullOrEmpty(MessageEn))
                 report.Append(NullError($"{nameof(MessageKr)} 또는 {nameof(MessageEn)}"));
         }
         
