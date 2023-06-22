@@ -13,9 +13,6 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
         
-        [field: Header("유저마다 붙일 수 있는 최대치")]
-        [field: SerializeField] public int Limit { get; private set; }
-        
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
