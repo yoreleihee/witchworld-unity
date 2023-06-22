@@ -130,8 +130,8 @@ namespace WitchCompany.Toolkit.Editor.API
                 standalone = new JBundleData{manifest = manifests[AssetBundleConfig.Standalone]},
                 webgl = new JBundleData{manifest = manifests[AssetBundleConfig.Webgl]},
                 webglMobile = new JBundleData{manifest = manifests[AssetBundleConfig.WebglMobile]},
-                android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
-                ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]},
+                // android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
+                // ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]},
                 // vr = new JBundleData{manifest = manifests[AssetBundleConfig.Vr]},
             };
             
@@ -179,28 +179,29 @@ namespace WitchCompany.Toolkit.Editor.API
                 Debug.Log("webgl mobile 번들 포함됨");
             }
 
-            if (platform.HasFlag(PlatformType.Android))
-            {
-                var androidBundleData = await GetByte(androidBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
-                Debug.Log("Android 번들 포함됨");
-            }
-            
-            if (platform.HasFlag(PlatformType.Ios))
-            {
-                var iosBundleData = await GetByte(iosBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
-                Debug.Log("iOS 번들 포함됨");
-            }
-            
-            
+            #region Android, Ios, VR
+
+            // if (platform.HasFlag(PlatformType.Android))
+            // {
+            //     var androidBundleData = await GetByte(androidBundlePath);
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
+            // }
+            //
+            // if (platform.HasFlag(PlatformType.Ios))
+            // {
+            //     var iosBundleData = await GetByte(iosBundlePath);
+            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
+            // }
+            //
             // if (platform.HasFlag(PlatformType.Vr))
             // {
             //     var vrBundleData = await GetByte(vrBundlePath);
             //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Vr, vrBundleData, option.BundleKey, ""));
             // }
-
-
+            
+            #endregion
+            
+            
             Debug.Log(JsonConvert.SerializeObject(bundleData, Formatting.Indented));
             Debug.Log(JsonConvert.SerializeObject(form.Count));
             
