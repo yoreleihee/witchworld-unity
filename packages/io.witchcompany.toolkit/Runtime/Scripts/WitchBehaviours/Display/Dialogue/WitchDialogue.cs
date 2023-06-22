@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.Dialogue
@@ -14,7 +15,8 @@ namespace WitchCompany.Toolkit.Module.Dialogue
 
         [field: Header("NPC 이름, 목소리")]
         [field: SerializeField] public string NpcNameKr { get; private set; }
-        [field: SerializeField] public string NpcNameEn { get; private set; }
+        [field:FormerlySerializedAs("<NpcName>k__BackingField")][field: SerializeField] 
+        public string NpcNameEn { get; private set; }
         [field: SerializeField] public NpcVoiceType VoiceType { get; private set; }
 
         [field: Header("시작 대사")]

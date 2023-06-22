@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.Dialogue
@@ -16,7 +17,8 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         
         [field: Header("대사")]
         [field: TextArea, SerializeField] public string MessageKr { get; private set; }
-        [field: TextArea, SerializeField] public string MessageEn { get; private set; }
+        [field:FormerlySerializedAs("<Message>k__BackingField")][field: TextArea, SerializeField] 
+        public string MessageEn { get; private set; }
 
         public virtual bool ShouldWait() => true;
         

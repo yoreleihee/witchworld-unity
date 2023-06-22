@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.Dialogue
@@ -16,7 +17,7 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         {
             [Header("내용")]
             public string contentKr;
-            public string contentEn;
+            [FormerlySerializedAs("content")]public string contentEn;
             
             [Header("URL 오픈 여부")]
             public bool openUrl;
