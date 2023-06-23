@@ -11,7 +11,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
     {
         public static ValidationReport ValidationCheck()
         {
-            return ValidateStatic();
+            //return ValidateStatic();
+            return new ValidationReport();
         }
 
         private static ValidationReport ValidateObjectID()

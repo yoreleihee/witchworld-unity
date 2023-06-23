@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.Dialogue
@@ -16,7 +17,7 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         {
             [Header("내용")]
             public string contentKr;
-            public string contentEn;
+            [FormerlySerializedAs("content")]public string contentEn;
             
             [Header("URL 오픈 여부")]
             public bool openUrl;
@@ -43,7 +44,7 @@ namespace WitchCompany.Toolkit.Module.Dialogue
 
             foreach (var btn in Buttons)
             {
-                if (string.IsNullOrEmpty(btn.contentKr) || string.IsNullOrEmpty(btn.contentEn))
+                if (string.IsNullOrEmpty(btn.contentKr) && string.IsNullOrEmpty(btn.contentEn))
                     report.Append(Error($"{name}: 대화 버튼의 content를 설정해주세요."));
                 if(btn.openUrl && string.IsNullOrEmpty(btn.url))
                     report.Append(Error($"{name}: 대화 버튼의 URL을 설정해주세요."));
