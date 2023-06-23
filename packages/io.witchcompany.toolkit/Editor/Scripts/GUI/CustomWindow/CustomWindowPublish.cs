@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,6 +24,16 @@ namespace WitchCompany.Toolkit.Editor.GUI
             AssetBundleConfig.Android,
             AssetBundleConfig.Ios,
             AssetBundleConfig.Vr
+        };
+
+        private static PlatformType[] platformTypes =
+        {
+            PlatformType.Standalone,
+            PlatformType.Webgl,
+            PlatformType.WebglMobile,
+            PlatformType.Android,
+            PlatformType.Ios,
+            PlatformType.Vr,
         };
         
         public static void ShowPublish()
@@ -127,26 +138,48 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static async UniTask<int> UploadBundle()
         {
             var option = GetOption();
-
             var manifests = new Dictionary<string, JManifest>();
-            foreach (var bundleType in bundleTypes)
+            var hasTypes = new List<string>();
+            for(var i = 0; i < platformTypes.Length; i++)
             {
+                if(PublishConfig.Platform.HasFlag(platformTypes[i]))
+                    hasTypes.Add(bundleTypes[i]);
+
                 var manifest = new JManifest();
-                var crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey);
+                var crc = AssetBundleTool.ReadManifest(bundleTypes[i], option.BundleKey);
                 if (crc != null)
                 {
                     manifest.unityVersion = ToolkitConfig.UnityVersion;
                     manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion;
                     manifest.crc = crc;
                 }
-                manifests.Add(bundleType, manifest);
+                manifests.Add(bundleTypes[i], manifest);
             }
-            
+
             var response = await WitchAPI.UploadBundle(option, manifests);
-            
+
+            DeleteFile(hasTypes, option);
+
             return response;
         }
-        
+
+        private static void DeleteFile(List<string> hasTypes, BlockPublishOption option)
+        {
+            // 번들 파일 삭제
+            foreach (var type in hasTypes)
+            {
+                var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, type, option.BundleKey);
+                var manifestPath = bundlePath + ".manifest";
+                
+                File.Delete(bundlePath);
+                File.Delete(manifestPath);
+            }
+            
+            // 썸네일 삭제
+            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
+            File.Delete(thumbnailPath);
+        }
+
         /// <summary>
         /// 빌드 결과
         /// - 방금 빌드 결과(성공/취소/실패)
