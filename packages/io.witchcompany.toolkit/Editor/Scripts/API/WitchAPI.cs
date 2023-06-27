@@ -162,35 +162,35 @@ namespace WitchCompany.Toolkit.Editor.API
             {
                 var standaloneBundleData = await GetByte(standaloneBundlePath);
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""));
-                Debug.Log("standalone 번들 포함됨");
+                Debug.Log("standalone 번들 업로드");
             }
 
             if (platform.HasFlag(PlatformType.Webgl))
             {
                 var webglBundleData = await GetByte(webglBundlePath);
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""));
-                Debug.Log("webgl 번들 포함됨");
+                Debug.Log("webgl 번들 업로드");
             }
 
             if (platform.HasFlag(PlatformType.WebglMobile))
             {
                 var webglMobileBundleData = await GetByte(webglMobileBundlePath);
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, ""));
-                Debug.Log("webgl mobile 번들 포함됨");
+                Debug.Log("webgl mobile 번들 업로드");
             }
 
             if (platform.HasFlag(PlatformType.Android))
             {
                 var androidBundleData = await GetByte(androidBundlePath);
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
-                Debug.Log("Android 번들 포함됨");
+                Debug.Log("Android 번들 업로드");
             }
             
             if (platform.HasFlag(PlatformType.Ios))
             {
                 var iosBundleData = await GetByte(iosBundlePath);
                 form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
-                Debug.Log("iOS 번들 포함됨");
+                Debug.Log("iOS 번들 업로드");
             }
             
             
@@ -199,12 +199,7 @@ namespace WitchCompany.Toolkit.Editor.API
             //     var vrBundleData = await GetByte(vrBundlePath);
             //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Vr, vrBundleData, option.BundleKey, ""));
             // }
-
-
-            Debug.Log(JsonConvert.SerializeObject(bundleData, Formatting.Indented));
-            Debug.Log(JsonConvert.SerializeObject(form.Count));
-            
-            
+         
             var response = await Request<JPublishResponse>(new RequestHelper
             {
                 Method = "POST",
