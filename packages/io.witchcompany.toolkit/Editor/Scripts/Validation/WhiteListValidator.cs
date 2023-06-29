@@ -92,6 +92,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
             "UIGradient",
             "SoftMask",
             "GridLayoutGroup",
+            
+            // Rig 그룹
+            "RigBuilder",
+            "Rig",
+            "ChainIKConstraint",
         };
         public static ValidationReport ValidationCheck()
         {
