@@ -123,10 +123,6 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 
                 var result = BuildPipeline.BuildAssetBundles(path, option, target);
                 
-                // 삭제
-                File.Delete(path);
-                File.Delete(path + ".manifest");
-
                 return result.GetAllAssetBundles();
             }
             catch (Exception e)
