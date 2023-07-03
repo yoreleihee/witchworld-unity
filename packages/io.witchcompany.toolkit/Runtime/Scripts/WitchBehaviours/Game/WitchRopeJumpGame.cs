@@ -12,7 +12,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "즐거운 줄넘기~\n" +
                                               "1. Humanoid로 리깅된 NPC가 2마리 필요합니다. 손 끝에 ChainIK를 달아주세요..\n" +
                                               "1-2. NPC의 애니메이터는 int형으로 구성된 parameter가 있어야 합니다.\n" +
-                                              "2. FaceMats, SkyBoxTints는 는 3단계로 이루어져야 합니다. 노말, 빠름, 매우빠름\n" +
+                                              "2. FaceMats, SkyBoxTints는 는 4단계로 이루어져야 합니다. 노말, 빠름, 매우빠름, 미침\n" +
                                               "3. Rope는 전체 길이기 4여야 합니다.\n" +
                                               "4. ScoreText는 현재 점수가, StateText는 게임 진행상황이 표시됩니다.\n" +
                                               "5. JoinGameEffect는 게임 참가시, OutGameEffect는 줄에 걸릴 시 플레이됩니다.";
@@ -32,19 +32,23 @@ namespace WitchCompany.Toolkit.Module
 
         [field: Header("UI")]
         [field: SerializeField] public TMP_Text ScoreText { get; private set; }
-        [field: SerializeField] public TMP_Text StateText { get; private set; }
         
-        [field: Header("Effect")]
-        [field: SerializeField] public Color[] SkyBoxTints { get; private set; }
+        [field: Header("효과")]
         [field: SerializeField] public ParticleSystem JoinGameEffect { get; private set; }
         [field: SerializeField] public ParticleSystem JumpFailEffect { get; private set; }
+        [field: SerializeField] public RopeJumpComboEffect ComboEffects { get; private set; }
+        [field: SerializeField] public RopeJumpMessageData MessageData { get; private set; }
+        [field: SerializeField] public List<Material> SkyBoxMats { get; private set; }
         
         [field: Header("SE(필수 아님)")]
         [field: SerializeField] public AudioClip JoinGameSE { get; private set; }
         [field: SerializeField] public AudioClip StartGameSE { get; private set; }
         [field: SerializeField] public AudioClip JumpFailSE { get; private set; }
         [field: SerializeField] public AudioClip JumpSuccessSE { get; private set; }
-        [field: SerializeField] public AudioClip MadChichiSE { get; private set; }
+        [field: SerializeField] public AudioClip ReverseChichiSE { get; private set; }
+        [field: SerializeField] public AudioClip AngryChichiSE { get; private set; }
+        [field: SerializeField] public AudioClip CrazyChichiSE { get; private set; }
+        [field: SerializeField] public AudioClip ComboSE { get; private set; }
 
         [Serializable]
         public class Npc
@@ -60,10 +64,9 @@ namespace WitchCompany.Toolkit.Module
             if (transform.rotation != Quaternion.identity) return Error("회전값은 0이어야 합니다.");
             
             if (ScoreText == null) return NullError(nameof(ScoreText));
-            if (StateText == null) return NullError(nameof(StateText));
 
-            if (FaceMats.Count != 3) return Error("FaceMats 는 3단계로 이루어져야 합니다. 노말, 빠름, 매우빠름");
-            if (SkyBoxTints.Length != 3) return Error("SkyBoxTints는 3단계로 이루어져야 합니다. 노말, 빠름, 매우빠름");
+            if (FaceMats.Count != 4) return Error("FaceMats 는 4단계로 이루어져야 합니다. 노말, 빠름, 매우빠름, 미침");
+            //if (SkyBoxTints.Length != 3) return Error("SkyBoxTints는 3단계로 이루어져야 합니다. 노말, 빠름, 매우빠름");
 
             if (Rope == null)
                 return NullError(nameof(Rope));
@@ -118,7 +121,6 @@ namespace WitchCompany.Toolkit.Module
         private void OnValidate()
         {
             if(ScoreText) ScoreText.text = "000";
-            if(StateText) StateText.text =  "Starts In 3";
         }
 #endif
     }
