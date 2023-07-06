@@ -4,5 +4,7 @@
     {
         Water = 1,
         Honey,
+        HalfGravity,
+        LowGravity
     }
 }
