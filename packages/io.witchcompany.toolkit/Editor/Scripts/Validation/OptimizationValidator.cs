@@ -172,9 +172,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
         public static double GetTextureMB()
         {
             var foundTextures = new List<Texture>();
-            var renderers  = GameObject.FindObjectsOfType<Renderer>(true);
+            var renderers  = Object.FindObjectsOfType<Renderer>(true);
 
-            foreach (Renderer renderer in renderers)
+            foreach (var renderer in renderers)
             {
                 // 랜더러의 shardMaterial 배열 탐색
                 foreach (var material in renderer.sharedMaterials)
@@ -196,9 +196,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             // 텍스트 사이즈 계산 - 중복 제거
             double bytes = 0;
-            foreach (Texture texture in foundTextures.Distinct())
+            foreach (var texture in foundTextures.Distinct())
             {
-                long sizeInBytes = Profiler.GetRuntimeMemorySizeLong(texture);
+                var sizeInBytes = Profiler.GetRuntimeMemorySizeLong(texture);
+                //Debug.Log($"[Texture]{texture.name}: {sizeInBytes/1024f/1024f}MB", texture);
                 bytes += sizeInBytes;
             }
             
