@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Extension;
+using WitchCompany.Toolkit.Scripts.WitchBehaviours.Display.Enum;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
@@ -17,12 +19,16 @@ namespace WitchCompany.Toolkit.Module
         private Renderer mediaRenderer;
         [Header("유저 클릭에 반응할 콜라이더"), SerializeField]
         private Collider interactionCollider;
-        [Header("전시물 인덱스"), SerializeField]
+        [Header("전시물 인덱스"), SerializeField, ReadOnly]
         private int index;
-
+        
+        //23.07.07 추가 코드
+        [field: SerializeField] public bool IsNew { get; private set; }
+        [field: SerializeField] public DisplayType DisplayType { get; private set; }
+        
         public Renderer MediaRenderer => mediaRenderer;
         public Collider InteractionCollider => interactionCollider;
-        public int Index => index;
+        public int Index => !IsNew ? index : transform.GetSiblingIndex();
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
@@ -32,6 +38,9 @@ namespace WitchCompany.Toolkit.Module
 
             if (!transform.HasChild(mediaRenderer)) return ChildError(nameof(mediaRenderer));
             if (!transform.HasChild(interactionCollider)) return ChildError(nameof(interactionCollider));
+
+            //scale 변화를 주는 로직이 있기 때문에 static 체크
+            if (gameObject.isStatic) return StaticError(gameObject);
             
             return null;
         }

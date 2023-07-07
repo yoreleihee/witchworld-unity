@@ -29,6 +29,7 @@ namespace WitchCompany.Toolkit.Module
         protected ValidationError NotTriggerError(Collider col) => Error($"{name}의 {col.name}은 IsTrigger 체크될 수 없습니다.");
         protected ValidationError RayLayerError(GameObject target) =>
             Error($"{name}의 {target.name}의 레이어는 Ignore Raycast일 수 없습니다.");
+        protected ValidationError StaticError(GameObject target) => Error($"{name}의 static을 해제해야 합니다.");
 #endif
     }
 }
