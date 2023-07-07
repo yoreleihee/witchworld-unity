@@ -19,7 +19,7 @@ namespace WitchCompany.Toolkit
         [field: SerializeField] public Color LightColor { get; private set; }
         
         [field: Header("색상 변경 속도")]
-        [field: SerializeField] public float ChangeSpeed { get; private set; }
+        [field: SerializeField, Range(0.1f, 2f)] public float ChangeSpeed { get; private set; }
         
 #if UNITY_EDITOR
         public override ValidationReport ValidationCheckReport()

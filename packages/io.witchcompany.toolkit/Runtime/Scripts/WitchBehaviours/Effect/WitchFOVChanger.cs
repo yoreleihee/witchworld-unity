@@ -21,11 +21,16 @@ namespace WitchCompany.Toolkit
         public override string DocumentURL => "";
         public override int MaximumCount => 1;
 
-        [field: Header("FOV 각도")] 
-        [field: SerializeField] public SerializableDictionary<FOVOffset, float> FOVOffsets { get; private set; }
+        [field: Header("FOV 각도")]
+        //[field: SerializeField] public SerializableDictionary<FOVOffset, float> FOVOffsets { get; private set; }
+        public Dictionary<FOVOffset, float> FOVOffsets { get; private set; } = new Dictionary<FOVOffset, float>();
+        
+        [field: SerializeField] public float Narrow { get; private set; }
+        [field: SerializeField] public float Medium { get; private set; }
+        [field: SerializeField] public float Wide { get; private set; }
 
         [field: Header("전환 속도")] 
-        [field: SerializeField] public float ChangeSpeed { get; private set; }
+        [field: SerializeField, Range(0.1f, 2f)] public float ChangeSpeed { get; private set; }
 
         [HideInInspector] public UnityEvent<FOVOffset> onChangeFOV = new();
 
@@ -39,7 +44,7 @@ namespace WitchCompany.Toolkit
         {
             var report = new ValidationReport();
 
-            if (FOVOffsets == null || FOVOffsets.Count == 0)
+            if (Narrow == 0 || Medium == 0 || Wide == 0)
                 return report.Append(NullError($"{nameof(FOVOffsets)}"));
 
             return report;
