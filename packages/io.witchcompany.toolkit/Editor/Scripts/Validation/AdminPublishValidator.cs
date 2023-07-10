@@ -9,7 +9,7 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
-    public static class AdminPublishValidatior
+    public static class AdminPublishValidator
     {
         public static ValidationReport ValidationCheck()
         {

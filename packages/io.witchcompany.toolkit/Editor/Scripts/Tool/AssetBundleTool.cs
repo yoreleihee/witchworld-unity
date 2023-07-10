@@ -96,7 +96,6 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 if(platform.HasFlag(PlatformType.Ios))
                     result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTargetGroup.iOS,BuildTarget.iOS));
                 
-                    
                 
                 return result;
             }

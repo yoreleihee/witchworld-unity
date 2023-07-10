@@ -83,12 +83,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
             new ("Settings"),
         };
         
-        private static GUIContent[] adminToolbarLabels = new GUIContent[5]
+        private static GUIContent[] adminToolbarLabels = new GUIContent[6]
         {
             new ("Authentication"),
             new ("Validation"),
             new ("Publish"),
             new ("Admin"),
+            new("Product"),
             new ("Settings"),
         };
 
@@ -129,7 +130,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     CustomWindowSetting.ShowSetting();
                     break;
                 case ControlPanelType.Admin :
-                        CustomWindowAdmin.ShowAdmin();
+                    CustomWindowAdmin.ShowAdmin();
+                    break;
+                case ControlPanelType.Product :
+                    CustomWindowProduct.ShowProduct();
                     break;
                 default: break;
             }
