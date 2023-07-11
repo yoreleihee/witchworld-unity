@@ -6,7 +6,7 @@ namespace WitchCompany.Toolkit
     {
         [Header("기어 종류")]
         [SerializeField] private GearType gearType;
-        [Header("기어 장착 부위")]
+        [Header("비활성화 할 신체 부위")]
         [SerializeField] private SkinType skinType;
         
         public GearType GearType => gearType;
