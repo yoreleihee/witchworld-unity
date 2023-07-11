@@ -180,13 +180,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             if (GUILayout.Button("Publish"))
             {
-                var report = AdminPublishValidatior.ValidationCheck();
+                var report = AdminPublishValidator.ValidationCheck();
                 await DrawDisplayDialog(report, true);
             }
 
             if (GUILayout.Button("Update"))
             {
-                var report = AdminPublishValidatior.ValidationUpdateCheck();
+                var report = AdminPublishValidator.ValidationUpdateCheck();
                 await DrawDisplayDialog(report, false);
             }
         }
@@ -323,7 +323,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static string RankingAlertMsg()
         {
-            var dataManager = AdminPublishValidatior.ValidateDataManager();
+            var dataManager = AdminPublishValidator.ValidateDataManager();
             var keyStr = new StringBuilder();
             var message =  "랭킹보드를 사용하지 않습니다. 진행하시겠습니까?";
 

@@ -13,7 +13,9 @@
         Publish = 2,
         // 어드민 패널
         Admin = 3,
+        // 상품 패널
+        Product = 4,
         // 설정 패널
-        Config = 4
+        Config = 5
     }
 }

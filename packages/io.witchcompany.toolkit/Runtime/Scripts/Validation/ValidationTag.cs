@@ -24,6 +24,8 @@
         public const string TagBadObject = "Bad Object";
         public const string TagBatchingStatic = "Batching Static";
         
+        // 상품 검사
+        public const string TagProduct = "Product";
         
         // 기타
         public const string TagDialogue = "Dialogue";
