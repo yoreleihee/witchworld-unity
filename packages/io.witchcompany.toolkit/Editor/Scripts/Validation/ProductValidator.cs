@@ -24,10 +24,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
             var fileSize = AssetTool.GetFileSizeByte(ProductConfig.PrefabPath);
             
-            if (fileSize > ProductConfig.MaxProductKB)
+            if (fileSize > ProductConfig.MaxProductSizeKb * 1024)
             {
                 var error = new ValidationError(string.Format(FileSizeErrorMsg, fileSize,
-                    ProductConfig.MaxProductKB), ValidationTag.TagProduct, ProductConfig.Prefab);
+                    ProductConfig.MaxProductSizeKb), ValidationTag.TagProduct, ProductConfig.Prefab);
 
                 report.Append(error);
             }

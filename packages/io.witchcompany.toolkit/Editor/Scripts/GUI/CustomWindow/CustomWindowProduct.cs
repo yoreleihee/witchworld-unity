@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -53,7 +54,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 {
                     if (ProductConfig.Prefab != null)
                     {
-                        EditorGUILayout.LabelField("File", $"{AssetTool.GetFileSizeByte(ProductConfig.PrefabPath)} / {ProductConfig.MaxProductKB} KB");
+                        var bytes = AssetTool.GetFileSizeByte(ProductConfig.PrefabPath);
+                        var sizeKB = Math.Round((double)bytes / 1024, 3);
+                        EditorGUILayout.LabelField("File Size", $"{sizeKB} / {ProductConfig.MaxProductSizeKb} KB");
                     }
                 }
             }
