@@ -9,7 +9,8 @@ namespace WitchCompany.Toolkit.Module.Dialogue
     {
         public override string BehaviourName => "전시: 대화";
         public override string Description => "NPC와 대화할 수 있는 기능입니다.\n" +
-                                              "WitchPointerEvent가 필요합니다.\n";
+                                              "WitchPointerEvent가 필요합니다.\n" +
+                                              "NPC 이름은 공백포함 12글자를 넘길 수 없습니다.";
         public override string DocumentURL => "";
         public override int MaximumCount => 10;
 
@@ -41,6 +42,8 @@ namespace WitchCompany.Toolkit.Module.Dialogue
                 return report.Append(NullError(nameof(CamPos)));
             if(GetComponent<WitchPointerEvent>() == null)
                 return report.Append(NullError(nameof(WitchPointerEvent)));
+            if (NpcNameKr.Length > 12 || NpcNameEn.Length > 12)
+                return report.Append(Error("NPC 이름은 공백포함 12글자를 넘길 수 없습니다."));
 
             var list = new List<WitchDialogueSOBase>();
             InitialDialogue.ValidationCheck(ref report, ref list);
