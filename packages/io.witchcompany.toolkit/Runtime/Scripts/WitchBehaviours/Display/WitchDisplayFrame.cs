@@ -13,7 +13,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "유저가 사진,움짤,영상 등을 등록하여 전시할 수 있는 액자입니다.\n" +
                                               "프레임 오브젝트의 X : Y = 1 : 1 로 해야 합니다.";
         public override string DocumentURL => "";
-        public override int MaximumCount => 31;
+        public override int MaximumCount => 40;
 
         [Header("사진,움짤,영상 등이 그려질 랜더러"), SerializeField] 
         private Renderer mediaRenderer;
@@ -43,6 +43,16 @@ namespace WitchCompany.Toolkit.Module
             if (gameObject.isStatic) return StaticError(gameObject);
             
             return null;
+        }
+
+        private void OnValidate()
+        {
+            if (IsNew) index = transform.GetSiblingIndex();
+        }
+
+        private void Reset()
+        {
+            if (IsNew) index = transform.GetSiblingIndex();
         }
 #endif
     }
