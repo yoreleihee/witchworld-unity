@@ -1,12 +1,13 @@
-﻿using UnityEngine.Serialization;
+﻿using System.Collections.Generic;
 
 namespace WitchCompany.Toolkit.Editor.DataStructure
 {
     [System.Serializable]
-    public class JBlock
+    public class JUnityKeyData
     {
         public string pathName;
         public string theme;
-        public string platform;
+        public int capacity;
+        public List<JUnityKeyDetail> unityKeyDetail;
     }
 }

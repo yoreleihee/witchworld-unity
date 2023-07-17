@@ -13,6 +13,10 @@ namespace WitchCompany.Toolkit.Editor.Validation
 {
     public static class ScriptRuleValidator
     {
+        
+        
+        
+        
         /// <summary>
         /// 위치월드 스크립트 룰 관련 유효성 검사
         /// - 블록 옵션 검증
@@ -28,7 +32,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 .Append(ValidateBlockOption(option))
                 .Append(ValidateHierarchy(scene))
                 .Append(ValidateWitchBehaviours(scene))
-                .Append(ValidateMissingComponents(scene));
+                .Append(ValidateMissingScripts(scene));
         }
 
         private static string ValidateBlockOption(BlockPublishOption option)
@@ -109,7 +113,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         }
 
 
-        private static ValidationReport ValidateMissingComponents(Scene scene)
+        private static ValidationReport ValidateMissingScripts(Scene scene)
         {
             var report = new ValidationReport();
             

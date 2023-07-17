@@ -24,6 +24,9 @@
         public const string TagBadObject = "Bad Object";
         public const string TagBatchingStatic = "Batching Static";
         
+        // 필수 컴포넌트 검사
+        public const string TagEssentialList = "Essential Component";
+        
         // 상품 검사
         public const string TagProduct = "Product";
         

@@ -2,6 +2,8 @@
 {
     public enum BundleTheme
     {
-        Outdoor = 0, Indoor
+        Game,
+        Store,
+        Social
     }
 }

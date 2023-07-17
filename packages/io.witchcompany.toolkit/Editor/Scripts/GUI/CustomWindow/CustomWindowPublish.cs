@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +8,7 @@ using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
+using WitchCompany.Toolkit.Editor.Validation;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
@@ -21,9 +21,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             AssetBundleConfig.Standalone,
             AssetBundleConfig.Webgl,
             AssetBundleConfig.WebglMobile,
-            AssetBundleConfig.Android,
-            AssetBundleConfig.Ios,
-            AssetBundleConfig.Vr
+            // AssetBundleConfig.Android,
+            // AssetBundleConfig.Ios,
+            // AssetBundleConfig.Vr
         };
 
         private static PlatformType[] platformTypes =
@@ -54,7 +54,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         public static BlockPublishOption GetOption()
         {
-            return new BlockPublishOption { targetScene = PublishConfig.Scene, theme = PublishConfig.Theme};
+            return new BlockPublishOption
+            {
+                targetScene = PublishConfig.Scene,
+                theme = PublishConfig.Theme,
+            };
         }
 
         /// <summary>
@@ -80,6 +84,17 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     }
                 }
             }
+
+            using (new GUILayout.HorizontalScope())
+            {
+                EditorGUILayout.LabelField("Thumbnail", PublishConfig.ThumbnailPath, EditorStyles.textField);
+                if (GUILayout.Button("Select", GUILayout.Width(100)))
+                {
+                    PublishConfig.ThumbnailPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "jpg");
+                    
+                }
+            } 
+            
             using (var check = new EditorGUI.ChangeCheckScope())
             {
                 var blockTheme = (BundleTheme)EditorGUILayout.EnumPopup("Theme", PublishConfig.Theme);
@@ -90,11 +105,30 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                var platformType = (PlatformType)EditorGUILayout.EnumFlagsField("Platform", PublishConfig.Platform);
-
+                var capacity = EditorGUILayout.IntField("Capacity (Max 20)", PublishConfig.Capacity);
+    
                 if (check.changed)
-                    PublishConfig.Platform = platformType;
+                    PublishConfig.Capacity = capacity <= 20 ? capacity : 20;
             } 
+            
+            // // 게임 블록 난이도
+            // if (PublishConfig.Theme == BundleTheme.Game)
+            // {
+            //     // 난이도
+            //     using var check = new EditorGUI.ChangeCheckScope();
+            //     var blockLevel = (BlockLevel)EditorGUILayout.EnumPopup("Level", PublishConfig.Level);
+            //
+            //     if (check.changed)
+            //         PublishConfig.Level = blockLevel;
+            // }
+            
+            // using (var check = new EditorGUI.ChangeCheckScope())
+            // {
+            //     var platformType = (PlatformType)EditorGUILayout.EnumFlagsField("Platform", PublishConfig.Platform);
+            //
+            //     if (check.changed)
+            //         PublishConfig.Platform = platformType;
+            // } 
 
             EditorGUILayout.EndVertical();
         }
@@ -118,10 +152,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 
             if (buildReport.result == JBuildReport.Result.Success)
             {
-                // 썸네일 캡쳐
-                var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, GetOption().ThumbnailKey);
-                CaptureTool.CaptureAndSave(thumbnailPath);
-                    
                 // 업로드
                 EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
                     
@@ -138,46 +168,45 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static async UniTask<int> UploadBundle()
         {
             var option = GetOption();
-            var manifests = new Dictionary<string, JManifest>();
-            var hasTypes = new List<string>();
-            for(var i = 0; i < platformTypes.Length; i++)
+            var manifests = new List<JManifest>();
+            foreach (var bundleType in bundleTypes)
             {
-                if(PublishConfig.Platform.HasFlag(platformTypes[i]))
-                    hasTypes.Add(bundleTypes[i]);
-
                 var manifest = new JManifest();
-                var crc = AssetBundleTool.ReadManifest(bundleTypes[i], option.BundleKey);
+                var crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey);
                 if (crc != null)
                 {
+                    manifest.bundleType = bundleType;
                     manifest.unityVersion = ToolkitConfig.UnityVersion;
                     manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion;
                     manifest.crc = crc;
                 }
-                manifests.Add(bundleTypes[i], manifest);
+                manifests.Add(manifest);
             }
 
             var response = await WitchAPI.UploadBundle(option, manifests);
-
-            DeleteFile(hasTypes, option);
+            
+            DeleteFile(option);
 
             return response;
         }
 
-        private static void DeleteFile(List<string> hasTypes, BlockPublishOption option)
+        private static void DeleteFile(BlockPublishOption option)
         {
             // 번들 파일 삭제
-            foreach (var type in hasTypes)
+            foreach (var type in bundleTypes)
             {
                 var bundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, type, option.BundleKey);
                 var manifestPath = bundlePath + ".manifest";
                 
+                var typePath = Path.Combine(AssetBundleConfig.BundleExportPath, type, type);
+                var typeManifestPath = typePath + ".manifest";
+                
                 File.Delete(bundlePath);
                 File.Delete(manifestPath);
+                
+                File.Delete(typePath);
+                File.Delete(typeManifestPath);
             }
-            
-            // 썸네일 삭제
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
-            File.Delete(thumbnailPath);
         }
 
         /// <summary>

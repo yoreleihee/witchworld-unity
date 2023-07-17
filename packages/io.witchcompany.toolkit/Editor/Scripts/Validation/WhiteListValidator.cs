@@ -101,8 +101,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         public static ValidationReport ValidationCheck()
         {
             var report = new ValidationReport();
-            
             var allTransforms = GameObject.FindObjectsOfType<Transform>(true);
+            
             // 오브젝트 단위
             foreach (var tr in allTransforms)
             {
@@ -124,12 +124,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
                         fullType = fullType.BaseType;
                     }
 
-                    if (fullType == null)
-                    {
-                        var typeName = c.GetType().FullName.Split(".")[^1];
-                        var error = new ValidationError($"Object : {c.name}\n{typeName} 컴포넌트는 배치할 수 없습니다.", ValidationTag.TagComponent, c);
-                        report.Append(error);
-                    }
+                    if (fullType != null) continue;
+                    
+                    var typeName = c.GetType().FullName.Split(".")[^1];
+                    var error = new ValidationError($"Object : {c.name}\n{typeName} 컴포넌트는 배치할 수 없습니다.", ValidationTag.TagComponent, c);
+                    report.Append(error);
                 }
             }
             

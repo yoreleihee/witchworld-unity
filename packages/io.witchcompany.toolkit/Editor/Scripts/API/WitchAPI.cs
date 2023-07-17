@@ -10,6 +10,7 @@ using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.DataStructure.Admin;
 using WitchCompany.Toolkit.Editor.Tool;
+using WitchCompany.Toolkit.Editor.Validation;
 
 namespace WitchCompany.Toolkit.Editor.API
 {
@@ -113,106 +114,84 @@ namespace WitchCompany.Toolkit.Editor.API
         /// 유니티 키 생성 (번들 업로드)
         /// 성공(1), 실패(-1), pathName 중복(-2)
         /// </summary>
-        public static async UniTask<int> UploadBundle(BlockPublishOption option, Dictionary<string, JManifest> manifests)
+        public static async UniTask<int> UploadBundle(BlockPublishOption option, List<JManifest> manifests)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
             
-            var blockData = new JBlock
+            var blockData = new JUnityKeyData
             {
                 pathName = option.Key,
                 theme = option.theme.ToString().ToLower(),
+                capacity = PublishConfig.Capacity,
+                unityKeyDetail = BlockDataValidator.GetBlockData()
             };
 
             var bundleData = new JBundle
             {
                 blockData = blockData,
-                standalone = new JBundleData{manifest = manifests[AssetBundleConfig.Standalone]},
-                webgl = new JBundleData{manifest = manifests[AssetBundleConfig.Webgl]},
-                webglMobile = new JBundleData{manifest = manifests[AssetBundleConfig.WebglMobile]},
-                android = new JBundleData{manifest = manifests[AssetBundleConfig.Android]},
-                ios = new JBundleData{manifest = manifests[AssetBundleConfig.Ios]},
-                // vr = new JBundleData{manifest = manifests[AssetBundleConfig.Vr]},
+                bundleInfoList = manifests
             };
             
             // Json
-            var jsonBundleData = JsonConvert.SerializeObject(bundleData);
-
+            var jsonData = JsonConvert.SerializeObject(bundleData);
             
             // thumbnail
-            var thumbnailPath = Path.Combine(AssetBundleConfig.BundleExportPath, option.ThumbnailKey);
-            var thumbnailData = await File.ReadAllBytesAsync(thumbnailPath);
+            var thumbnailData = await File.ReadAllBytesAsync(PublishConfig.ThumbnailPath);
 
-            var form = new List<IMultipartFormSection>
-            {
-                new MultipartFormDataSection("json", jsonBundleData, "application/json"),
-                new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg"),
-            };
-            
             // bundle
             var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
             var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Webgl, option.BundleKey);
             var webglMobileBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebglMobile, option.BundleKey);
-            var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
-            var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
-            var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
-            var platform = PublishConfig.Platform;
             
-            if (platform.HasFlag(PlatformType.Standalone))
+            var standaloneBundleData = await GetByte(standaloneBundlePath);
+            var webglBundleData = await GetByte(webglBundlePath);
+            var webglMobileBundleData = await GetByte(webglMobileBundlePath);
+            
+            var form = new List<IMultipartFormSection>
             {
-                var standaloneBundleData = await GetByte(standaloneBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""));
-                Debug.Log("standalone 번들 업로드");
-            }
+                new MultipartFormDataSection("json", jsonData, "application/json"),
+                new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg"),
+                new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""),
+                new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, "")
+            };
 
-            if (platform.HasFlag(PlatformType.Webgl))
-            {
-                var webglBundleData = await GetByte(webglBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""));
-                Debug.Log("webgl 번들 업로드");
-            }
+            #region Android, Ios, Vr 주석
 
-            if (platform.HasFlag(PlatformType.WebglMobile))
-            {
-                var webglMobileBundleData = await GetByte(webglMobileBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, ""));
-                Debug.Log("webgl mobile 번들 업로드");
-            }
+            // var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
+            // var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
+            // var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
+            
+            // var androidBundleData = await GetByte(androidBundlePath);
+            // form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
+            // Debug.Log("Android 번들 업로드");
+            //
+            // var iosBundleData = await GetByte(iosBundlePath);
+            // form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
+            // Debug.Log("iOS 번들 업로드");
+            //
+            // var vrBundleData = await GetByte(vrBundlePath);
+            // form.Add(new MultipartFormFileSection(AssetBundleConfig.Vr, vrBundleData, option.BundleKey, ""));
+            
 
-            if (platform.HasFlag(PlatformType.Android))
-            {
-                var androidBundleData = await GetByte(androidBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
-                Debug.Log("Android 번들 업로드");
-            }
+            #endregion
             
-            if (platform.HasFlag(PlatformType.Ios))
-            {
-                var iosBundleData = await GetByte(iosBundlePath);
-                form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
-                Debug.Log("iOS 번들 업로드");
-            }
-            
-            
-            // if (platform.HasFlag(PlatformType.Vr))
-            // {
-            //     var vrBundleData = await GetByte(vrBundlePath);
-            //     form.Add(new MultipartFormFileSection(AssetBundleConfig.Vr, vrBundleData, option.BundleKey, ""));
-            // }
-         
-            var response = await Request<JPublishResponse>(new RequestHelper
+            var response = await Request<JBundle>(new RequestHelper
             {
                 Method = "POST",
-                Uri = ApiConfig.URL("v2/toolkits/unity-key"),
+                Uri = ApiConfig.URL("v3/toolkits/unity-key"),
                 Headers = ApiConfig.TokenHeader(auth.accessToken),
                 FormSections = form
             });
-
+            
+            Debug.Log(JsonConvert.SerializeObject(response, Formatting.Indented));
+            
             if (response.statusCode == 200) return 1;
             if (response.statusCode == 409) return -2;
             return -1;
         }
-
+        
         /// <summary> 유니티 키 리스트 조회 </summary>
         public static async UniTask<List<JUnityKey>> GetUnityKeys(int page, int limit)
         {
@@ -233,7 +212,7 @@ namespace WitchCompany.Toolkit.Editor.API
         /// 유니티 키로 블록 생성
         /// 성공(blockId), 실패(-1), pathName 중복(-2)
         /// </summary>
-        public static async UniTask<int> UploadBlock(JBlockData blockData)
+        public static async UniTask<int> UploadBlock(DataStructure.Admin.JBlockData blockData)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
@@ -250,7 +229,7 @@ namespace WitchCompany.Toolkit.Editor.API
             if(thumbnailData != null)
                 form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
             
-            var response = await Request<JBlockData>(new RequestHelper
+            var response = await Request<DataStructure.Admin.JBlockData>(new RequestHelper
             {
                 Method = "POST",
                 Uri = ApiConfig.URL("v2/toolkits/blocks"),
@@ -267,7 +246,7 @@ namespace WitchCompany.Toolkit.Editor.API
         /// 블록 정보 수정
         /// </summary>
         /// <param name="blockData"></param>
-        public static async UniTask<bool> UpdateBlockData(JBlockData blockData)
+        public static async UniTask<bool> UpdateBlockData(DataStructure.Admin.JBlockData blockData)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return false;
@@ -284,7 +263,7 @@ namespace WitchCompany.Toolkit.Editor.API
             if(thumbnailData != null)
                 form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
 
-            var response = await Request<JBlockData>(new RequestHelper
+            var response = await Request<DataStructure.Admin.JBlockData>(new RequestHelper
             {
                 Method = "POST",
                 Uri = ApiConfig.URL("v2/blocks/update/blockdata"),

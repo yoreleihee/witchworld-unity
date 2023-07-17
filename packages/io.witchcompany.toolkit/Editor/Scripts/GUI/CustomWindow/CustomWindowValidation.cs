@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Validation;
 using WitchCompany.Toolkit.Validation;
@@ -43,11 +44,16 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static async UniTask ValidationCheck()
         {
+            var task = AwaitValidator.ValidationCheck();
+            
             validationReport = OptimizationValidator.ValidationCheck();
             validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
             validationReport.Append(ObjectValidator.ValidationCheck());
             validationReport.Append(WhiteListValidator.ValidationCheck());
-            validationReport.Append(await AwaitValidator.ValidationCheck());
+            validationReport.Append(EssentialComponentValidator.ValidationCheck());
+            validationReport.Append(await task);
+
+            // BlockDataValidator.GetBlockData();
         }
 
 
