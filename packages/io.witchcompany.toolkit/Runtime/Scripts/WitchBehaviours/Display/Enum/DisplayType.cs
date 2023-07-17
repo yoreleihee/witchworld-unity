@@ -1,8 +1,13 @@
-namespace WitchCompany.Toolkit.Scripts.WitchBehaviours.Display.Enum
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace WitchCompany.Toolkit.Module
 {
     public enum DisplayType
     {
-        Picture = 0,
-        Video
+        Square = 0,
+        NineToSixteen,
+        SixteenToNine
     }
 }

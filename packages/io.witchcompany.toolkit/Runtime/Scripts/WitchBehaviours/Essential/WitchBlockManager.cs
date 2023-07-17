@@ -79,10 +79,57 @@ namespace WitchCompany.Toolkit.Module
         {
             if(!Application.isPlaying) FindWitchBehaviours();
             
+            SetDisplayIndex();
+            
         }
         private void Reset()
         {
             if(!Application.isPlaying) FindWitchBehaviours();
+            
+            SetDisplayIndex();
+        }
+
+        private void SetDisplayIndex()
+        {
+            Debug.Log("setIndex?");
+            //var displayFrames = FindObjectsOfType<WitchDisplayFrame>();
+            var displayFrames = GetComponentsInChildren<WitchDisplayFrame>();
+            Debug.Log(displayFrames.Length);
+            if(displayFrames.Length == 0) return;
+            
+            var pictures = new List<WitchDisplayFrame>();
+            var videos = new List<WitchDisplayFrame>();
+
+            foreach (var display in displayFrames)
+            {
+                 switch (display.MediaType)
+                 {
+                     case MediaType.Picture:
+                     {
+                         Debug.Log("pic?");
+                         pictures.Add(display);
+                         break;
+                     }
+                     case MediaType.Video:
+                     {
+                         videos.Add(display);
+                         break;
+                     }
+                 }
+            }
+
+            if(pictures.Count > 0)
+                for (int i = 0; i < pictures.Count; ++i)
+                {
+                    Debug.Log(i);
+                    pictures[i].SetIndex(i);
+                }
+
+            if(videos.Count > 0)
+                for (int i = 0; i < videos.Count; ++i)
+                {
+                    videos[i].SetIndex(i);
+                }
         }
 #endif
     }
