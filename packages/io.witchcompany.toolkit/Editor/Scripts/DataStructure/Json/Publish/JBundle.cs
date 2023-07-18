@@ -8,6 +8,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     public class JBundle
     {
         public JUnityKeyData blockData;
-        public List<JManifest> bundleList;
+        public List<JManifest> bundleInfoList;
     }
 }

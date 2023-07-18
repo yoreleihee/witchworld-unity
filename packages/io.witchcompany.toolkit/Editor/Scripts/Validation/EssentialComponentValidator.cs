@@ -23,7 +23,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             "WitchLeaderboard"
         };
-
         
         /// <summary> 필수 컴포넌트 검사 </summary>
         public static ValidationReport ValidationCheck()

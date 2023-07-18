@@ -131,7 +131,7 @@ namespace WitchCompany.Toolkit.Editor.API
             var bundleData = new JBundle
             {
                 blockData = blockData,
-                bundleList = manifests
+                bundleInfoList = manifests
             };
             
             // Json
@@ -186,8 +186,6 @@ namespace WitchCompany.Toolkit.Editor.API
                 FormSections = form
             });
             
-            Debug.Log(JsonConvert.SerializeObject(response, Formatting.Indented));
-            
             if (response.statusCode == 200) return 1;
             if (response.statusCode == 409) return -2;
             return -1;
@@ -213,7 +211,7 @@ namespace WitchCompany.Toolkit.Editor.API
         /// 유니티 키로 블록 생성
         /// 성공(blockId), 실패(-1), pathName 중복(-2)
         /// </summary>
-        public static async UniTask<int> UploadBlock(DataStructure.Admin.JBlockData blockData)
+        public static async UniTask<int> UploadBlock(JBlockData blockData)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
