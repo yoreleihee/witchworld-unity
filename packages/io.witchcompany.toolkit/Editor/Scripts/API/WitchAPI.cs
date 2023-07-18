@@ -131,7 +131,7 @@ namespace WitchCompany.Toolkit.Editor.API
             var bundleData = new JBundle
             {
                 blockData = blockData,
-                bundleInfoList = manifests
+                bundleList = manifests
             };
             
             // Json

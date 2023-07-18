@@ -8,13 +8,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     public class JBundle
     {
         public JUnityKeyData blockData;
-        [JsonProperty("bundleList")]
-        public List<JManifest> bundleInfoList;
-        // public JBundleData standalone;
-        // public JBundleData webgl;
-        // public JBundleData webglMobile;
-        // public JBundleData android;
-        // public JBundleData ios;
-        // public JBundleData vr;
+        public List<JManifest> bundleList;
     }
 }
