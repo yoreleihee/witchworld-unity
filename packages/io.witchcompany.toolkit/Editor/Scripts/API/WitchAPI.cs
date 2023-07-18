@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
@@ -124,7 +125,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 pathName = option.Key,
                 theme = option.theme.ToString().ToLower(),
                 capacity = PublishConfig.Capacity,
-                unityKeyDetail = BlockDataValidator.GetBlockData()
+                unityKeyDetail = AssetDataValidator.GetAssetData().Values.ToList()
             };
 
             var bundleData = new JBundle

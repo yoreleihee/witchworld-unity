@@ -17,6 +17,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
         {
             DrawSceneVital();
             GUILayout.Space(10);
+            DrawAssetVital();
+            GUILayout.Space(10);
 
             if (GUILayout.Button("Check"))
             {
@@ -38,6 +40,22 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.LabelField("Unique Material", OptimizationValidator.GetUniqueMaterialCount().ToString());
             EditorGUILayout.LabelField("Texture", OptimizationValidator.GetTextureMB()+ " MB");
             EditorGUILayout.LabelField("Light Map", OptimizationValidator.GetLightMapMB()+ " MB");
+
+            EditorGUILayout.EndVertical();
+        }
+
+        private static void DrawAssetVital()
+        {
+            GUILayout.Label("Asset Vital", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("box");
+
+            var assetData = AssetDataValidator.GetAssetData();
+            
+            EditorGUILayout.LabelField("Art", assetData["art"].count.ToString());
+            EditorGUILayout.LabelField("Video", assetData["video"].count.ToString());
+            EditorGUILayout.LabelField("Doodling", assetData["doodling"].count.ToString());
+            EditorGUILayout.LabelField("Posting", assetData["posting"].count.ToString());
+            EditorGUILayout.LabelField("Ranking", assetData["ranking"].count.ToString());
 
             EditorGUILayout.EndVertical();
         }

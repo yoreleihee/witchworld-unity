@@ -1,29 +1,31 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Module;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
-    public static class BlockDataValidator
+    public static class AssetDataValidator
     {
-        public static List<JUnityKeyDetail> GetBlockData()
+        private static JUnityKeyDetail art = new("art");
+        private static JUnityKeyDetail video = new("video");
+        private static JUnityKeyDetail posting = new("posting");
+        private static JUnityKeyDetail doodling = new("doodling");
+        private static JUnityKeyDetail ranking = new("ranking");
+        
+        private static Dictionary<string, JUnityKeyDetail> assetData = new ()
         {
-            var art = new JUnityKeyDetail("art");
-            var video = new JUnityKeyDetail("video");
-            var posting = new JUnityKeyDetail("posting");
-            var doodling = new JUnityKeyDetail("doodling");
-            var  ranking = new JUnityKeyDetail("ranking");
-            
-            var unityKeyDetails = new List<JUnityKeyDetail>()
-            {
-                art,
-                video,
-                doodling,
-                posting,
-                ranking
-            };
+            {"art", art},
+            {"video", video},
+            {"posting", posting},
+            {"doodling", doodling},
+            {"ranking", ranking},
+        };
+        
+        public static Dictionary<string, JUnityKeyDetail> GetAssetData()
+        {
+            Initialize();
             
             var transforms = GameObject.FindObjectsOfType<Transform>(true);
 
@@ -41,23 +43,24 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 }
                 // 낙서장
                 if (transform.TryGetComponent(out WitchPaintWall paintWall))
-                {
                     doodling.count++;
-                }
                 
                 // 포스트잇
                 if (transform.TryGetComponent(out WitchPostItWall postItWall))
-                {
                     posting.count++;
-                }
+                
                 // 랭킹보드
                 if (transform.TryGetComponent(out WitchLeaderboard leaderboard))
-                {
                     ranking.count++;
-                }
             }
             
-            return unityKeyDetails;
+            return assetData;
+        }
+
+        private static void Initialize()
+        {
+            foreach (var key in assetData.Keys.ToList())
+                assetData[key].count = 0;
         }
     }
 }
