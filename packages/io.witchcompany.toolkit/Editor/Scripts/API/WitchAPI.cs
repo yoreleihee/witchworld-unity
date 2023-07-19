@@ -110,11 +110,12 @@ namespace WitchCompany.Toolkit.Editor.API
             var bytes = await File.ReadAllBytesAsync(filePath);
             return bytes;
         }
-        
+
         /// <summary>
         /// 유니티 키 생성 (번들 업로드)
         /// 성공(1), 실패(-1), pathName 중복(-2)
         /// </summary>
+        ///
         public static async UniTask<int> UploadBundle(BlockPublishOption option, List<JManifest> manifests)
         {
             var auth = AuthConfig.Auth;

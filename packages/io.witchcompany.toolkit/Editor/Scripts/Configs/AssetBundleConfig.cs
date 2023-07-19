@@ -26,8 +26,9 @@ namespace WitchCompany.Toolkit.Editor.Configs
         public const string FailedKeyMsg = "Upload Failed\n\n블록을 서버에 업로드했으나 랭킹보드의 key를 업로드하지 못했습니다. 개발팀에게 문의주세요";
         public const string FailedStatusMsg = "Upload Failed\n\n블록을 서버에 업로드했으나 블록의 접속 상태를 변경하지 못했습니다. 개발팀에게 문의주세요";
         public const string PermissionMsg = "Upload Failed\n\n블록 업로드 권한이 없습니다";
+        public const string ThumbnailMsg = "Upload Failed\n\n썸네일을 지정 후 다시 시도해주세요";
         public const string AuthMsg = "Upload Failed\n\n로그인 후 다시 시도해주세요";
-        public const string SuccessUpdateMsg = "Update Success\n\n블록 정보를 업데이트했습니다.";
-        public const string FailedUpdateMsg = "Update Failed\n\n블록 정보 업데이트를 실패했습니다.";
+        public const string SuccessUpdateMsg = "Update Success\n\n블록 정보를 업데이트했습니다";
+        public const string FailedUpdateMsg = "Update Failed\n\n블록 정보 업데이트를 실패했습니다";
     }
 }

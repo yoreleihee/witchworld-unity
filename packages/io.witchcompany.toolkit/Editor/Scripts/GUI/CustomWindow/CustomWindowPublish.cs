@@ -144,7 +144,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
                 return;
             }
-
+            // 썸네일 확인
+            if (string.IsNullOrEmpty(PublishConfig.ThumbnailPath))
+            {
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", AssetBundleConfig.ThumbnailMsg, "OK");
+                return;
+            }
+            
             // 입력 제한
             CustomWindow.IsInputDisable = true;
             // 번들 추출
