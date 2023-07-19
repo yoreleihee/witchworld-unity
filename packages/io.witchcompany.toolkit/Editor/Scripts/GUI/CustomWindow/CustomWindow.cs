@@ -108,7 +108,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 if (check.changed)
                 {
                     if (!AuthConfig.Admin && (int)controlPanelType == 3)
-                        controlPanelType++;
+                        controlPanelType += 2;
                     
                     ToolkitConfig.CurrControlPanelType = controlPanelType;
                 }
