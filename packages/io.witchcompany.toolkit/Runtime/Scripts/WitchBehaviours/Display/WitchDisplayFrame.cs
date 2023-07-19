@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Extension;
-using WitchCompany.Toolkit.Scripts.WitchBehaviours.Display.Enum;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
@@ -11,7 +10,8 @@ namespace WitchCompany.Toolkit.Module
         // Information
         public override string BehaviourName => "전시: 액자";
         public override string Description => "유저가 사진,움짤,영상 등을 등록하여 전시할 수 있는 액자입니다.\n" +
-                                              "프레임 오브젝트의 X : Y = 1 : 1 로 해야 합니다.";
+                                              "전시 될 미디어 타입에서 사진인지 영상인지 구분해야합니다.\n" +
+                                              "프레입 타입에서 배치 될 오브젝트 형식을 정해줘야 합니다.";
         public override string DocumentURL => "";
         public override int MaximumCount => 40;
 
@@ -21,14 +21,22 @@ namespace WitchCompany.Toolkit.Module
         private Collider interactionCollider;
         [Header("전시물 인덱스"), SerializeField, ReadOnly]
         private int index;
-        
+
         //23.07.07 추가 코드
         [field: SerializeField] public bool IsNew { get; private set; }
+        
+        [field: Header("전시 될 미디어 타입")]
+        [field: SerializeField] public MediaType MediaType { get; private set; }
+        
+        [field: Header("프레임 타입")]
+        [field: SerializeField] public FrameType FrameType { get; private set; }
+        
+        [field: Header("디스플레이 타입")]
         [field: SerializeField] public DisplayType DisplayType { get; private set; }
         
         public Renderer MediaRenderer => mediaRenderer;
         public Collider InteractionCollider => interactionCollider;
-        public int Index => !IsNew ? index : transform.GetSiblingIndex();
+        public int Index => index;
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
@@ -45,14 +53,14 @@ namespace WitchCompany.Toolkit.Module
             return null;
         }
 
-        private void OnValidate()
+        public void SetIndex(int i)
         {
-            if (IsNew) index = transform.GetSiblingIndex();
-        }
-
-        private void Reset()
-        {
-            if (IsNew) index = transform.GetSiblingIndex();
+            if (IsNew)
+            {
+                Debug.Log($"setIndex !! { i }");
+                index = i;
+                Debug.Log(Index);
+            }
         }
 #endif
     }
