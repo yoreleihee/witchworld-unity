@@ -11,6 +11,8 @@ namespace WitchCompany.Toolkit.Editor.Configs
     {
         private const string Prefs_Email = "auth_email";
         private const string Prefs_Password = "auth_password";
+        private const string Prefs_Email_Dev = "auth_email_dev";
+        private const string Prefs_Password_Dev = "auth_password_dev";
         private const string Prefs_NickName = "auth_nick_name";
         private const string Prefs_LoginTime = "auth_login_time";
         private const string Prefs_Auth = "auth_auth";
@@ -27,6 +29,18 @@ namespace WitchCompany.Toolkit.Editor.Configs
         {
             get => EditorPrefs.GetString(Prefs_Password, "");
             set => EditorPrefs.SetString(Prefs_Password, value);
+        }
+        
+        public static string DevEmail
+        {
+            get => EditorPrefs.GetString(Prefs_Email_Dev, "");
+            set => EditorPrefs.SetString(Prefs_Email_Dev, value);
+        }
+        
+        public static string DevPassword
+        {
+            get => EditorPrefs.GetString(Prefs_Password_Dev, "");
+            set => EditorPrefs.SetString(Prefs_Password_Dev, value);
         }
         
         public static string NickName

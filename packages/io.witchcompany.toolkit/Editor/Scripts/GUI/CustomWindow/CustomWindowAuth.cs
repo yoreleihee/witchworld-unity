@@ -46,16 +46,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             EditorGUILayout.BeginVertical("box");
             
-            if (ToolkitConfig.DeveloperMode)
-            {
-                email = EditorGUILayout.TextField("E-Mail", "kmkim@witchcompany.io");
-                password = EditorGUILayout.PasswordField("Password", "Witch00!");
-            }
-            else
-            {
-                email = EditorGUILayout.TextField("E-Mail", email);
-                password = EditorGUILayout.PasswordField("Password", password);
-            }
+            // if (ToolkitConfig.DeveloperMode)
+            // {
+            //     AuthConfig.DevEmail = EditorGUILayout.TextField("E-Mail", AuthConfig.DevEmail);
+            //     AuthConfig.DevPassword = EditorGUILayout.PasswordField("Password", AuthConfig.DevPassword);
+            // }
+            // else
+            // {
+            //     AuthConfig.Email = EditorGUILayout.TextField("E-Mail", AuthConfig.Email);
+            //     AuthConfig.Password = EditorGUILayout.PasswordField("Password", AuthConfig.Password);
+            // }
+            
+            email = EditorGUILayout.TextField("E-Mail", email);
+            password = EditorGUILayout.PasswordField("Password", password);
+            
             
             EditorGUILayout.EndVertical();
 
@@ -89,8 +93,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static async void Login()
         {
             AuthConfig.LoginState = LoginState.Wait;
-            
+
             // 로그인
+            // email = ToolkitConfig.DeveloperMode ? AuthConfig.DevEmail : AuthConfig.Email;
+            // password = ToolkitConfig.DeveloperMode ? AuthConfig.DevPassword : AuthConfig.Password;
+            
             var auth = await WitchAPI.Login(AuthConfig.Email, AuthConfig.Password);
             
             if (auth == null)
@@ -124,8 +131,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // 로그아웃 상태로 변경
             AuthConfig.LoginState = LoginState.Logout;
             AuthConfig.Auth = new JAuth();
-            AuthConfig.Email = "";
-            AuthConfig.Password = "";
+            // AuthConfig.Email = "";
+            // AuthConfig.Password = "";
             AuthConfig.NickName = "";
             AuthConfig.LoginTime = "";
             AuthConfig.Admin = false;
