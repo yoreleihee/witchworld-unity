@@ -27,12 +27,10 @@ namespace WitchCompany.Toolkit.Module
         
         [field: Header("전시 될 미디어 타입")]
         [field: SerializeField] public MediaType MediaType { get; private set; }
-        
-        [field: Header("프레임 타입")]
-        [field: SerializeField] public FrameType FrameType { get; private set; }
-        
+
         [field: Header("디스플레이 타입")]
         [field: SerializeField] public DisplayType DisplayType { get; private set; }
+        
         
         public Renderer MediaRenderer => mediaRenderer;
         public Collider InteractionCollider => interactionCollider;
@@ -55,12 +53,17 @@ namespace WitchCompany.Toolkit.Module
 
         public void SetIndex(int i)
         {
-            if (IsNew)
-            {
-                //Debug.Log($"setIndex !! { i }");
-                index = i;
-                //Debug.Log(Index);
-            }
+            if (IsNew) index = i;
+            
+            //Debug.Log($"setIndex !! { i }");
+            //Debug.Log(Index);
+        }
+
+        private void OnValidate()
+        {
+            var blockManager = FindObjectOfType<WitchBlockManager>();
+            
+            blockManager.SetDisplayIndex();
         }
 #endif
     }

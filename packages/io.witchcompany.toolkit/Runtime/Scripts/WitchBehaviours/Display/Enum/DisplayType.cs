@@ -6,8 +6,12 @@ namespace WitchCompany.Toolkit.Module
 {
     public enum DisplayType
     {
-        Square = 0,
+        Flexible,
+        [InspectorName("1:1")]
+        Square,
+        [InspectorName("9:16")]
         NineToSixteen,
-        SixteenToNine
+        [InspectorName("16:9")]
+        SixteenToNine,
     }
 }

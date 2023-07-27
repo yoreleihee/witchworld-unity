@@ -78,18 +78,13 @@ namespace WitchCompany.Toolkit.Module
         private void OnValidate()
         {
             if(!Application.isPlaying) FindWitchBehaviours();
-            
-            SetDisplayIndex();
-            
         }
         private void Reset()
         {
             if(!Application.isPlaying) FindWitchBehaviours();
-            
-            SetDisplayIndex();
         }
 
-        private void SetDisplayIndex()
+        public void SetDisplayIndex()
         {
             //Debug.Log("setIndex?");
             //var displayFrames = FindObjectsOfType<WitchDisplayFrame>();
