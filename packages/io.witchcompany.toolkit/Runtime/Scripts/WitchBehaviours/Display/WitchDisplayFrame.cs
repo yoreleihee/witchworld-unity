@@ -57,9 +57,9 @@ namespace WitchCompany.Toolkit.Module
         {
             if (IsNew)
             {
-                Debug.Log($"setIndex !! { i }");
+                //Debug.Log($"setIndex !! { i }");
                 index = i;
-                Debug.Log(Index);
+                //Debug.Log(Index);
             }
         }
 #endif

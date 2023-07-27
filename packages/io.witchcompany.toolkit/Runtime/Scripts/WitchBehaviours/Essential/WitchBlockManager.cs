@@ -91,10 +91,10 @@ namespace WitchCompany.Toolkit.Module
 
         private void SetDisplayIndex()
         {
-            Debug.Log("setIndex?");
+            //Debug.Log("setIndex?");
             //var displayFrames = FindObjectsOfType<WitchDisplayFrame>();
             var displayFrames = GetComponentsInChildren<WitchDisplayFrame>();
-            Debug.Log(displayFrames.Length);
+            //Debug.Log(displayFrames.Length);
             if(displayFrames.Length == 0) return;
             
             var pictures = new List<WitchDisplayFrame>();
@@ -106,7 +106,7 @@ namespace WitchCompany.Toolkit.Module
                  {
                      case MediaType.Picture:
                      {
-                         Debug.Log("pic?");
+                         //Debug.Log("pic?");
                          pictures.Add(display);
                          break;
                      }
@@ -121,7 +121,7 @@ namespace WitchCompany.Toolkit.Module
             if(pictures.Count > 0)
                 for (int i = 0; i < pictures.Count; ++i)
                 {
-                    Debug.Log(i);
+                    //Debug.Log(i);
                     pictures[i].SetIndex(i);
                 }
 
