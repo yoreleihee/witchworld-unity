@@ -83,12 +83,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
             new ("Settings"),
         };
         
-        private static GUIContent[] adminToolbarLabels = new GUIContent[6]
+        private static GUIContent[] adminToolbarLabels = new GUIContent[5]
         {
             new ("Authentication"),
             new ("Validation"),
             new ("Publish"),
-            new ("Admin"),
+            // new ("Admin"),
             new("Product"),
             new ("Settings"),
         };
@@ -108,7 +108,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 if (check.changed)
                 {
                     if (!AuthConfig.Admin && (int)controlPanelType == 3)
-                        controlPanelType += 2;
+                        controlPanelType += 1;
                     
                     ToolkitConfig.CurrControlPanelType = controlPanelType;
                 }
@@ -126,12 +126,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 case ControlPanelType.Publish: 
                     CustomWindowPublish.ShowPublish();
                     break;
-                case ControlPanelType.Config : 
+                case ControlPanelType.Setting : 
                     CustomWindowSetting.ShowSetting();
                     break;
-                case ControlPanelType.Admin :
-                    CustomWindowAdmin.ShowAdmin();
-                    break;
+                // case ControlPanelType.Admin :
+                //     CustomWindowAdmin.ShowAdmin();
+                //     break;
                 case ControlPanelType.Product :
                     CustomWindowProduct.ShowProduct();
                     break;

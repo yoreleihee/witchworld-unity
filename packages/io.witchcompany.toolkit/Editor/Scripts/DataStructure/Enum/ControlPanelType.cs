@@ -11,11 +11,11 @@
         Validate = 1,
         // 빌드 패널
         Publish = 2,
-        // 어드민 패널
-        Admin = 3,
+        // // 어드민 패널
+        // Admin = 3,
         // 상품 패널
-        Product = 4,
+        Product = 3,
         // 설정 패널
-        Config = 5
+        Setting = 4
     }
 }
