@@ -1,7 +1,12 @@
 ﻿using System.Linq;
 using Cysharp.Threading.Tasks;
+using UnityEditor;
 using UnityEditor.PackageManager;
+using UnityEditor.PackageManager.Requests;
+using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
+using Progress = Cysharp.Threading.Tasks.Progress;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
@@ -13,14 +18,65 @@ namespace WitchCompany.Toolkit.Editor.Tool
     /// </summary>
     public static class PackageTool
     {
-        public static async UniTask<PackageInfo> GePackageInfo(string name)
+        private static ListRequest Request;
+        private static bool isRequesting = false;
+        
+        public static string GePackageInfo()
         {
-            //Client.Search()
+            if(isRequesting) return "0.1.72";
+
+            Debug.Log("Request!");
             
-            var listRequest = Client.List(true);
-            await UniTask.WaitUntil(() => listRequest.IsCompleted);
-            
-            return listRequest.Result.FirstOrDefault(p => p.name == name);
+            isRequesting = true;
+            Request = Client.List(true);    // List packages installed for the project
+            EditorApplication.update += Progress;
+
+            return "0.1.72";
+            // PackageInfo packageInfo = Client.("");
+            // Debug.Log("Package version: " + packageInfo.version);
+            //
+            // //Client.Search()
+            //
+            // var listRequest = Client.List(true);
+            // await UniTask.WaitUntil(() => listRequest.IsCompleted);
+            //
+            // return listRequest.Result.FirstOrDefault(p => p.name == name);
+        }
+
+        public static void Progress()
+        {
+            if (Request == null)
+            {
+                isRequesting = false;
+                return;
+            }
+
+            if (Request.IsCompleted)
+            {
+                if (Request.Status == StatusCode.Success)
+                {
+                    foreach (var package in Request.Result)
+                    {
+                        if(package.name != "io.witchcompany.toolkit")
+                             continue;
+                        
+                        var str =
+                            $"Package name: {package.name}\n" +
+                            $"Package id: {package.packageId}\n" +
+                            $"Package version: {package.version}\n" +
+                            $"lateset Versions: {package.versions.latest}\n" +
+                            $"lateset Versions: {package.versions.latestCompatible}\n" +
+                            $"lateset Versions: {package.versions.verified}\n";
+                        Debug.Log(str);
+                    }
+                }
+                else if (Request.Status >= StatusCode.Failure)
+                    Debug.LogError(Request.Error.message);
+
+                EditorApplication.update -= Progress;
+            }
+
+            isRequesting = false;
         }
     }
 }

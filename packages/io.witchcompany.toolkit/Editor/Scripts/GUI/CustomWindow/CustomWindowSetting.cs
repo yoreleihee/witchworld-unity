@@ -47,7 +47,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.BeginVertical("box");
             
             EditorGUILayout.LabelField("Editor", ToolkitConfig.UnityVersion);
-            EditorGUILayout.LabelField("Package", ToolkitConfig.WitchToolkitVersion);
+            EditorGUILayout.LabelField("Package", ToolkitConfig.WitchToolkitVersion.ToString());
             
             EditorGUILayout.EndVertical();
             

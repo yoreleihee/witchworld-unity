@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Module;
 
@@ -110,7 +111,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             _timeStamp = timeStamp;
 
             if (_currentBlockManager == null) _currentBlockManager = FindObjectOfType<WitchBlockManager>();
-            _currentBlockManager.FindWitchBehaviours();
+
+            _currentBlockManager.FindWitchBehaviours(ToolkitConfig.UnityVersion, ToolkitConfig.WitchToolkitVersion);
         }
 
         public override void OnInspectorGUI()

@@ -79,7 +79,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             // 블록 매니저를 찾고, WitchBehaviours 찾아서 저장
             var manager = scene.GetRootGameObjects()[0].GetComponent<WitchBlockManager>();
-            manager.FindWitchBehaviours();
+            manager.FindWitchBehaviours(ToolkitConfig.UnityVersion, ToolkitConfig.WitchToolkitVersion);
             EditorSceneManager.SaveOpenScenes();
             
             // 리포트 생성

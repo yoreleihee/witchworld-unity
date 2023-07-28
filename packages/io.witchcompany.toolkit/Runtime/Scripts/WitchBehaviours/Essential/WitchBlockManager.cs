@@ -18,9 +18,15 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "https://www.notion.so/witchcompany/WitchBlockManager-27694686287943d28baa4cfbf1803b28?pvs=4";
         public override int MaximumCount => 1;
 
-        [Header("읽기 전용")] 
+        [Header("정보")] 
+        [SerializeField, ReadOnly] private string unityVersion;
+        [SerializeField, ReadOnly] private string toolkitVersion;
+        [SerializeField, ReadOnly] private string updatedDateUtc;
+        
+        [Header("연결된 behaviours")]
         [SerializeField, ReadOnly] private List<WitchBehaviour> behaviours;
-        [SerializeField, ReadOnly] private WitchSpawnPoint spawnPoint;
+        
+        [SerializeField, HideInInspector] private WitchSpawnPoint spawnPoint;
 
         [Header("BGM")] 
         [SerializeField] private AudioClip defaultBGM;
@@ -33,13 +39,14 @@ namespace WitchCompany.Toolkit.Module
         public float GravityRatio => gravity;
         public Transform SpawnPoint => spawnPoint.transform;
         public List<WitchBehaviour> Behaviours => behaviours;
+        public string ToolkitVersion => toolkitVersion;
 
         public void Respawn() => respawnEvent.Invoke();
 
 #if UNITY_EDITOR
         /// <summary>위치 요소를 카운팅한 딕셔너리</summary>
-        public Dictionary<Type, (WitchBehaviour behaviour, int count)> BehaviourCounter;
-
+        public Dictionary<Type, (WitchBehaviour behaviour, int count)> BehaviourCounter { get; private set; }
+        
         public override ValidationError ValidationCheck()
         {
             if (spawnPoint == null) return NullError(nameof(spawnPoint));
@@ -52,19 +59,29 @@ namespace WitchCompany.Toolkit.Module
         }
 
         /// <summary>포함한 위치 요소를 모두 검색하고, 카운팅한다.</summary>
-        public void FindWitchBehaviours()
+        public void FindWitchBehaviours(string unityVer, string toolkitVer)
         {
-            if(Application.isPlaying) return; 
+            if(Application.isPlaying) return;
+
+            // 날짜 설정
+            unityVersion = unityVer;
+            toolkitVersion = toolkitVer;
+            updatedDateUtc = DateTime.UtcNow.ToString("s");
             
             // 요소 검색
             behaviours = transform.GetComponentsInChildren<WitchBehaviour>(true).ToList();
             behaviours.Remove(this);
 
+            // 스폰포인트 설정
             spawnPoint = behaviours.Find(x => x.GetType() == typeof(WitchSpawnPoint)) as WitchSpawnPoint;
             
-            // 요소 카운팅
+            // 카운터 초기화
             BehaviourCounter ??= new Dictionary<Type, (WitchBehaviour obj, int count)>();
             BehaviourCounter.Clear();
+
+            var displayPhotos = new List<WitchDisplayFrame>();
+            var displayVideos = new List<WitchDisplayFrame>();
+            
             foreach (var behaviour in behaviours)
             {
                 // 각 요소별 카운팅
@@ -73,58 +90,24 @@ namespace WitchCompany.Toolkit.Module
                     BehaviourCounter.Add(type, (behaviour, 1));
                 else
                     BehaviourCounter[type] = (behaviour, BehaviourCounter[type].count + 1);
-            }
-        }
-        private void OnValidate()
-        {
-            if(!Application.isPlaying) FindWitchBehaviours();
-        }
-        private void Reset()
-        {
-            if(!Application.isPlaying) FindWitchBehaviours();
-        }
 
-        public void SetDisplayIndex()
-        {
-            //Debug.Log("setIndex?");
-            //var displayFrames = FindObjectsOfType<WitchDisplayFrame>();
-            var displayFrames = GetComponentsInChildren<WitchDisplayFrame>();
-            //Debug.Log(displayFrames.Length);
-            if(displayFrames.Length == 0) return;
+                // DisplayFrame 카운팅
+                if (type == typeof(WitchDisplayFrame))
+                {
+                    var display = (WitchDisplayFrame) behaviour;
+                    if(display.MediaType == MediaType.Picture)
+                        displayPhotos.Add(display);
+                    else
+                        displayVideos.Add(display);
+                }
+            }
             
-            var pictures = new List<WitchDisplayFrame>();
-            var videos = new List<WitchDisplayFrame>();
-
-            foreach (var display in displayFrames)
-            {
-                 switch (display.MediaType)
-                 {
-                     case MediaType.Picture:
-                     {
-                         //Debug.Log("pic?");
-                         pictures.Add(display);
-                         break;
-                     }
-                     case MediaType.Video:
-                     {
-                         videos.Add(display);
-                         break;
-                     }
-                 }
-            }
-
-            if(pictures.Count > 0)
-                for (int i = 0; i < pictures.Count; ++i)
-                {
-                    //Debug.Log(i);
-                    pictures[i].SetIndex(i);
-                }
-
-            if(videos.Count > 0)
-                for (int i = 0; i < videos.Count; ++i)
-                {
-                    videos[i].SetIndex(i);
-                }
+            // 액자 인덱스 세팅
+            for (var i = 0; i < displayPhotos.Count; i++) 
+                displayPhotos[i].Editor_SetIndex(i);
+            //비디오 인덱스 세팅
+            for (var i = 0; i < displayVideos.Count; i++)
+                displayVideos[i].Editor_SetIndex(displayPhotos.Count + i);
         }
 #endif
     }

@@ -183,7 +183,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 {
                     manifest.bundleType = bundleType;
                     manifest.unityVersion = ToolkitConfig.UnityVersion;
-                    manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion;
+                    manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion.ToString();
                     manifest.crc = crc;
                 }
                 manifests.Add(manifest);

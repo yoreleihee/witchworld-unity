@@ -14,27 +14,25 @@ namespace WitchCompany.Toolkit.Module
                                               "프레입 타입에서 배치 될 오브젝트 형식을 정해줘야 합니다.";
         public override string DocumentURL => "";
         public override int MaximumCount => 40;
-
-        [Header("사진,움짤,영상 등이 그려질 랜더러"), SerializeField] 
-        private Renderer mediaRenderer;
-        [Header("유저 클릭에 반응할 콜라이더"), SerializeField]
-        private Collider interactionCollider;
+        
         [Header("전시물 인덱스"), SerializeField, ReadOnly]
         private int index;
+        public int Index => index;
 
-        //23.07.07 추가 코드
-        [field: SerializeField] public bool IsNew { get; private set; }
-        
         [field: Header("전시 될 미디어 타입")]
         [field: SerializeField] public MediaType MediaType { get; private set; }
 
         [field: Header("디스플레이 타입")]
         [field: SerializeField] public DisplayType DisplayType { get; private set; }
         
-        
+        [Header("사진,움짤,영상 등이 그려질 랜더러"), SerializeField] 
+        private Renderer mediaRenderer;
         public Renderer MediaRenderer => mediaRenderer;
+        
+        [Header("유저 클릭에 반응할 콜라이더"), SerializeField]
+        private Collider interactionCollider;
         public Collider InteractionCollider => interactionCollider;
-        public int Index => index;
+        
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
@@ -51,20 +49,7 @@ namespace WitchCompany.Toolkit.Module
             return null;
         }
 
-        public void SetIndex(int i)
-        {
-            if (IsNew) index = i;
-            
-            //Debug.Log($"setIndex !! { i }");
-            //Debug.Log(Index);
-        }
-
-        private void OnValidate()
-        {
-            var blockManager = FindObjectOfType<WitchBlockManager>();
-            
-            blockManager.SetDisplayIndex();
-        }
+        public void Editor_SetIndex(int id) => index = id;
 #endif
     }
 }

@@ -45,10 +45,16 @@ namespace WitchCompany.Toolkit.Editor.Configs
         public const string PackageName = "io.witchcompany.toolkit";
         
         // TODO: 툴킷 패키지 버전 가져오기 
-        //public static string WitchToolkitVersion => PackageTool.GePackageInfo(WitchToolkitPackageName);
-        public static string WitchToolkitVersion => "0.0.1";
+        // public static int WitchToolkitVersion
+        // {
+        //     get
+        //     {
+        //         PackageTool.GePackageInfo();
+        //         return 72;
+        //     }
+        // }
+        public static string WitchToolkitVersion => "0.1.72";
 
-        
         /// <summary> 문서 url </summary>
         public const string WitchToolkitDocumentUrl = "https://github.com/witchcompany/witchworld-unity/tree/main/packages/io.witchcompany.toolkit";
         
