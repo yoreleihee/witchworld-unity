@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit
     {
         public override string BehaviourName => "상품 : 기어 아이템";
         public override string Description => $"기어 아이템의 속성을 정할 수 있습니다.\n아바타의 신장은 gearType이 BodySuit일 때만 적용됩니다.";
-        public override string DocumentURL { get; }
+        public override string DocumentURL => "";
         
         [Header("기어 종류")]
         [SerializeField] private GearType gearType;
@@ -16,7 +16,7 @@ namespace WitchCompany.Toolkit
         [SerializeField] private SkinType skinType;
         [Header("아바타의 신장(m)"), Range(0.5f, 2f)]
         [SerializeField] private float height = 1f;
-        [Header("텍스처 커스마아징 가능 여부")]
+        [Header("텍스처 커스터마이징 가능 여부")]
         [SerializeField] private bool isCustomizableTexture;
 
         public GearType GearType => gearType;
