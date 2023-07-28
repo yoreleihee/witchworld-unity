@@ -12,7 +12,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "유저가 사진,움짤,영상 등을 등록하여 전시할 수 있는 액자입니다.\n" +
                                               "전시 될 미디어 타입에서 사진인지 영상인지 구분해야합니다.\n" +
                                               "프레입 타입에서 배치 될 오브젝트 형식을 정해줘야 합니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchDisplayFrame-e60b2c85dfc2437290f2327163f19ea4?pvs=4";
         public override int MaximumCount => 40;
         
         [Header("전시물 인덱스"), SerializeField, ReadOnly]
