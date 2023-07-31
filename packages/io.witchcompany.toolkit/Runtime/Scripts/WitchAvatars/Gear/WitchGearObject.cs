@@ -1,14 +1,13 @@
-using UnityEditor;
 using UnityEngine;
-using WitchCompany.Toolkit.Module;
 
 namespace WitchCompany.Toolkit
 {
-    public class WitchGearObject : WitchBehaviourUnique
+    [DisallowMultipleComponent]
+    public class WitchGearObject : MonoBehaviour
     {
-        public override string BehaviourName => "상품 : 기어 아이템";
-        public override string Description => $"기어 아이템의 속성을 정할 수 있습니다.\n아바타의 신장은 gearType이 BodySuit일 때만 적용됩니다.";
-        public override string DocumentURL => "";
+        // public override string BehaviourName => "상품 : 기어 아이템";
+        // public override string Description => $"기어 아이템의 속성을 정할 수 있습니다.\n아바타의 신장은 gearType이 BodySuit일 때만 적용됩니다.";
+        // public override string DocumentURL => "";
         
         [Header("기어 종류")]
         [SerializeField] private GearType gearType;

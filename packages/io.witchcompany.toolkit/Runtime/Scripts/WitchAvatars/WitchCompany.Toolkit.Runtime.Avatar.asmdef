@@ -1,19 +1,16 @@
 {
-    "name": "WitchCompany.Toolkit.Editor",
-    "rootNamespace": "WitchCompany.Toolkit.Editor",
+    "name": "WitchCompany.Toolkit.Runtime.Avatar",
+    "rootNamespace": "WitchCompany.Toolkit",
     "references": [
         "UniTask",
-        "WitchCompany.Toolkit.Runtime",
-        "WitchCompany.Toolkit.Runtime.Avatar"
+        "WitchCompany.Core"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": false,
+    "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
