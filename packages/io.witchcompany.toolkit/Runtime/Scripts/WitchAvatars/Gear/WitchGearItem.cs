@@ -3,7 +3,7 @@ using UnityEngine;
 namespace WitchCompany.Toolkit
 {
     [DisallowMultipleComponent]
-    public class WitchGearObject : MonoBehaviour
+    public class WitchGearItem : MonoBehaviour
     {
         // public override string BehaviourName => "상품 : 기어 아이템";
         // public override string Description => $"기어 아이템의 속성을 정할 수 있습니다.\n아바타의 신장은 gearType이 BodySuit일 때만 적용됩니다.";
@@ -22,22 +22,6 @@ namespace WitchCompany.Toolkit
         public SkinType SkinType => skinType;
         public float Height => height;
         public bool IsCustomizableTexture => isCustomizableTexture;
-
-#if UNITY_EDITOR
-        // private void OnValidate()
-        // {
-        //     var enable = gearType == GearType.BodySuit;
-        //     ShowField("height", enable);
-        // }
-        //
-        // private void ShowField(string fieldName, bool enable)
-        // {
-        //     var so = new SerializedObject(this);
-        //     var property = so.FindProperty(fieldName);
-        //     property.isExpanded = enable;
-        //     so.ApplyModifiedProperties();
-        // }
-#endif
 
     }
 }
