@@ -22,6 +22,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// - 배치된 전체 메쉬 버텍스 개수
         /// - 사용된 라이트맵 용량
         /// - 사용된 텍스쳐 용량
+        /// - 가장 용량이 큰 텍스쳐
         /// - 유니크 머테리얼 개수
         /// - light 타입, 모드 검사
         /// - reflection Probe 용량
@@ -57,6 +58,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                                                 $"모든 Texture의 최대 크기는 {OptimizationConfig.MaxSharedTextureMb} MB입니다. Scene 내의 Texture를 조절해주세요.", ValidationTag.TagTexture);
                 validationReport.Append(error);
             }
+            GetLargestTextureArray();
             
             //  유니크 머티리얼 검사
             var materialCount = GetUniqueMaterialCount();
@@ -72,6 +74,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             validationReport.Append(ValidateMeshCollider());
             validationReport.Append(ValidateLight());
             validationReport.Append(ValidateReflectionProbe());
+            validationReport.Append(ValidationUseCrunchCompression());
             // validationReport.Append(ScriptRuleValidator.ValidateMissingComponents(SceneManager.GetActiveScene()));
             
             return validationReport;
@@ -165,13 +168,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     bytes += sizeInBytes;
                 }
             }
-            return Math.Round(bytes /1024 / 1024, 3);
+            return Math.Round(bytes / 1024 / 1024, 3);
         }
-        
-        /// <summary> 텍스쳐 용량 : 소숫점 아래 3번째 자리까지 표시</summary>
-        public static double GetTextureMB()
+
+        /// <summary> 텍스쳐 불러오기</summary>>
+        public static IEnumerable<Texture> foundTextureList()
         {
-            var foundTextures = new List<Texture>();
+            var loadTextures = new List<Texture>();
             var renderers  = Object.FindObjectsOfType<Renderer>(true);
 
             foreach (var renderer in renderers)
@@ -188,13 +191,21 @@ namespace WitchCompany.Toolkit.Editor.Validation
                         var tex = material.GetTexture(texName);
                         if (tex != null)
                         {
-                            foundTextures.Add(tex);
+                            loadTextures.Add(tex);
                         }
                     }
                 }
             }
+
+            return loadTextures;
+        }
+
+        /// <summary> 텍스쳐 용량 : 소숫점 아래 3번째 자리까지 표시</summary>
+        public static double GetTextureMB()
+        {
+            var foundTextures = foundTextureList();
             
-            // 텍스트 사이즈 계산 - 중복 제거
+            // 텍스쳐 사이즈 계산 - 중복 제거
             double bytes = 0;
             foreach (var texture in foundTextures.Distinct())
             {
@@ -204,6 +215,38 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
             
             return Math.Round(bytes / 1024 / 1024, 3);
+        }
+
+        /// <summary> 가장 용량이 큰 텍스쳐: 5개까지 표시</summary>
+        public static void GetLargestTextureArray()
+        {
+            var foundTextures = foundTextureList();
+            var textureNames = new string[] { "", "", "", "", "" };
+            var textureSizes = new double[] { 0f, 0f, 0f, 0f, 0f };
+            
+            // 가장 용량이 큰 텍스쳐 로깅 - 중복 제거
+            foreach (var texture in foundTextures.Distinct())
+            {
+                var sizeInBytes = Profiler.GetRuntimeMemorySizeLong(texture);
+
+                if (!(textureSizes[^1] < sizeInBytes)) continue;
+                textureNames[^1] = texture.name;
+                textureSizes[^1] = sizeInBytes;
+
+                for (var i = textureSizes.Length - 1; i > 0; i--)
+                {
+                    if (!(textureSizes[i] > textureSizes[i - 1])) continue;
+                    (textureNames[i], textureNames[i - 1]) = (textureNames[i - 1], textureNames[i]);
+                    (textureSizes[i], textureSizes[i - 1]) = (textureSizes[i - 1], textureSizes[i]);
+                }
+            }
+
+            for (var i = 0; i < textureSizes.Length; i++)
+            {
+                if (textureSizes[i] > 0f)
+                    Debug.Log($"[Texture]{textureNames[i]}: {textureSizes[i]}MB");
+            }
+            
         }
 
         /// <summary> 유니크 머테리얼 개수 </summary>
@@ -356,6 +399,49 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 report.Append(error);
             }
             
+            return report;
+        }
+
+        /// <summary> Use Crunch Compression 사용 여부 검사 </summary>
+        private static ValidationReport ValidationUseCrunchCompression()
+        {
+            var report = new ValidationReport();
+            
+            var foundTextures = new List<Texture>();
+            var renderers  = Object.FindObjectsOfType<Renderer>(true);
+
+            foreach (var renderer in renderers)
+            {
+                // 랜더러의 shardMaterial 배열 탐색
+                foreach (var material in renderer.sharedMaterials)
+                {
+                    if (material == null)
+                        continue;
+
+                    // 머티리얼의 texture 배열 탐색 -> texture 찾아서 리스트에 추가 (foundTextures)
+                    foreach (var texName in material.GetTexturePropertyNames())
+                    {
+                        var tex = material.GetTexture(texName);
+                        if (tex != null)
+                        {
+                            foundTextures.Add(tex);
+                        }
+                    }
+                }
+            }
+            
+            // crunch compress 설정 확인 - 중복 제거
+            foreach (var texture in foundTextures.Distinct())
+            {
+                var path = AssetDatabase.GetAssetPath(texture);
+                var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                if (importer != null && !importer.crunchedCompression)
+                {
+                    var error = new ValidationError($"Texture: {texture.name}\nCrunch Compression 기능을 활성화해야 합니다.", ValidationTag.TagTexture, texture);
+                    report.Append(error);
+                }
+            }
+
             return report;
         }
     }
