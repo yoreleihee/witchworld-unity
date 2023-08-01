@@ -126,7 +126,8 @@ namespace WitchCompany.Toolkit.Editor.API
                 pathName = option.Key,
                 theme = option.theme.ToString().ToLower(),
                 capacity = PublishConfig.Capacity,
-                unityKeyDetail = AssetDataValidator.GetAssetData().Values.ToList()
+                unityKeyDetail = AssetDataValidator.GetAssetData().Values.ToList(),
+                isPrivate = ToolkitConfig.DeveloperMode ? false : true
             };
 
             var bundleData = new JBundle

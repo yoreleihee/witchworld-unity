@@ -9,5 +9,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         public string theme;
         public int capacity;
         public List<JUnityKeyDetail> unityKeyDetail;
+        public bool isPrivate;
     }
 }
