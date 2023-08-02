@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using UnityEngine.Serialization;
 
 namespace WitchCompany.Toolkit.Editor.DataStructure
 {
@@ -7,6 +8,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string bundleUrl;
-        public JManifest manifest;
+        public JBundleInfo bundleInfo;
     }
 }

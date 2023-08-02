@@ -1,7 +1,7 @@
 ﻿namespace WitchCompany.Toolkit.Editor.DataStructure
 {
     [System.Serializable]
-    public class JManifest
+    public class JBundleInfo
     {
         public string bundleType;
         public string unityVersion;

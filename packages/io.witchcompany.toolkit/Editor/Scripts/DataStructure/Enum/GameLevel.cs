@@ -1,6 +1,6 @@
 ﻿namespace WitchCompany.Toolkit.Editor.DataStructure
 {
-    public enum BlockLevel
+    public enum GameLevel
     {
         Easy,
         Normal,

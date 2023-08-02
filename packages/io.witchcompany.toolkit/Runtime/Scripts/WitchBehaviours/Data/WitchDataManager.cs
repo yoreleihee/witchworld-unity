@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
@@ -16,7 +14,7 @@ namespace WitchCompany.Toolkit.Module
         public override int MaximumCount => 1;
 
         [field: Header("랭킹보드에서 사용할 키값 (최대 3개, 타이머: @timer, 경과시간: @timespan)")]
-        [field: SerializeField] public List<KeyGroup> RankingKeys { get; private set; }
+        [field: SerializeField] public KeyGroup RankingKey { get; private set; }
         
         [field: Header("데이터 변경 등록")]
         [field: SerializeField] public List<WitchDataChangerSO> DataChangers { get; private set; }
@@ -32,8 +30,8 @@ namespace WitchCompany.Toolkit.Module
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
-            if (RankingKeys is {Count: > 3})
-                return Error("랭킹보드에서 보여줄 수 있는 키값의 개수는 최대 3개입니다.");
+            if (string.IsNullOrEmpty(RankingKey.key) || string.IsNullOrWhiteSpace(RankingKey.key))
+                return Error("랭킹보드에 사용할 키값이 비어 있거나 공백 문자로만 구성되어 있습니다.");
 
             return base.ValidationCheck();
         }

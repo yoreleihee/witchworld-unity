@@ -10,7 +10,6 @@ namespace WitchCompany.Toolkit.Editor.Configs
     {
         private const string Prefs_Scene = "publish_scene";
         private const string Prefs_Theme = "publish_theme";
-        private const string Prefs_Platform = "publish_platform";
         private const string Prefs_ThumbnailPath = "publish_thumnail";
         private const string Prefs_Level = "publish_level";
         private const string Prefs_Capacity = "publish_capacity";
@@ -33,15 +32,9 @@ namespace WitchCompany.Toolkit.Editor.Configs
             set => EditorPrefs.SetInt(Prefs_Theme, (int)value);
         }
         
-        public static PlatformType Platform
+        public static GameLevel Level
         {
-            get => (PlatformType)EditorPrefs.GetInt(Prefs_Platform, (int)PlatformType.None);
-            set => EditorPrefs.SetInt(Prefs_Platform, (int)value);
-        }
-        
-        public static BlockLevel Level
-        {
-            get => (BlockLevel)EditorPrefs.GetInt(Prefs_Level, 0);
+            get => (GameLevel)EditorPrefs.GetInt(Prefs_Level, 0);
             set => EditorPrefs.SetInt(Prefs_Level, (int)value);
         }
         

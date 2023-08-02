@@ -10,5 +10,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         public int capacity;
         public List<JUnityKeyDetail> unityKeyDetail;
         public bool isPrivate;
+        public JRankingKey gameUnityKey;
     }
 }

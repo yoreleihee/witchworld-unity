@@ -42,9 +42,8 @@ namespace WitchCompany.Toolkit.Editor.API
             AuthConfig.Auth = new JAuth();
         }
 
-        public static async UniTask<JUserInfo> GetUserInfo()
+        public static async UniTask<JUserInfo> GetUserInfo(JAuth auth)
         {
-            var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return null;
             
             var response = await AuthSafeRequest<JUserInfo>(new RequestHelper
@@ -116,7 +115,7 @@ namespace WitchCompany.Toolkit.Editor.API
         /// 성공(1), 실패(-1), pathName 중복(-2)
         /// </summary>
         ///
-        public static async UniTask<int> UploadBundle(BlockPublishOption option, List<JManifest> manifests)
+        public static async UniTask<int> UploadBundle(BlockPublishOption option, List<JBundleInfo> bundleInfos, JRankingKey rankingKey)
         {
             var auth = AuthConfig.Auth;
             if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
@@ -127,18 +126,20 @@ namespace WitchCompany.Toolkit.Editor.API
                 theme = option.theme.ToString().ToLower(),
                 capacity = PublishConfig.Capacity,
                 unityKeyDetail = AssetDataValidator.GetAssetData().Values.ToList(),
-                isPrivate = ToolkitConfig.DeveloperMode ? false : true
+                isPrivate = !ToolkitConfig.DeveloperMode,
+                gameUnityKey = rankingKey
             };
 
             var bundleData = new JBundle
             {
                 blockData = blockData,
-                bundleInfoList = manifests
+                bundleInfoList = bundleInfos
             };
             
             // Json
             var jsonData = JsonConvert.SerializeObject(bundleData);
-            
+            Debug.Log(JsonConvert.SerializeObject(bundleData, Formatting.Indented));
+
             // thumbnail
             var thumbnailData = await File.ReadAllBytesAsync(PublishConfig.ThumbnailPath);
 

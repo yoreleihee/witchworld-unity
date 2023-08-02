@@ -106,20 +106,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 AuthConfig.LoginState = LoginState.Logout;
                 return;
             }
-            AuthConfig.Auth = auth;
+
 
             // 유저 정보
-            var response = await WitchAPI.GetUserInfo();
+            var response = await WitchAPI.GetUserInfo(auth);
 
             if (response == null)
             {
                 AuthConfig.LoginState = LoginState.Logout;
                 return;
             }
+            
+            AuthConfig.Auth = auth;
             AuthConfig.NickName = response.profile.nickname;
             AuthConfig.LoginTime = DateTime.Now.ToString();
-            
-            // 어드민 권한 부여
             AuthConfig.Admin = response.profile.role == 9;
             AuthConfig.LoginState = LoginState.Login;
             

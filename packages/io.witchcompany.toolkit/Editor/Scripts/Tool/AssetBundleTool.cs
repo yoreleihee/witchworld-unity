@@ -73,30 +73,19 @@ namespace WitchCompany.Toolkit.Editor.Tool
             try
             {
                 var result = new Dictionary<string, string[]>();
-                var platform = PublishConfig.Platform;
 
-                if(platform.HasFlag(PlatformType.Standalone))
-                    result.Add(AssetBundleConfig.Standalone, BuildBundle(AssetBundleConfig.Standalone, BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
-
-                if (platform.HasFlag(PlatformType.Webgl))
-                {
-                    EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.DXT;
-                    result.Add(AssetBundleConfig.Webgl, BuildBundle(AssetBundleConfig.Webgl, BuildTargetGroup.WebGL, BuildTarget.WebGL));
-                }
-
-                if (platform.HasFlag(PlatformType.WebglMobile))
-                {
-                    EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
-                    result.Add(AssetBundleConfig.WebglMobile, BuildBundle(AssetBundleConfig.WebglMobile, BuildTargetGroup.WebGL, BuildTarget.WebGL));
-                }
+                // standalone
+                result.Add(AssetBundleConfig.Standalone, BuildBundle(AssetBundleConfig.Standalone, BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64));
+                // webgl
+                EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.DXT;
+                result.Add(AssetBundleConfig.Webgl, BuildBundle(AssetBundleConfig.Webgl, BuildTargetGroup.WebGL, BuildTarget.WebGL));
+                // webglMobile
+                EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
+                result.Add(AssetBundleConfig.WebglMobile, BuildBundle(AssetBundleConfig.WebglMobile, BuildTargetGroup.WebGL, BuildTarget.WebGL));
                 
-                if (platform.HasFlag(PlatformType.Android))
-                    result.Add(AssetBundleConfig.Android, BuildBundle(AssetBundleConfig.Android, BuildTargetGroup.Android,BuildTarget.Android));
-                
-                if(platform.HasFlag(PlatformType.Ios))
-                    result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTargetGroup.iOS,BuildTarget.iOS));
-                
-                
+                // result.Add(AssetBundleConfig.Android, BuildBundle(AssetBundleConfig.Android, BuildTargetGroup.Android,BuildTarget.Android));
+                // result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTargetGroup.iOS,BuildTarget.iOS));
+            
                 return result;
             }
             catch (Exception e)

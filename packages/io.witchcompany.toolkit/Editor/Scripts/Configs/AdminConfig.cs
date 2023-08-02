@@ -62,9 +62,9 @@ namespace WitchCompany.Toolkit.Editor.Configs
             set => EditorPrefs.SetInt(Prefs_Theme, (int)value);
         }
         
-        public static BlockLevel BlockLevel
+        public static GameLevel GameLevel
         {
-            get => (BlockLevel)EditorPrefs.GetInt(Prefs_Level, 0);
+            get => (GameLevel)EditorPrefs.GetInt(Prefs_Level, 0);
             set => EditorPrefs.SetInt(Prefs_Level, (int)value);
         }
         

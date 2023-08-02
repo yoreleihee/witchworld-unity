@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,7 +9,7 @@ using WitchCompany.Toolkit.Editor.API;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.Tool;
-using WitchCompany.Toolkit.Editor.Validation;
+using WitchCompany.Toolkit.Module;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
@@ -50,15 +51,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             if (buildReport != null)
                 DrawReport();
-        }
-
-        public static BlockPublishOption GetOption()
-        {
-            return new BlockPublishOption
-            {
-                targetScene = PublishConfig.Scene,
-                theme = PublishConfig.Theme,
-            };
         }
 
         /// <summary>
@@ -103,32 +95,23 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     PublishConfig.Theme = blockTheme;
             } 
             
+            // 게임 블록 난이도
+            if (PublishConfig.Theme == BundleTheme.Game)
+            {
+                using var check = new EditorGUI.ChangeCheckScope();
+                var blockLevel = (GameLevel)EditorGUILayout.EnumPopup("Level", PublishConfig.Level);
+            
+                if (check.changed)
+                    PublishConfig.Level = blockLevel;
+            }
+            
             using (var check = new EditorGUI.ChangeCheckScope())
             {
                 var capacity = EditorGUILayout.IntField("Capacity (Max 20)", PublishConfig.Capacity);
     
                 if (check.changed)
                     PublishConfig.Capacity = capacity <= 20 ? capacity : 20;
-            } 
-            
-            // // 게임 블록 난이도
-            // if (PublishConfig.Theme == BundleTheme.Game)
-            // {
-            //     // 난이도
-            //     using var check = new EditorGUI.ChangeCheckScope();
-            //     var blockLevel = (BlockLevel)EditorGUILayout.EnumPopup("Level", PublishConfig.Level);
-            //
-            //     if (check.changed)
-            //         PublishConfig.Level = blockLevel;
-            // }
-            
-            // using (var check = new EditorGUI.ChangeCheckScope())
-            // {
-            //     var platformType = (PlatformType)EditorGUILayout.EnumFlagsField("Platform", PublishConfig.Platform);
-            //
-            //     if (check.changed)
-            //         PublishConfig.Platform = platformType;
-            // } 
+            }
 
             EditorGUILayout.EndVertical();
         }
@@ -174,29 +157,64 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static async UniTask<int> UploadBundle()
         {
             var option = GetOption();
-            var manifests = new List<JManifest>();
+            var rankingKey = GetRankingKey();
+            
+            var bundleInfos = new List<JBundleInfo>();
             foreach (var bundleType in bundleTypes)
             {
-                var manifest = new JManifest();
+                var bundleInfo = new JBundleInfo();
                 var crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey);
                 if (crc != null)
                 {
-                    manifest.bundleType = bundleType;
-                    manifest.unityVersion = ToolkitConfig.UnityVersion;
-                    manifest.toolkitVersion = ToolkitConfig.WitchToolkitVersion.ToString();
-                    manifest.crc = crc;
+                    bundleInfo.bundleType = bundleType;
+                    bundleInfo.unityVersion = ToolkitConfig.UnityVersion;
+                    bundleInfo.toolkitVersion = ToolkitConfig.WitchToolkitVersion;
+                    bundleInfo.crc = crc;
                 }
-                manifests.Add(manifest);
+                bundleInfos.Add(bundleInfo);
             }
-
-            var response = await WitchAPI.UploadBundle(option, manifests);
             
-            DeleteFile(option);
-
+            
+            var response = await WitchAPI.UploadBundle(option, bundleInfos, rankingKey);
+            
+            DeleteBundleFile(option);
+            
             return response;
         }
+        
+        public static BlockPublishOption GetOption()
+        {
+            return new BlockPublishOption
+            {
+                targetScene = PublishConfig.Scene,
+                theme = PublishConfig.Theme,
+            };
+        }
 
-        private static void DeleteFile(BlockPublishOption option)
+        private static JRankingKey GetRankingKey()
+        {
+            // 테마가 게임이 아닐 경우
+            if (PublishConfig.Theme != BundleTheme.Game) return null;
+            
+            // 랭킹 키값 설정
+            var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
+            
+            // 데이터 매니저 없으면 랭킹 키값 확인 안함
+            if (dataManager == null) return null;
+            
+            var rankingKey = dataManager.RankingKey;
+            return new JRankingKey()
+            {
+                level = PublishConfig.Level.ToString().ToLower(),
+                key = rankingKey.key,
+                sortType = rankingKey.alignment.ToString().ToLower(),
+                dataType = rankingKey.dataType.ToString().ToLower()
+            };
+            
+            
+        }
+
+        private static void DeleteBundleFile(BlockPublishOption option)
         {
             // 번들 파일 삭제
             foreach (var type in bundleTypes)
