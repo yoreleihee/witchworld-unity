@@ -202,15 +202,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // 데이터 매니저 없으면 랭킹 키값 확인 안함
             if (dataManager == null) return null;
             
-            var rankingKey = dataManager.RankingKey;
-            return new JRankingKey()
+            var rankingKey = dataManager.RankingKeys[0];
+            return new JRankingKey
             {
                 level = PublishConfig.Level.ToString().ToLower(),
                 key = rankingKey.key,
                 sortType = rankingKey.alignment.ToString().ToLower(),
                 dataType = rankingKey.dataType.ToString().ToLower()
             };
-            
             
         }
 
