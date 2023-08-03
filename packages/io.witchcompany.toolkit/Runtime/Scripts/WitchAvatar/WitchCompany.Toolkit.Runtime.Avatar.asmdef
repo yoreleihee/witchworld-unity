@@ -3,7 +3,8 @@
     "rootNamespace": "WitchCompany.Toolkit",
     "references": [
         "UniTask",
-        "WitchCompany.Core"
+        "WitchCompany.Core",
+        "WitchCompany.Toolkit.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -36,11 +36,15 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static ValidationReport ValidationGearScript()
         {
             var report = new ValidationReport();
-            if (ProductConfig.Prefab.TryGetComponent(out WitchGearItem gear)) return report;
-            
-            var error = new ValidationError(ScriptErrorMsg, ValidationTag.TagProduct, ProductConfig.Prefab);
-            report.Append(error);
-
+            if (ProductConfig.Prefab.TryGetComponent(out WitchGearItem gear))
+            {
+                return gear.ValidationReport();
+            }
+            else
+            {
+                var error = new ValidationError(ScriptErrorMsg, ValidationTag.TagProduct, ProductConfig.Prefab);
+                report.Append(error);
+            }
             return report;
         }
     }

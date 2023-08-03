@@ -45,7 +45,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 {
                     var product = EditorGUILayout.ObjectField("Prefab", ProductConfig.Prefab, typeof(GameObject), false) as GameObject;
                     if (check.changed)
+                    {
                         ProductConfig.Prefab = product;
+                        validationReport = null;
+                    }
                 }
             }
             
