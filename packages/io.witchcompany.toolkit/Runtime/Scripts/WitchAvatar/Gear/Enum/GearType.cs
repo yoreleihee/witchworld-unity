@@ -2,15 +2,15 @@ namespace WitchCompany.Toolkit
 {
     public enum GearType
     {
-        Hat,
-        Onepiece,
-        BodySuit,
+        Head,
         Top,
         Bottom,
+        Onepiece,
+        BodySuit,
         Shoes,
-        Accessory,
-        Wing,
-        LeftHand,
-        RightHand
+        Hand,
+        AccessoryFace,
+        AccessoryNeck,
+        AccessoryBack
     }
 }

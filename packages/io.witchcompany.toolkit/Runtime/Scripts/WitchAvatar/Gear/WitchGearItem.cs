@@ -1,7 +1,6 @@
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using UnityEngine;
+using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit
@@ -11,20 +10,21 @@ namespace WitchCompany.Toolkit
     {
         [Header("기어 종류")]
         [SerializeField] private GearType gearType;
-        [Header("비활성화 할 신체 부위")]
-        [SerializeField] private SkinType skinType;
-        [Header("아바타의 신장"), Range(0.5f, 2f)]
-        [SerializeField] private float height = 1f;
         [Header("Texture를 적용할 Material")]
         [SerializeField] private Material textureMaterial;
         [Header("Color를 적용할 Material")]
         [SerializeField] private Material colorMaterial;
-
+        [Header("아바타 설정")]
+        [SerializeField, ShowIf(nameof(gearType), GearType.BodySuit), Range(0.5f, 2f)]
+        private float height = 1f;
+        [SerializeField, ShowIf(nameof(gearType), GearType.BodySuit)]
+        private Avatar avatar;
+        
         public GearType GearType => gearType;
-        public SkinType SkinType => skinType;
-        public float Height => height;
         public Material TextureMaterial => textureMaterial;
         public Material ColorMaterial => colorMaterial;
+        public float Height => height;
+        public Avatar Avatar => avatar;
         
 #if UNITY_EDITOR
         private ValidationError Error(string msg) => new(msg, ValidationTag.TagProduct, this);
@@ -33,6 +33,11 @@ namespace WitchCompany.Toolkit
         {
             var report = new ValidationReport();
 
+            if (gearType == GearType.Hand)
+            {
+                
+            }
+            
             // material 유효성 검사
             if (!transform.GetChild(0).TryGetComponent<SkinnedMeshRenderer>(out var skinnedMeshRenderer))
             {
