@@ -14,9 +14,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
     public class CustomWindow : EditorWindow
     {
         
-        private const float MinWindowWidth = 600;
+        private const float MinWindowWidth = 700;
         private const float MinWindowHeight = 700;
-        private const float MaxWindowWidth = 600;
+        private const float MaxWindowWidth = 700;
         private const float MaxWindowHeight = 2000;
         private const float LogHeight = 40;
         private static GUIStyle logTextStyle;
@@ -89,8 +89,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             new ("Validation"),
             new ("Publish"),
             // new ("Admin"),
-            new("Export Item"),
-            new("Upload Item"),
+            new("Export Bundle"),
+            new("Upload Bundle"),
             new ("Setting"),
         };
 
@@ -133,11 +133,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 // case ControlPanelType.Admin :
                 //     CustomWindowAdmin.ShowAdmin();
                 //     break;
-                case ControlPanelType.ExportItem :
-                    CustomWindowExportItem.ShowExport();
+                case ControlPanelType.ExportBundle :
+                    CustomWindowExportBundle.ShowExportBundle();
                     break;
-                case ControlPanelType.UploadItem:
-                    CustomWindowUploadItem.ShowUploadItem();
+                case ControlPanelType.UploadBundle:
+                    CustomWindowUploadBundle.ShowUploadBundle();
                     break;
                 default: break;
             }

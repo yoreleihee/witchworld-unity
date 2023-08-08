@@ -13,7 +13,7 @@ using WitchCompany.Toolkit.Editor.Tool;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
-    public static class CustomWindowUploadItem
+    public static class CustomWindowUploadBundle
     {
         private static string[] bundleTypes =
         {
@@ -25,9 +25,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // AssetBundleConfig.Vr
         };
         
-        public static void ShowUploadItem()
+        public static void ShowUploadBundle()
         {
-            DrawUploadItem();
+            DrawUploadBundle();
             
             GUILayout.Space(10);
             
@@ -37,50 +37,50 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
         }
 
-        private static void DrawUploadItem()
+        private static void DrawUploadBundle()
         {
-            GUILayout.Label("Upload Item", EditorStyles.boldLabel);
+            GUILayout.Label("Upload Bundle", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
             // Bundle Folder
             using (new GUILayout.HorizontalScope())
             {
-                EditorGUILayout.TextField("Bundle Folder", ModelConfig.BundleFolderPath);
+                EditorGUILayout.TextField("Bundle Folder", UploadBundleConfig.BundleFolderPath);
                 if (GUILayout.Button("Select", GUILayout.Width(100)))
                 {
-                    ModelConfig.BundleFolderPath = EditorUtility.OpenFolderPanel("Witch Creator Toolkit", ModelConfig.BundleFolderPath,"");
+                    UploadBundleConfig.BundleFolderPath = EditorUtility.OpenFolderPanel("Witch Creator Toolkit", UploadBundleConfig.BundleFolderPath,"");
                 }
             }
             
             // Model File
             using (new GUILayout.HorizontalScope())
             {
-                EditorGUILayout.TextField("Gltf File", ModelConfig.GltfPath);
+                EditorGUILayout.TextField("Gltf File", UploadBundleConfig.GltfPath);
                 if (GUILayout.Button("Select", GUILayout.Width(100)))
                 {
-                    ModelConfig.GltfPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "gltf");
+                    UploadBundleConfig.GltfPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "gltf");
                 }
             } 
             
             // Model Type
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                var modelType = (GearType)EditorGUILayout.EnumPopup("Model Type", ModelConfig.ModelType);
+                var modelType = (GearType)EditorGUILayout.EnumPopup("Parts Type", UploadBundleConfig.PartsType);
 
                 if (check.changed)
                 {
-                    ModelConfig.ModelType = modelType;
+                    UploadBundleConfig.PartsType = modelType;
                 }
             }
             
             // Disable Body
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                var disableBody = (SkinType)EditorGUILayout.EnumFlagsField("Disable BodyType", ModelConfig.DisableBodyType);
+                var disableBody = (SkinType)EditorGUILayout.EnumFlagsField("Disable Body", UploadBundleConfig.DisableBody);
 
                 if (check.changed)
                 {
-                    ModelConfig.DisableBodyType = disableBody;
+                    UploadBundleConfig.DisableBody = disableBody;
                 }
             }
             EditorGUILayout.EndVertical();
@@ -100,7 +100,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static async UniTask<bool> UploadItem()
         {
             // 비활성화 신체 인덱스 문자열 추출
-            var disableBodyToBinary = Convert.ToString(ModelConfig.DisableBodyType.GetHashCode(), 2);
+            var disableBodyToBinary = Convert.ToString(UploadBundleConfig.DisableBody.GetHashCode(), 2);
             var disableBodyIndexes = new List<int>();
             var maxIndex = disableBodyToBinary.Length - 1;
             for (var i = maxIndex; i >= 0; i--)
@@ -110,8 +110,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
             
             // 번들 이름
-            var bundleName = ModelConfig.BundleFolderPath.Split("/")[^1];
-            var typeName = ModelConfig.ModelType.ToString().Replace("Accessory", "Accessory_").ToLower();
+            var bundleName = UploadBundleConfig.BundleFolderPath.Split("/")[^1];
+            var typeName = UploadBundleConfig.PartsType.ToString().Replace("Accessory", "Accessory_").ToLower();
             
             // 아이템 정보
             var itemData = new JItemData
@@ -125,7 +125,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var bundleInfos = new Dictionary<string, JBundleInfo>();
             foreach (var bundleType in bundleTypes)
             {
-                var bundlePath = Path.Combine(ModelConfig.BundleFolderPath, $"{bundleName}_{bundleType}.bundle");
+                var bundlePath = Path.Combine(UploadBundleConfig.BundleFolderPath, $"{bundleName}_{bundleType}.bundle");
                 var bundleInfo = new JBundleInfo();
                 var crc = AssetBundleTool.ReadManifest(bundlePath);
                 if (crc != null)
@@ -148,7 +148,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 // vr = bundleInfos[AssetBundleConfig.Vr],
             };
             
-            var result = await WitchAPI.UploadItemData(itemBundleData, ModelConfig.BundleFolderPath, ModelConfig.GltfPath);
+            var result = await WitchAPI.UploadItemData(itemBundleData, UploadBundleConfig.BundleFolderPath, UploadBundleConfig.GltfPath);
             
             return result;
         }

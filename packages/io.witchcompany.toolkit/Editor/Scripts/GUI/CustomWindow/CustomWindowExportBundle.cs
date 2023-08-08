@@ -11,18 +11,18 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
-    public class CustomWindowExportItem
+    public class CustomWindowExportBundle
     {
         private static Vector2 scrollPos;
         private static ValidationReport validationReport;
         private static JBuildReport buildReport;
-        public static void ShowExport()
+        public static void ShowExportBundle()
         {
-            DrawExport();
+            DrawExportBundle();
             
             GUILayout.Space(10);
             
-            if (GUILayout.Button("Build"))
+            if (GUILayout.Button("Export"))
             {
                 OnClickBuild();
             }
@@ -33,9 +33,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
         }
 
-        private static void DrawExport()
+        private static void DrawExportBundle()
         {
-            GUILayout.Label("Export Item", EditorStyles.boldLabel);
+            GUILayout.Label("Export Bundle", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
             var check = new EditorGUI.ChangeCheckScope();
@@ -43,10 +43,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 using (check)
                 {
-                    var prefab = EditorGUILayout.ObjectField("Prefab", PrefabConfig.Prefab, typeof(GameObject), false) as GameObject;
+                    var prefab = EditorGUILayout.ObjectField("Prefab", ExportBundleConfig.Prefab, typeof(GameObject), false) as GameObject;
                     if (check.changed)
                     {
-                        PrefabConfig.Prefab = prefab;
+                        ExportBundleConfig.Prefab = prefab;
                         validationReport = null;
                     }
                 }
@@ -56,11 +56,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 using (check)
                 {
-                    if (PrefabConfig.Prefab != null)
+                    if (ExportBundleConfig.Prefab != null)
                     {
-                        var bytes = AssetTool.GetFileSizeByte(PrefabConfig.PrefabPath);
+                        var bytes = AssetTool.GetFileSizeByte(ExportBundleConfig.PrefabPath);
                         var sizeKb = Math.Round((double)bytes / 1024, 3);
-                        EditorGUILayout.LabelField("File Size", $"{sizeKb} / {PrefabConfig.MaxProductSizeKb} KB");
+                        EditorGUILayout.LabelField("File Size", $"{sizeKb} / {ExportBundleConfig.MaxProductSizeKb} KB");
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             if (validationReport.result == ValidationReport.Result.Success)
             {
-                var path = Path.Combine(PrefabConfig.BundleExportPath, PrefabConfig.Prefab.name);
+                var path = Path.Combine(ExportBundleConfig.BundleExportPath, ExportBundleConfig.Prefab.name);
                 EditorGUILayout.LabelField("Path", path);
             }
             else

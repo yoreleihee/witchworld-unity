@@ -14,9 +14,9 @@
         // // 어드민 패널
         // Admin = 3,
         // 상품 패널
-        ExportItem = 3,
+        ExportBundle = 3,
         // 상품 업로드 패널
-        UploadItem = 4,
+        UploadBundle = 4,
         // 설정 패널
         Setting = 5
     }

@@ -21,12 +21,12 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             var report = new ValidationReport();
 
-            var fileSize = AssetTool.GetFileSizeByte(PrefabConfig.PrefabPath);
+            var fileSize = AssetTool.GetFileSizeByte(ExportBundleConfig.PrefabPath);
             
-            if (fileSize > PrefabConfig.MaxProductSizeKb * 1024)
+            if (fileSize > ExportBundleConfig.MaxProductSizeKb * 1024)
             {
                 var error = new ValidationError(string.Format(FileSizeErrorMsg, fileSize,
-                    PrefabConfig.MaxProductSizeKb), ValidationTag.TagProduct, PrefabConfig.Prefab);
+                    ExportBundleConfig.MaxProductSizeKb), ValidationTag.TagProduct, ExportBundleConfig.Prefab);
 
                 report.Append(error);
             }
@@ -36,13 +36,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static ValidationReport ValidationGearScript()
         {
             var report = new ValidationReport();
-            if (PrefabConfig.Prefab.TryGetComponent(out WitchGearItem gear))
+            if (ExportBundleConfig.Prefab.TryGetComponent(out WitchGearItem gear))
             {
                 return gear.ValidationReport();
             }
             else
             {
-                var error = new ValidationError(ScriptErrorMsg, ValidationTag.TagProduct, PrefabConfig.Prefab);
+                var error = new ValidationError(ScriptErrorMsg, ValidationTag.TagProduct, ExportBundleConfig.Prefab);
                 report.Append(error);
             }
             return report;
