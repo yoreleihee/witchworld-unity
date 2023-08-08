@@ -89,8 +89,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             new ("Validation"),
             new ("Publish"),
             // new ("Admin"),
-            new("Prefab"),
-            new("Model "),
+            new("Export Item"),
+            new("Upload Item"),
             new ("Setting"),
         };
 
@@ -133,11 +133,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 // case ControlPanelType.Admin :
                 //     CustomWindowAdmin.ShowAdmin();
                 //     break;
-                case ControlPanelType.Prefab :
-                    CustomWindowPrefab.ShowPrefab();
+                case ControlPanelType.ExportItem :
+                    CustomWindowExportItem.ShowExport();
                     break;
-                case ControlPanelType.Model:
-                    CustomWindowModel.ShowModel();
+                case ControlPanelType.UploadItem:
+                    CustomWindowUploadItem.ShowUploadItem();
                     break;
                 default: break;
             }

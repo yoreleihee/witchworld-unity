@@ -13,7 +13,7 @@ using WitchCompany.Toolkit.Editor.Tool;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
-    public static class CustomWindowModel
+    public static class CustomWindowUploadItem
     {
         private static string[] bundleTypes =
         {
@@ -25,21 +25,21 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // AssetBundleConfig.Vr
         };
         
-        public static void ShowModel()
+        public static void ShowUploadItem()
         {
-            DrawModel();
+            DrawUploadItem();
             
             GUILayout.Space(10);
             
-            if (GUILayout.Button("Publish"))
+            if (GUILayout.Button("Upload"))
             {
-                OnClickPublish().Forget();
+                OnClickUpload().Forget();
             }
         }
 
-        private static void DrawModel()
+        private static void DrawUploadItem()
         {
-            GUILayout.Label("Model", EditorStyles.boldLabel);
+            GUILayout.Label("Upload Item", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
             // Bundle Folder
@@ -55,7 +55,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // Model File
             using (new GUILayout.HorizontalScope())
             {
-                EditorGUILayout.TextField("Model File", ModelConfig.GltfPath);
+                EditorGUILayout.TextField("Gltf File", ModelConfig.GltfPath);
                 if (GUILayout.Button("Select", GUILayout.Width(100)))
                 {
                     ModelConfig.GltfPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "gltf");
@@ -76,31 +76,31 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // Disable Body
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                var disableBody = (SkinType)EditorGUILayout.EnumFlagsField("Disable Body", ModelConfig.DisableBody);
+                var disableBody = (SkinType)EditorGUILayout.EnumFlagsField("Disable BodyType", ModelConfig.DisableBodyType);
 
                 if (check.changed)
                 {
-                    ModelConfig.DisableBody = disableBody;
+                    ModelConfig.DisableBodyType = disableBody;
                 }
             }
             EditorGUILayout.EndVertical();
         }
 
-        private static async UniTaskVoid OnClickPublish()
+        private static async UniTaskVoid OnClickUpload()
         {
             EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Uploading to server...", 1.0f);
             
-            var result = await PublishModel();
+            var result = await UploadItem();
             var msg = result ? AssetBundleConfig.SuccessMsg : AssetBundleConfig.FailedPublishMsg;
             
             EditorUtility.DisplayDialog("Witch Creator Toolkit", msg, "OK");
             EditorUtility.ClearProgressBar();
         }
 
-        private static async UniTask<bool> PublishModel()
+        private static async UniTask<bool> UploadItem()
         {
             // 비활성화 신체 인덱스 문자열 추출
-            var disableBodyToBinary = Convert.ToString(ModelConfig.DisableBody.GetHashCode(), 2);
+            var disableBodyToBinary = Convert.ToString(ModelConfig.DisableBodyType.GetHashCode(), 2);
             var disableBodyIndexes = new List<int>();
             var maxIndex = disableBodyToBinary.Length - 1;
             for (var i = maxIndex; i >= 0; i--)

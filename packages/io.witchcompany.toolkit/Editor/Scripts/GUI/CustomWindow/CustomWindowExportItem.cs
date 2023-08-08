@@ -11,14 +11,14 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
-    public class CustomWindowPrefab
+    public class CustomWindowExportItem
     {
         private static Vector2 scrollPos;
         private static ValidationReport validationReport;
         private static JBuildReport buildReport;
-        public static void ShowPrefab()
+        public static void ShowExport()
         {
-            DrawPrefab();
+            DrawExport();
             
             GUILayout.Space(10);
             
@@ -33,9 +33,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
         }
 
-        private static void DrawPrefab()
+        private static void DrawExport()
         {
-            GUILayout.Label("GearItem Prefab", EditorStyles.boldLabel);
+            GUILayout.Label("Export Item", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
             var check = new EditorGUI.ChangeCheckScope();

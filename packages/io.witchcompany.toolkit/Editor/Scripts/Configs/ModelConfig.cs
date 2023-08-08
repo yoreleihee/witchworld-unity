@@ -7,7 +7,7 @@ namespace WitchCompany.Toolkit.Editor.Configs
         private const string Prefs_BundleFolderPath = "model_bundle_folder_path";
         private const string Prefs_GltfPath = "model_gltf_path";
         private const string Prefs_ModelType = "model_type";
-        private const string Prefs_DisableBody = "model_disable_body";
+        private const string Prefs_DisableBodyType = "model_disable_body_type";
         public static string BundleFolderPath
         {
             get => EditorPrefs.GetString(Prefs_BundleFolderPath, "");
@@ -26,10 +26,10 @@ namespace WitchCompany.Toolkit.Editor.Configs
             set => EditorPrefs.SetInt(Prefs_ModelType, (int)value);
         }
         
-        public static SkinType DisableBody
+        public static SkinType DisableBodyType
         {
-            get => (SkinType)EditorPrefs.GetInt(Prefs_DisableBody, 0);
-            set => EditorPrefs.SetInt(Prefs_DisableBody, (int)value);
+            get => (SkinType)EditorPrefs.GetInt(Prefs_DisableBodyType, 0);
+            set => EditorPrefs.SetInt(Prefs_DisableBodyType, (int)value);
         }
     }
 }
