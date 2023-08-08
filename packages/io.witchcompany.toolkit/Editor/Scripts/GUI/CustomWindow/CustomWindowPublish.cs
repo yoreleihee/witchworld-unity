@@ -163,7 +163,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             foreach (var bundleType in bundleTypes)
             {
                 var bundleInfo = new JBundleInfo();
-                var crc = AssetBundleTool.ReadManifest(bundleType, option.BundleKey);
+                var manifestPath = Path.Combine(AssetBundleConfig.BundleExportPath, bundleType, option.BundleKey);
+                var crc = AssetBundleTool.ReadManifest(manifestPath);
                 if (crc != null)
                 {
                     bundleInfo.bundleType = bundleType;

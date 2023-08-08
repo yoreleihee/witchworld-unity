@@ -8,9 +8,9 @@ using WitchCompany.Toolkit.Editor.DataStructure;
 
 namespace WitchCompany.Toolkit.Editor.Tool
 {
-    public static class ProductBuildPipeline
+    public static class PrefabBuildPipeline
     {
-        public static JBuildReport PublishWithBuildReport(string platform)
+        public static JBuildReport BuildReport(string platform)
         {
             // 리포트 생성
             var buildReport = new JBuildReport
@@ -28,8 +28,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 AssetBundleTool.ClearAllBundles();
                 
                 // 번들 할당
-                var bundleName = $"{ProductConfig.Prefab.name}_{platform}.bundle";
-                AssetBundleTool.AssignAssetBundle(ProductConfig.PrefabPath, bundleName);
+                var bundleName = $"{PrefabConfig.Prefab.name}_{platform}.bundle";
+                AssetBundleTool.AssignAssetBundle(PrefabConfig.PrefabPath, bundleName);
                 
                 // var webglMobBundleName = $"{ProductConfig.Prefab.name}_{AssetBundleConfig.WebglMobile}.bundle";
                 // AssetBundleTool.AssignAssetBundle(ProductConfig.PrefabPath, webglMobBundleName);
@@ -48,9 +48,9 @@ namespace WitchCompany.Toolkit.Editor.Tool
                     var group = new JBuildGroup
                     {
                         target = target,
-                        exportPath = Path.Combine(ProductConfig.BundleExportPath, ProductConfig.Prefab.name)
+                        exportPath = Path.Combine(PrefabConfig.BundleExportPath, PrefabConfig.Prefab.name)
                     };
-                    group.totalSizeByte = AssetTool.GetFileSizeByte(ProductConfig.PrefabPath);
+                    group.totalSizeByte = AssetTool.GetFileSizeByte(PrefabConfig.PrefabPath);
                 }
                 
                 buildReport.BuildEndedAt = DateTime.Now;
@@ -101,12 +101,12 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 const BuildAssetBundleOptions option = BuildAssetBundleOptions.ForceRebuildAssetBundle |
                                                        BuildAssetBundleOptions.ChunkBasedCompression;
                 // 폴더 경로
-                var path = Path.Combine(ProductConfig.BundleExportPath, ProductConfig.Prefab.name);
+                var path = Path.Combine(PrefabConfig.BundleExportPath, PrefabConfig.Prefab.name);
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
                 var result = BuildPipeline.BuildAssetBundles(path, option, target);
                 
-                var deleteFile = Path.Combine(path, ProductConfig.Prefab.name);
+                var deleteFile = Path.Combine(path, PrefabConfig.Prefab.name);
                 File.Delete(deleteFile);
                 File.Delete(deleteFile + ".manifest");    
 

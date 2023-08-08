@@ -121,10 +121,10 @@ namespace WitchCompany.Toolkit.Editor.Tool
         }
         
         /// <summary> manifest 파일에서 crc 읽음 </summary>
-        public static string ReadManifest(string bundleType, string bundleKey)
+        public static string ReadManifest(string bundlePath)
         {
             // 번들 경로/씬이름.bundle.manifest
-            var manifestFile = Path.Combine(AssetBundleConfig.BundleExportPath, bundleType, bundleKey)+".manifest";
+            var manifestFile = $"{bundlePath}.manifest";
 
             if (!File.Exists(manifestFile)) return null;
             

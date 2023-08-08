@@ -83,14 +83,15 @@ namespace WitchCompany.Toolkit.Editor.GUI
             new ("Settings"),
         };
         
-        private static GUIContent[] adminToolbarLabels = new GUIContent[5]
+        private static GUIContent[] adminToolbarLabels = new GUIContent[6]
         {
             new ("Authentication"),
             new ("Validation"),
             new ("Publish"),
             // new ("Admin"),
-            new("Product"),
-            new ("Settings"),
+            new("Prefab"),
+            new("Model "),
+            new ("Setting"),
         };
 
         private void OnGUI()
@@ -108,7 +109,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 if (check.changed)
                 {
                     if (!AuthConfig.Admin && (int)controlPanelType == 3)
-                        controlPanelType += 1;
+                        controlPanelType += adminToolbarLabels.Length - defalutToolbarLabels.Length;
                     
                     ToolkitConfig.CurrControlPanelType = controlPanelType;
                 }
@@ -120,7 +121,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 case ControlPanelType.Auth: 
                     CustomWindowAuth.ShowAuth();
                     break;
-                case ControlPanelType.Validate :
+                case ControlPanelType.Validation :
                     CustomWindowValidation.ShowValidation();
                     break;
                 case ControlPanelType.Publish: 
@@ -132,8 +133,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 // case ControlPanelType.Admin :
                 //     CustomWindowAdmin.ShowAdmin();
                 //     break;
-                case ControlPanelType.Product :
-                    CustomWindowProduct.ShowProduct();
+                case ControlPanelType.Prefab :
+                    CustomWindowPrefab.ShowPrefab();
+                    break;
+                case ControlPanelType.Model:
+                    CustomWindowModel.ShowModel();
                     break;
                 default: break;
             }

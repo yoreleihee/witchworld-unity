@@ -11,20 +11,20 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.GUI
 {
-    public class CustomWindowProduct
+    public class CustomWindowPrefab
     {
         private static Vector2 scrollPos;
         private static ValidationReport validationReport;
         private static JBuildReport buildReport;
-        public static void ShowProduct()
+        public static void ShowPrefab()
         {
-            DrawProduct();
+            DrawPrefab();
             
             GUILayout.Space(10);
             
-            if (GUILayout.Button("Publish"))
+            if (GUILayout.Button("Build"))
             {
-                OnClickPublish();
+                OnClickBuild();
             }
 
             if (validationReport != null)
@@ -33,9 +33,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             }
         }
 
-        private static void DrawProduct()
+        private static void DrawPrefab()
         {
-            GUILayout.Label("Product", EditorStyles.boldLabel);
+            GUILayout.Label("GearItem Prefab", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
             var check = new EditorGUI.ChangeCheckScope();
@@ -43,10 +43,10 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 using (check)
                 {
-                    var product = EditorGUILayout.ObjectField("Prefab", ProductConfig.Prefab, typeof(GameObject), false) as GameObject;
+                    var prefab = EditorGUILayout.ObjectField("Prefab", PrefabConfig.Prefab, typeof(GameObject), false) as GameObject;
                     if (check.changed)
                     {
-                        ProductConfig.Prefab = product;
+                        PrefabConfig.Prefab = prefab;
                         validationReport = null;
                     }
                 }
@@ -56,11 +56,11 @@ namespace WitchCompany.Toolkit.Editor.GUI
             {
                 using (check)
                 {
-                    if (ProductConfig.Prefab != null)
+                    if (PrefabConfig.Prefab != null)
                     {
-                        var bytes = AssetTool.GetFileSizeByte(ProductConfig.PrefabPath);
+                        var bytes = AssetTool.GetFileSizeByte(PrefabConfig.PrefabPath);
                         var sizeKb = Math.Round((double)bytes / 1024, 3);
-                        EditorGUILayout.LabelField("File Size", $"{sizeKb} / {ProductConfig.MaxProductSizeKb} KB");
+                        EditorGUILayout.LabelField("File Size", $"{sizeKb} / {PrefabConfig.MaxProductSizeKb} KB");
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             if (validationReport.result == ValidationReport.Result.Success)
             {
-                var path = Path.Combine(ProductConfig.BundleExportPath, ProductConfig.Prefab.name);
+                var path = Path.Combine(PrefabConfig.BundleExportPath, PrefabConfig.Prefab.name);
                 EditorGUILayout.LabelField("Path", path);
             }
             else
@@ -120,19 +120,19 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
         }
             
-        private static void OnClickPublish()
+        private static void OnClickBuild()
         {
             validationReport = null;
             
             CustomWindow.IsInputDisable = true;  
-            EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Publish...", 1.0f);
+            EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Build...", 1.0f);
 
-            validationReport = ProductValidator.ValidationCheck();
+            validationReport = PrefabValidator.ValidationCheck();
 
             if (validationReport.result == ValidationReport.Result.Success)
             {
-                buildReport = ProductBuildPipeline.PublishWithBuildReport(AssetBundleConfig.Webgl);
-                buildReport = ProductBuildPipeline.PublishWithBuildReport(AssetBundleConfig.WebglMobile);
+                buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.Webgl);
+                buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.WebglMobile);
             }
             
             EditorUtility.ClearProgressBar();

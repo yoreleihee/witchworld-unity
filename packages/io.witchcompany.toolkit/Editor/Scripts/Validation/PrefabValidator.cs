@@ -4,7 +4,7 @@ using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Editor.Validation
 {
-    public static class ProductValidator
+    public static class PrefabValidator
     {
         private const string FileSizeErrorMsg = "파일 크기 : {0}/{1} KB\n최대 용량을 초과했습니다. 다시 시도해주세요.";
         private const string ScriptErrorMsg = "등록할 상품 Prefab의 최상단 오브젝트에 WitchGearItem 컴포넌트가 있어야 합니다.";
@@ -21,12 +21,12 @@ namespace WitchCompany.Toolkit.Editor.Validation
         {
             var report = new ValidationReport();
 
-            var fileSize = AssetTool.GetFileSizeByte(ProductConfig.PrefabPath);
+            var fileSize = AssetTool.GetFileSizeByte(PrefabConfig.PrefabPath);
             
-            if (fileSize > ProductConfig.MaxProductSizeKb * 1024)
+            if (fileSize > PrefabConfig.MaxProductSizeKb * 1024)
             {
                 var error = new ValidationError(string.Format(FileSizeErrorMsg, fileSize,
-                    ProductConfig.MaxProductSizeKb), ValidationTag.TagProduct, ProductConfig.Prefab);
+                    PrefabConfig.MaxProductSizeKb), ValidationTag.TagProduct, PrefabConfig.Prefab);
 
                 report.Append(error);
             }
@@ -36,13 +36,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static ValidationReport ValidationGearScript()
         {
             var report = new ValidationReport();
-            if (ProductConfig.Prefab.TryGetComponent(out WitchGearItem gear))
+            if (PrefabConfig.Prefab.TryGetComponent(out WitchGearItem gear))
             {
                 return gear.ValidationReport();
             }
             else
             {
-                var error = new ValidationError(ScriptErrorMsg, ValidationTag.TagProduct, ProductConfig.Prefab);
+                var error = new ValidationError(ScriptErrorMsg, ValidationTag.TagProduct, PrefabConfig.Prefab);
                 report.Append(error);
             }
             return report;

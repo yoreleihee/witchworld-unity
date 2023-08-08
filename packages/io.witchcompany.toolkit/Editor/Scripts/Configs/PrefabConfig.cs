@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace WitchCompany.Toolkit.Editor.Configs
 {
-    public static class ProductConfig
+    public static class PrefabConfig
     {
         // 빌드 경로
         private static readonly string BundleString = "Products";

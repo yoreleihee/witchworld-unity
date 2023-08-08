@@ -15,9 +15,9 @@ namespace WitchCompany.Toolkit
         [Header("Color를 적용할 Material")]
         [SerializeField] private Material colorMaterial;
         [Header("아바타 설정")]
-        [SerializeField, ShowIf(nameof(gearType), GearType.BodySuit), Range(0.5f, 2f)]
+        [SerializeField, ShowIf(nameof(gearType), GearType.AccessoryBodySuit), Range(0.5f, 2f)]
         private float height = 1f;
-        [SerializeField, ShowIf(nameof(gearType), GearType.BodySuit)]
+        [SerializeField, ShowIf(nameof(gearType), GearType.AccessoryBodySuit)]
         private Avatar avatar;
         
         public GearType GearType => gearType;

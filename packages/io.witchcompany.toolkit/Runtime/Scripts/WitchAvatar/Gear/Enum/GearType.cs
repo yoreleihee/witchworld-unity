@@ -4,13 +4,13 @@ namespace WitchCompany.Toolkit
     {
         Head,
         Top,
-        Bottom,
         Onepiece,
-        BodySuit,
+        Bottom,
         Shoes,
         Hand,
         AccessoryFace,
         AccessoryNeck,
-        AccessoryBack
+        AccessoryBack,
+        AccessoryBodySuit
     }
 }

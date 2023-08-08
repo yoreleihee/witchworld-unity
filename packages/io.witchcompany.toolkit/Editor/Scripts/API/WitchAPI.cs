@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Editor.DataStructure.Admin;
+using WitchCompany.Toolkit.Editor.DataStructure.Item;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Validation;
 
@@ -368,6 +369,46 @@ namespace WitchCompany.Toolkit.Editor.API
             return response != null && response.success;
         }
 
+        public static async UniTask<bool> UploadItemData(JItemBundleData itemBundleData, string bundleFolderPath, string modelPath)
+        {
+            var auth = AuthConfig.Auth;
+            var jsonData = JsonConvert.SerializeObject(itemBundleData);
+            var iteData = itemBundleData.itemData;
+            
+            // bundle 
+            var webglBundleKey = $"{iteData.name}_{AssetBundleConfig.Webgl}.bundle";
+            var webglMobileBundleKey = $"{iteData.name}_{AssetBundleConfig.WebglMobile}.bundle";
+            
+            var webglBundlePath = Path.Combine(bundleFolderPath, webglBundleKey);
+            var webglMobileBundlePath = Path.Combine(bundleFolderPath, webglMobileBundleKey);
+            
+            var webglBundleData = await GetByte(webglBundlePath);
+            var webglMobileBundleData = await GetByte(webglMobileBundlePath);
+            
+            // gltf
+            var gltfName = modelPath.Split("/")[^1];
+            var gltfData = await GetByte(modelPath);
+            
+            Debug.Log("gltfData : " + gltfName);
+            
+            var form = new List<IMultipartFormSection>
+            {
+                new MultipartFormDataSection("json", jsonData, "application/json"),
+                new MultipartFormFileSection("model", gltfData, gltfName, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, webglBundleKey, ""),
+                new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, webglMobileBundleKey, ""),
+            };
+            
+            var response = await Request<JBlockStatus>(new RequestHelper
+            {
+                Method = "POST",
+                Uri = ApiConfig.URL("v2/toolkits/item/unity-key"),
+                Headers = ApiConfig.TokenHeader(auth.accessToken),
+                FormSections = form
+            });
+
+            return response != null && response.success;
+        }
     }
     
     public static partial class WitchAPI
