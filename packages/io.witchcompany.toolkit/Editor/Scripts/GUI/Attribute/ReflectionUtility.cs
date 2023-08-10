@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace NaughtyAttributes.Editor
+namespace WitchCompany.Toolkit.Editor.GUI.Attribute
 {
     public static class ReflectionUtility
     {
