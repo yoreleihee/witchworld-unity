@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NaughtyAttributes.Editor
+namespace WitchCompany.Toolkit.Editor.GUI.Attribute
 {
     public static class PropertyUtility
     {

@@ -1,5 +1,4 @@
-﻿using NaughtyAttributes.Editor;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using WitchCompany.Toolkit.Attribute;
 
