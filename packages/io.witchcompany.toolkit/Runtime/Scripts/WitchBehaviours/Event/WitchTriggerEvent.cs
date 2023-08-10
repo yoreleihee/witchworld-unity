@@ -11,7 +11,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "해당 구역에 플레이어가 들어오고 나감을 감지할 수 있습니다.\n" + 
                                               "오브젝트에 isTrigger가 활성화된 Collider가 있어야 합니다.";
 
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchTriggerEvent-1e09ee8ed0994ff2a75e2fb718ce47c4?pvs=4";
 
         
         [Header("플레이어 감지 이벤트: Enter"), SerializeField]

@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEnvironment
     {
         public override string BehaviourName => "물리 오브젝트: 사라지는 플랫폼";
         public override string Description => "플레이어가 해당 플랫폼을 밟으면 플랫폼이 사라집니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchVanishPlatform-c82f6dc8ec1540baa03c56febb383c1d?pvs=4";
         public override int MaximumCount => 40;
 
         public enum VanishCondition

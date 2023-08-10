@@ -11,7 +11,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "특정 아이템을 가지고 있을 때 프라이빗 블록으로 연결되는 포탈입니다.\n" +
                                               "입구로 사용할 isTrigger가 활성화된 SphereCollider가 필요합니다.\n" +
                                               "입구와 출구는 겹치면 안됩니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchPrivatePortal-211ba720ca834e86ad4de92631b64c70?pvs=4";
         
         public override int MaximumCount => 10;
         

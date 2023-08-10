@@ -11,7 +11,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "다른 실내/실외 공간으로 연결되는 포탈입니다.\n" +
                                               "입구로 사용될 SphereCollider가 필요합니다.(IsTrigger 필요).\n" +
                                               "입구와 출구는 겹치면 안됩니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchPortal-18bc652f7fb9436a8db9a624925c2689?pvs=4";
         public override int MaximumCount => 10;
 
         [Header("출구"), SerializeField] private Transform exit;

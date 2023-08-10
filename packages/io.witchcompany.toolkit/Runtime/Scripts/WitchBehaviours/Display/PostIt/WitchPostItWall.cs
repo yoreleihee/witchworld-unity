@@ -14,7 +14,7 @@ namespace WitchCompany.Toolkit.Module
                                               "캔버스의 사이즈가 포스트잇을 붙일 수 있는 공간의 사이즈입니다.\n" +
                                               @"'전시: 포스트잇 생성 버튼'이 씬에 있어야 합니다.";
 
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchPostItWall-c76d69b45f4f48b39f1c9bbe9c4a4c14?pvs=4";
         public override int MaximumCount => 1;
         
 #if UNITY_EDITOR

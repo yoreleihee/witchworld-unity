@@ -14,7 +14,7 @@ namespace WitchCompany.Toolkit.Module
         public override string BehaviourName => "통로: 프라이빗 문";
         public override string Description => "특정 아이템을 가지고 있을 때 프라이빗 공간으로 연결되는 문입니다.\n" +
                                               "입장 권한을 확인할 아이템을 지정해야 합니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchPrivateDoor-1c0168060cc740d9883fd383104804cc?pvs=4";
 
         [Header("입장 권할을 지정할 아이템의 ID (개발용)"), SerializeField]
         private int itemIdDev;

@@ -9,8 +9,8 @@ namespace WitchCompany.Toolkit.Module
     public class WitchChair : WitchBehaviourUnique
     {
         public override string BehaviourName => "의자";
-        public override string Description => "의자입니다.";
-        public override string DocumentURL => "";
+        public override string Description => "플레이어가 상호작용을 통해 앉을 수 있는 의자입니다.";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchChair-f9a0aaa9007340f0a47c7f977534bba3?pvs=4";
 
         [field: Header("플레이어가 앉을 위치")] 
         [field: SerializeField] public Transform sitTarget { get; private set; }

@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEnvironment
         public override string BehaviourName => "물리 오브젝트: 플랫폼";
         public override string Description => "다양한 물리적 환경을 구현하는 오브젝트입니다.\n" +
                                               "Rigidbody 없는 콜라이더가 필요합니다.\n";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchPhysicsPlatform-48d78976b1424eaf9b11878c3877b85c?pvs=4";
         public override int MaximumCount => 64;
 
         [Header("타입")] 

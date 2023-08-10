@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit
     {
         public override string BehaviourName => "블록 입장시 이벤트 발생";
         public override string Description => "블록 입장 성공 시 이벤트를 발생시키는 요소입니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchBlockEnterEvent-e388e0facda04be9b899d3c3971f3292?pvs=4";
         public override int MaximumCount => 1;
 
         // [field: Header("지급할 위트")]

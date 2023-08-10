@@ -13,7 +13,7 @@ namespace WitchCompany.Toolkit.Module
                                               "낙서 벽의 하위 오브젝트로 두어야 합니다.\n" +
                                               "콜라이더가 필요합니다.";
 
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchPaintBrush-fcd25a1f53b84464b8b487856f0cb584?pvs=4";
         
         [Header("브러쉬 색상")] 
         [SerializeField] private Color brushColor = Color.black;

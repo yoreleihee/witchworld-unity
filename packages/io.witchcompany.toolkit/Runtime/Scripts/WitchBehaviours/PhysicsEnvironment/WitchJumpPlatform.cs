@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEnvironment
     {
         public override string BehaviourName => "물리 오브젝트: 점프 플랫폼";
         public override string Description => "플레이어가 해당 플랫폼을 밟으면 점프합니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchJumpPlatform-f3deac7c72fd40fd839668ce8c35f543?pvs=4";
         public override int MaximumCount => 32;
 
         

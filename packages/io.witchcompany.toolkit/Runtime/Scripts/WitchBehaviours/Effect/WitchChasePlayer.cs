@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit
     {
         public override string BehaviourName => "효과: 플레이어 따라다니기";
         public override string Description => "자기 자신 오브젝트가 카메라 방향을 바라보게 만듭니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchChasePlayer-786f81facbc745b5b8a99566950b4a05?pvs=4";
 
         [field: Header("해당 오브젝트가 유저 카메라를 바라보도록, 체크시 바라봄")]
         [field: SerializeField] public bool faceCamera { get; private set; }

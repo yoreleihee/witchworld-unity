@@ -9,9 +9,9 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
     public class WitchMovementEffect : WitchPhysicsEffectBase
     {
         public override string BehaviourName => "물리효과: 두 지점 사이 이동";
-        public override string Description => "오브젝트를 두 지점 사이로 이동시킬 수 있는 요소입니다.\n" +
+        public override string Description => "오브젝트를 두 지점을 기준으로 이동시킬 수 있는 요소입니다.\n" +
                                               "시작 지점과 끝 지점이 필요합니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchMovementEffect-2de3243cd4b84c1eb7c4c6713842846c?pvs=4";
         public override int MaximumCount => 64;
         
         public enum CurveType

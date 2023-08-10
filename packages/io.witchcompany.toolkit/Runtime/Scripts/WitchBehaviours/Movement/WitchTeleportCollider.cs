@@ -10,7 +10,7 @@ namespace WitchCompany.Toolkit.Module
         public override string BehaviourName => "이동: 텔레포트 콜라이더";
         public override string Description => "텔레포트에서 플레이어를 감지할 수 있는 요소입니다.\n" +
                                               "오브젝트에 isTrigger가 활성화 된 SphereCollider가 필요합니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchTeleportCollider-753b500ff9764e2180296ca483ae4c78?pvs=4";
         
         
         [Header("오브젝트의 SphereCollider")]

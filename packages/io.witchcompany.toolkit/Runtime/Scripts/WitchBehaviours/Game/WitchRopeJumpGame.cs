@@ -16,7 +16,7 @@ namespace WitchCompany.Toolkit.Module
                                               "3. Rope는 전체 길이기 4여야 합니다.\n" +
                                               "4. ScoreText는 현재 점수가, StateText는 게임 진행상황이 표시됩니다.\n" +
                                               "5. JoinGameEffect는 게임 참가시, OutGameEffect는 줄에 걸릴 시 플레이됩니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchRopeJumpGame-0ed24408ed9041c0aca807901bd67a0a?pvs=4";
         public override int MaximumCount => 1;
 
         public const float TurningRadius = 0.15f;
