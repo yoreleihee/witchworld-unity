@@ -37,7 +37,8 @@ namespace WitchCompany.Toolkit.Module
         public PointOfView POV => pov;
         
         [SerializeField, HideInInspector] private WitchSpawnPoint spawnPoint;
-        [HideInInspector] public UnityEvent respawnEvent;
+        [Header("캐릭터 리스폰 이벤트"), Tooltip("캐릭터 리스폰되면 이벤트 실행")]
+        public UnityEvent respawnEvent;
 
         public AudioClip DefaultBGM => defaultBGM;
         public Transform SpawnPoint => spawnPoint.transform;
