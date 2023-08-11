@@ -22,24 +22,26 @@ namespace WitchCompany.Toolkit.Module
         [SerializeField, ReadOnly] private string unityVersion;
         [SerializeField, ReadOnly] private string toolkitVersion;
         [SerializeField, ReadOnly] private string updatedDateUtc;
+        public string UnityVersion => unityVersion;
+        public string ToolkitVersion => toolkitVersion;
+        public string UpdatedDateUtc => updatedDateUtc;
         
         [Header("연결된 behaviours")]
         [SerializeField, ReadOnly] private List<WitchBehaviour> behaviours;
-        
-        [SerializeField, HideInInspector] private WitchSpawnPoint spawnPoint;
 
         [Header("BGM")] 
         [SerializeField] private AudioClip defaultBGM;
-        [Header("중력값")]
-        [SerializeField, Range(0.1f, 1f)] private float gravity = 1f;
+
+        [Header("시점")] 
+        [SerializeField] private PointOfView pov = PointOfView.Free;
+        public PointOfView POV => pov;
         
+        [SerializeField, HideInInspector] private WitchSpawnPoint spawnPoint;
         [HideInInspector] public UnityEvent respawnEvent;
 
         public AudioClip DefaultBGM => defaultBGM;
-        public float GravityRatio => gravity;
         public Transform SpawnPoint => spawnPoint.transform;
         public List<WitchBehaviour> Behaviours => behaviours;
-        public string ToolkitVersion => toolkitVersion;
 
         public void Respawn() => respawnEvent.Invoke();
 
@@ -50,7 +52,6 @@ namespace WitchCompany.Toolkit.Module
         public override ValidationError ValidationCheck()
         {
             if (spawnPoint == null) return NullError(nameof(spawnPoint));
-            if (gravity is < 0 or > 1) return Error("gravity는 0과 1 사이어야 합니다.");
             if (transform.position != Vector3.zero) return Error("매니저의 좌표는 0이어야 합니다.");
             if (transform.rotation != Quaternion.identity) return Error("매니저의 회전값은 0이어야 합니다.");
             if (transform.localScale != Vector3.one) return Error("매니저의 스케일은 1이어야 합니다.");
