@@ -9,7 +9,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "타이머를 시작, 종료할 수 있는 요소입니다.\n" +
                                               "timer는 mm:ss.ms로 표시됩니다.\n" +
                                               "timespan은 hh:mm:ss로 표시됩니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchTimer-7d2f74b50da64977aa81b832198dcee0?pvs=4";
 
         public override int MaximumCount => 1;
 

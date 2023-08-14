@@ -8,7 +8,7 @@ namespace WitchCompany.Toolkit.Module.Event
     {
         public override string BehaviourName => "이벤트: 연결자";
         public override string Description => "씬 위의 이벤트와 ScriptableObject 이벤트를 연결시켜주는 도구입니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchEventConnector-1fa5cf2a5abf4a6c926c4c3b57f91831?pvs=4";
 
         [field: Header("타겟")]
         [field: SerializeField] public WitchEventConnectorSO TargetEvent { get; private set; }

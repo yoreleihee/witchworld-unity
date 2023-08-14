@@ -11,7 +11,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "블록의 랭킹을 나타냅니다.\n" +
                                               "블록의 랭킹에 필요한 키 값을 넣어 랭킹을 불러옵니다.\n\n" +
                                               "*데이터 매니저가 필요합니다.\n";
-        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchRankingBoard-4d5aa299eafc4d50b94c48313329d8a4?pvs=4";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchLeaderBoard-4d5aa299eafc4d50b94c48313329d8a4?pvs=4";
 
         public override int MaximumCount => 8;
 

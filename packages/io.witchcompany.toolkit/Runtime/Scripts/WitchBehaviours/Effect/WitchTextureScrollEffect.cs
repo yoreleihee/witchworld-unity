@@ -10,7 +10,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
 
         public override string Description => "텍스쳐를 일정 속도로 움직입니다. MeshRenderer가 필요합니다.";
 
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchTextureScrollEffect-1314c266421549698059676fa304c061?pvs=4";
 
         [Header("X축 속도"), SerializeField, Range(-10, 10)]
         private float speedX;

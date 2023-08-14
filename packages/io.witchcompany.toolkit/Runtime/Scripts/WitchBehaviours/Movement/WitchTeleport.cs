@@ -14,7 +14,7 @@ namespace WitchCompany.Toolkit.Module
         public override string Description => "블록 내부에서 A 지점에서 B 지점 또는 B 지점에서 A 지점으로 순간 이동할 수 있는 요소입니다.\n" +
                                               "텔레포트의 A, B 지점에는 WitchTeleportCollider 컴포넌트가 필요합니다.\n" +
                                               "텔레포트의 두 지점은 WitchTeleport의 자식 오브젝트여야 합니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchTeleport-74f693c68fd841bf8894ddfec66baa09?pvs=4";
 
 
         [Header("단방향 (A->B)"), SerializeField]

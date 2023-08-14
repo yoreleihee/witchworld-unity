@@ -14,7 +14,7 @@ namespace WitchCompany.Toolkit.Module
                                               "매쉬콜라이더 및 매쉬렌더러가 필요합니다.\n" +
                                               "낙서가 되는 벽면의 텍스쳐 및 색상은 낙서 설정을 따릅니다.\n" +
                                               "브러쉬가 없다면 검은색, 있다면 첫브러쉬의 색상으로 시작합니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchPaintWall-d8f0382e1e234a3b912987f91bf6c954?pvs=4";
 
         public override int MaximumCount => 1;
 

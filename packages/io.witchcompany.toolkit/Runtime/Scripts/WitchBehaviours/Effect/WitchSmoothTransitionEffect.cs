@@ -10,7 +10,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         public override string Description => "이 모듈이 부착된 오브젝트는 서서히 나타나거나 사라집니다.\n" +
                                               "변화가 일어날 시간을 설정할 수 있습니다.\n";
 
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchSmoothTransitionEffect-a6d7426699684a79b7b4497052e0ad42?pvs=4";
 
         [Header("변화 시간"), SerializeField, Range(0.01f, 2f)]
         private float smoothTime = 0.1f;

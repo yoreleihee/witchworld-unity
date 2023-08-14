@@ -9,7 +9,7 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
     {
         public override string BehaviourName => "물리효과: 열리는 문";
         public override string Description => "플레이어가 특정 구역에 들어서면, 문이 열립니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchDoorEffect-7dd7908522f64077b29851b2743b40cb?pvs=4";
         public override int MaximumCount => 16;
 
         [Header("플레이어를 인지할 Trigger"), SerializeField]

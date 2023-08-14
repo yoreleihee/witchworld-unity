@@ -11,7 +11,7 @@ namespace WitchCompany.Toolkit.Module.Dialogue
         public override string Description => "NPC와 대화할 수 있는 기능입니다.\n" +
                                               "WitchPointerEvent가 필요합니다.\n" +
                                               "NPC 이름은 공백포함 12글자를 넘길 수 없습니다.";
-        public override string DocumentURL => "";
+        public override string DocumentURL => "https://www.notion.so/witchcompany/WitchDialogue-7ec45e0f20ef4ce59f9c044fc8f022ae?pvs=4";
         public override int MaximumCount => 10;
 
         [field: Header("NPC 이름, 목소리")]
