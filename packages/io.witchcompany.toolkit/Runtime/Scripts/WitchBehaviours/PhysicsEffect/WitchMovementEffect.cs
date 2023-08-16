@@ -29,10 +29,13 @@ namespace WitchCompany.Toolkit.Module.PhysicsEffect
         private CurveType type = CurveType.Constant;
         [Header("시간"), SerializeField, Range(0.1f, 300)]
         private float moveTime = 3f;
+        [Header("활성화 시 위치 초기화"), Tooltip("오브젝트를 비활성화 상태에서 활성화 시키면 시작 지점에서 활성화 되도록 설정")]
+        private bool activeOnReset = true;
 
         public Transform EndTr => endPos;
         public float MoveTime => moveTime;
         public CurveType Curve => type;
+        public bool ActiveOnReset => activeOnReset;
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
