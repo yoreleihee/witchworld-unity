@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using WitchCompany.Toolkit.Attribute;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEnvironment
 {
@@ -46,5 +47,17 @@ namespace WitchCompany.Toolkit.Module.PhysicsEnvironment
         public Collider Col => col;
         public Color OriginColor => originColor;
         public Color WarnColor => warnColor;
+
+#if UNITY_EDITOR
+        public override ValidationError ValidationCheck()
+        {
+            if (ren == null)
+                return NullError("renderer");
+            if (col == null)
+                return NullError("collider");
+
+            return base.ValidationCheck();
+        }
+#endif
     }
 }
