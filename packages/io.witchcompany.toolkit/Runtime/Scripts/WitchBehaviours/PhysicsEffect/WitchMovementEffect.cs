@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using WitchCompany.Core;
+﻿using UnityEngine;
 using WitchCompany.Toolkit.Extension;
 using WitchCompany.Toolkit.Validation;
 

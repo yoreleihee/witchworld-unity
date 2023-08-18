@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using WitchCompany.Toolkit.Attribute;
+﻿using UnityEngine;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module.PhysicsEnvironment

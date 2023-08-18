@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
