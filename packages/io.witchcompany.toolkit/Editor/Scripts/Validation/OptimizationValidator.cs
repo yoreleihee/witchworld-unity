@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.GUI;
 using WitchCompany.Toolkit.Editor.Tool;
+using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 using Object = UnityEngine.Object;
 
@@ -21,6 +22,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// - 배치된 개별 매쉬 버텍스 개수
         /// - 배치된 전체 메쉬 버텍스 개수
         /// - 사용된 라이트맵 용량
+        /// - 사용된 BGM 용량
         /// - 사용된 텍스쳐 용량
         /// - 가장 용량이 큰 텍스쳐
         /// - 유니크 머테리얼 개수
@@ -47,6 +49,14 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {
                 var error = new ValidationError($"Total Light Map Size : {lightMapSize} / {OptimizationConfig.MaxLightmapMb} MB\n" +
                                                 $"모든 Light Map의 최대 크기는 {OptimizationConfig.MaxLightmapMb} MB입니다. Scene에 적용된 Light Map을 조절해주세요.", ValidationTag.TagLightmap);
+                validationReport.Append(error);
+            }
+            //  BGM 검사
+            var bgmSize = GetBgmMB();
+            if (bgmSize > OptimizationConfig.MaxBgmMb)
+            {
+                var error = new ValidationError($"BGM Size : {bgmSize} / {OptimizationConfig.MaxBgmMb} MB\n" +
+                                                $"BGM의 최대 크기는 {OptimizationConfig.MaxBgmMb} MB입니다. Scene에 적용된 BGM을 조절해주세요.", ValidationTag.TagBgm);
                 validationReport.Append(error);
             }
             
@@ -171,7 +181,21 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return Math.Round(bytes / 1024 / 1024, 3);
         }
 
-        /// <summary> 텍스쳐 불러오기</summary>>
+        /// <summary> BGM 용량 : 소숫점 아래 3번째 자리까지 표시 </summary>
+        public static double GetBgmMB()
+        {
+            double bytes = 0;
+            var blockManager = Object.FindObjectOfType<WitchBlockManager>(true);
+            
+            if (blockManager.DefaultBGM == null) return bytes;
+            
+            var bgm = blockManager.DefaultBGM;
+            bytes = AssetTool.GetFileSizeByte(AssetTool.GetAssetPath(bgm));
+
+            return Math.Round(bytes / 1024 / 1024, 3);
+        }
+
+        /// <summary> 텍스쳐 불러오기 </summary>>
         public static IEnumerable<Texture> foundTextureList()
         {
             var loadTextures = new List<Texture>();
@@ -200,7 +224,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return loadTextures;
         }
 
-        /// <summary> 텍스쳐 용량 : 소숫점 아래 3번째 자리까지 표시</summary>
+        /// <summary> 텍스쳐 용량 : 소숫점 아래 3번째 자리까지 표시 </summary>
         public static double GetTextureMB()
         {
             var foundTextures = foundTextureList();

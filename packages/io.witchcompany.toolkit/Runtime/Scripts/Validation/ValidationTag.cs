@@ -11,6 +11,7 @@
         public const string TagMaterial = "Material";
         public const string TagTexture = "Texture";
         public const string TagLightmap = "Light Map";
+        public const string TagBgm = "BGM";
         public const string TagMeshCollider = "Mesh Collider";
         public const string TagRigidbody = "Rigidbody";
         public const string TagDirectionalLight = "Directional";
