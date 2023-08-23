@@ -22,7 +22,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// - 배치된 개별 매쉬 버텍스 개수
         /// - 배치된 전체 메쉬 버텍스 개수
         /// - 사용된 라이트맵 용량
-        /// - 사용된 BGM 용량
+        /// - 사용된 오디오 클립 용량
+        /// - 가장 용량이 큰 오디오 클립
         /// - 사용된 텍스쳐 용량
         /// - 가장 용량이 큰 텍스쳐
         /// - 유니크 머테리얼 개수
@@ -43,6 +44,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                                                 $"모든 Vertex의 최대 개수는 {OptimizationConfig.MaxVerts}개 입니다. Scene 내의 Mesh Vertex를 조절해주세요.", ValidationTag.TagMeshVertex);
                 validationReport.Append(error);
             }
+            
             //  라이트맵 검사
             var lightMapSize = GetLightMapMB();
             if (lightMapSize > OptimizationConfig.MaxLightmapMb)
@@ -51,24 +53,28 @@ namespace WitchCompany.Toolkit.Editor.Validation
                                                 $"모든 Light Map의 최대 크기는 {OptimizationConfig.MaxLightmapMb} MB입니다. Scene에 적용된 Light Map을 조절해주세요.", ValidationTag.TagLightmap);
                 validationReport.Append(error);
             }
-            //  BGM 검사
-            var bgmSize = GetBgmMB();
-            if (bgmSize > OptimizationConfig.MaxBgmMb)
+            
+            //  오디오 클립 검사
+            var findAudioClips = FindAudioClipList();
+            var audioClipSize = GetAudioClipMB(findAudioClips);
+            if (audioClipSize > OptimizationConfig.MaxAudioClipMb)
             {
-                var error = new ValidationError($"BGM Size : {bgmSize} / {OptimizationConfig.MaxBgmMb} MB\n" +
-                                                $"BGM의 최대 크기는 {OptimizationConfig.MaxBgmMb} MB입니다. Scene에 적용된 BGM을 조절해주세요.", ValidationTag.TagBgm);
+                var error = new ValidationError($"Total Audio Clip Size : {audioClipSize} / {OptimizationConfig.MaxAudioClipMb} MB\n" +
+                                                $"모든 Audio Clip의 최대 크기는 {OptimizationConfig.MaxAudioClipMb} MB입니다. Scene에 적용된 Audio Clip을 조절해주세요.", ValidationTag.TagAudioClip);
                 validationReport.Append(error);
             }
+            GetLargestAudioClipArray(findAudioClips);
             
             //  텍스쳐 검사
-            var textureSize = GetTextureMB();
+            var findTexture = FindTextureList();
+            var textureSize = GetTextureMB(findTexture);
             if (textureSize > OptimizationConfig.MaxSharedTextureMb)
             {
                 var error = new ValidationError($"Texture Size : {textureSize} / {OptimizationConfig.MaxSharedTextureMb} MB\n" +
                                                 $"모든 Texture의 최대 크기는 {OptimizationConfig.MaxSharedTextureMb} MB입니다. Scene 내의 Texture를 조절해주세요.", ValidationTag.TagTexture);
                 validationReport.Append(error);
             }
-            GetLargestTextureArray();
+            GetLargestTextureArray(findTexture);
             
             //  유니크 머티리얼 검사
             var materialCount = GetUniqueMaterialCount();
@@ -112,7 +118,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return report;
         }
         
-        /// <summary> 전체 mesh의 vertex 개수 검사</summary>
+        /// <summary> 전체 mesh의 vertex 개수 검사 </summary>
         public static (List<Tuple<GameObject, Mesh>>, int) GetAllMeshes()
         {
             var meshes = new List<Tuple<GameObject, Mesh>>();
@@ -152,7 +158,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return (meshes, totalVertexCount);
         }
 
-        /// <summary> 라이트맵 용량 : 소수점 아래 3번째 자리까지 표시</summary>
+        /// <summary> 라이트맵 용량 : 소수점 아래 3번째 자리까지 표시 </summary>
         public static double GetLightMapMB()
         {
             double bytes = 0;
@@ -181,25 +187,86 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return Math.Round(bytes / 1024 / 1024, 3);
         }
 
-        /// <summary> BGM 용량 : 소숫점 아래 3번째 자리까지 표시 </summary>
-        public static double GetBgmMB()
+        /// <summary> 오디오 클립 불러오기 </summary>
+        public static IEnumerable<AudioClip> FindAudioClipList()
         {
-            double bytes = 0;
+            var loadSoundEffects = new List<AudioClip>();
+            var soundEffects = Object.FindObjectsOfType<WitchSoundEffect>(true);
+            
             var blockManager = Object.FindObjectOfType<WitchBlockManager>(true);
             
-            if (blockManager.DefaultBGM == null) return bytes;
-            
-            var bgm = blockManager.DefaultBGM;
-            bytes = AssetTool.GetFileSizeByte(AssetTool.GetAssetPath(bgm));
+            // Witch Sound Effect의 Target Clip (Audio Clip) 탐색 -> Audio Clip 찾아서 리스트에 추가 (foundAudioClip)
+            foreach (var soundEffect in soundEffects)
+            {
+                var audioClip = soundEffect.TargetClip;
 
-            return Math.Round(bytes / 1024 / 1024, 3);
+                if (audioClip != null)
+                    loadSoundEffects.Add(audioClip);
+            }
+
+            var bgmClip = blockManager.DefaultBGM;
+
+            if (bgmClip != null)
+                loadSoundEffects.Add(bgmClip);
+
+            return loadSoundEffects.Distinct();
+        }
+
+        /// <summary> 전체 오디오 클립 용량 : 소숫점 아래 3번째 자리까지 표시 </summary>
+        public static double GetAudioClipMB(IEnumerable<AudioClip> audioClipList)
+        {
+            var foundAudioClips = audioClipList;
+            
+            // 오디오 클립 사이즈 계산
+            var totalBytes = 0L;
+            foreach (var audioClip in foundAudioClips)
+            {
+                var sizeInBytes = Profiler.GetRuntimeMemorySizeLong(audioClip);
+                // Debug.Log($"[Audio Clip]{audioClip.name}: {Math.Round(sizeInBytes/1024f/1024f)}MB");
+                totalBytes += sizeInBytes;
+            }
+
+            const double mb = 1024D * 1024D;
+            return Math.Round(totalBytes / mb, 3);
+        }
+
+        /// <summary> 가장 용량이 큰 오디오 클립: 5개까지 표시 </summary>
+        public static void GetLargestAudioClipArray(IEnumerable<AudioClip> audioClipList)
+        {
+            var foundAudioClips = audioClipList;
+            
+            var audioClipNames = new[] { "", "", "", "", "" };
+            var audioClipSizes = new[] { 0D, 0, 0, 0, 0 };
+            
+            // 가장 용량이 큰 오디오 클립 로깅
+            foreach (var audioClip in foundAudioClips)
+            {
+                var sizeInBytes = Profiler.GetRuntimeMemorySizeLong(audioClip);
+
+                if (!(audioClipSizes[^1] < sizeInBytes)) continue;
+                audioClipNames[^1] = audioClip.name;
+                audioClipSizes[^1] = sizeInBytes;
+
+                for (var i = audioClipSizes.Length - 1; i > 0; i--)
+                {
+                    if (!(audioClipSizes[i] > audioClipSizes[i - 1])) continue;
+                    (audioClipNames[i], audioClipNames[i - 1]) = (audioClipNames[i - 1], audioClipNames[i]);
+                    (audioClipSizes[i], audioClipSizes[i - 1]) = (audioClipSizes[i - 1], audioClipSizes[i]);
+                }
+            }
+
+            for (var i = 0; i < audioClipSizes.Length; i++)
+            {
+                if (audioClipSizes[i] > 0f)
+                    Debug.Log($"[Audio Clip]{audioClipNames[i]}: {Math.Round(audioClipSizes[i] / 1024 / 1024, 3)}MB");
+            }
         }
 
         /// <summary> 텍스쳐 불러오기 </summary>>
-        public static IEnumerable<Texture> foundTextureList()
+        public static IEnumerable<Texture> FindTextureList()
         {
             var loadTextures = new List<Texture>();
-            var renderers  = Object.FindObjectsOfType<Renderer>(true);
+            var renderers = Object.FindObjectsOfType<Renderer>(true);
 
             foreach (var renderer in renderers)
             {
@@ -221,34 +288,36 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 }
             }
 
-            return loadTextures;
+            return loadTextures.Distinct();
         }
 
-        /// <summary> 텍스쳐 용량 : 소숫점 아래 3번째 자리까지 표시 </summary>
-        public static double GetTextureMB()
+        /// <summary> 전체 텍스쳐 용량 : 소숫점 아래 3번째 자리까지 표시 </summary>
+        public static double GetTextureMB(IEnumerable<Texture> textureList)
         {
-            var foundTextures = foundTextureList();
+            var foundTextures = textureList;
             
-            // 텍스쳐 사이즈 계산 - 중복 제거
-            double bytes = 0;
-            foreach (var texture in foundTextures.Distinct())
+            // 텍스쳐 사이즈 계산
+            var totalBytes = 0L;
+            foreach (var texture in foundTextures)
             {
                 var sizeInBytes = Profiler.GetRuntimeMemorySizeLong(texture);
-                //Debug.Log($"[Texture]{texture.name}: {sizeInBytes/1024f/1024f}MB", texture);
-                bytes += sizeInBytes;
+                // Debug.Log($"[Texture]{texture.name}: {Math.Round(sizeInBytes/1024f/1024f)}MB", texture);
+                totalBytes += sizeInBytes;
             }
             
-            return Math.Round(bytes / 1024 / 1024, 3);
+            const double mb = 1024D * 1024D;
+            return Math.Round(totalBytes / mb, 3);
         }
 
-        /// <summary> 가장 용량이 큰 텍스쳐: 5개까지 표시</summary>
-        public static void GetLargestTextureArray()
+        /// <summary> 가장 용량이 큰 텍스쳐 : 5개까지 표시 </summary>
+        public static void GetLargestTextureArray(IEnumerable<Texture> textureList)
         {
-            var foundTextures = foundTextureList();
-            var textureNames = new string[] { "", "", "", "", "" };
-            var textureSizes = new double[] { 0f, 0f, 0f, 0f, 0f };
+            var foundTextures = textureList;
             
-            // 가장 용량이 큰 텍스쳐 로깅 - 중복 제거
+            var textureNames = new[] { "", "", "", "", "" };
+            var textureSizes = new[] { 0D, 0, 0, 0, 0 };
+            
+            // 가장 용량이 큰 텍스쳐 로깅
             foreach (var texture in foundTextures.Distinct())
             {
                 var sizeInBytes = Profiler.GetRuntimeMemorySizeLong(texture);
@@ -268,7 +337,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             for (var i = 0; i < textureSizes.Length; i++)
             {
                 if (textureSizes[i] > 0f)
-                    Debug.Log($"[Texture]{textureNames[i]}: {textureSizes[i]}MB");
+                    Debug.Log($"[Texture]{textureNames[i]}: {Math.Round(textureSizes[i] / 1024 / 1024, 3)}MB");
             }
             
         }

@@ -38,8 +38,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             EditorGUILayout.LabelField("Vertex", OptimizationValidator.GetAllMeshes().Item2.ToString());
             EditorGUILayout.LabelField("Unique Material", OptimizationValidator.GetUniqueMaterialCount().ToString());
-            EditorGUILayout.LabelField("Texture", OptimizationValidator.GetTextureMB()+ " MB");
+            EditorGUILayout.LabelField("Texture", OptimizationValidator.GetTextureMB(OptimizationValidator.FindTextureList())+ " MB");
             EditorGUILayout.LabelField("Light Map", OptimizationValidator.GetLightMapMB()+ " MB");
+            EditorGUILayout.LabelField("Audio Clip", OptimizationValidator.GetAudioClipMB(OptimizationValidator.FindAudioClipList())+ " MB");
 
             EditorGUILayout.EndVertical();
         }
