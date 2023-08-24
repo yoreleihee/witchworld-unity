@@ -118,44 +118,27 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static async UniTaskVoid OnClickPublish()
         {
+            // 업로드 권한 확인
+            var permission = await WitchAPI.CheckPermission();
+                
+            if (permission < 0)
+            {
+                var permissionMsg = permission > -2 ? AssetBundleConfig.AuthMsg : AssetBundleConfig.PermissionMsg;
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
+                return;
+            }
+            // 썸네일 확인
+            if (string.IsNullOrEmpty(PublishConfig.ThumbnailPath))
+            {
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", AssetBundleConfig.ThumbnailMsg, "OK");
+                return;
+            }
+            
             // 입력 제한
             CustomWindow.IsInputDisable = true;
-            
-            // 업로드 권한 확인
-            // var permission = await WitchAPI.CheckPermission();
-            //     
-            // if (permission < 0)
-            // {
-            //     var permissionMsg = permission > -2 ? AssetBundleConfig.AuthMsg : AssetBundleConfig.PermissionMsg;
-            //     EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
-            //     return;
-            // }
-            // // 썸네일 확인
-            // if (string.IsNullOrEmpty(PublishConfig.ThumbnailPath))
-            // {
-            //     EditorUtility.DisplayDialog("Witch Creator Toolkit", AssetBundleConfig.ThumbnailMsg, "OK");
-            //     return;
-            // }
-
-            await UniTask.Yield();
-            
             // 번들 추출
             buildReport = WitchToolkitPipeline.PublishWithValidation(GetOption());
-            if (buildReport.result == JBuildReport.Result.Success)
-            {
-                var span = buildReport.BuildEndedAt - buildReport.BuildStatedAt;
-                Debug.Log($"번들 추출 성공({span.TotalMinutes}min): " + buildReport.buildGroups.Count);
-                EditorUtility.OpenWithDefaultApp(buildReport.buildGroups[0].exportPath);
-            }
-            else
-            {
-                Debug.LogError("번들 추출 실패");
-            }
-            
-            // 입력 제한 해제
-            CustomWindow.IsInputDisable = false;
-            return;
-            
+                
             if (buildReport.result == JBuildReport.Result.Success)
             {
                 // 업로드

@@ -78,11 +78,9 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 var scenePath = AssetDatabase.GetAssetPath(option.targetScene);
                 var bundleName = option.BundleKey;
                 AssetBundleTool.AssignAssetBundle(scenePath, bundleName);
-                Log("번들 할당 성공!");
-                
                 // 번들 빌드
                 var bundles = AssetBundleTool.BuildAssetBundle();
-                Log($"번들 빌드 성공!({bundles.Count})");
+                Log("번들 빌드 성공!");
                 
                 // // Static 되돌려주기
                 // StaticRevertTool.RevertFlags();
@@ -90,9 +88,11 @@ namespace WitchCompany.Toolkit.Editor.Tool
 
                 // 업로드 룰 검증
                 foreach (var (target, bundle) in bundles)
-                    if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, target, bundle)).result !=
-                        ValidationReport.Result.Success)
+                {
+                    if (validationReport.Append(UploadRuleValidator.ValidationCheck(option, target, bundle)).result != ValidationReport.Result.Success)
                         throw new Exception("업로드 유효성 검사 실패");
+                }
+
                 Log("업로드 유효성 검사 성공!");
                 
                 // 빌드 리포트 작성
@@ -104,7 +104,6 @@ namespace WitchCompany.Toolkit.Editor.Tool
                     group.target = target;
                     group.exportPath = Path.Combine(AssetBundleConfig.BundleExportPath, target, option.BundleKey);
                     group.totalSizeByte = AssetTool.GetFileSizeByte(group.exportPath);
-                    buildReport.buildGroups.Add(group);
                 }
                 buildReport.BuildEndedAt = DateTime.Now;
             }

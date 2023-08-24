@@ -99,11 +99,8 @@ namespace WitchCompany.Toolkit.Editor.Tool
         {
             try
             {
-                //const BuildAssetBundleOptions option = BuildAssetBundleOptions.ForceRebuildAssetBundle |
-                //                                       BuildAssetBundleOptions.ChunkBasedCompression;
-                // 옵션 변경
-                const BuildAssetBundleOptions option = BuildAssetBundleOptions.ChunkBasedCompression |
-                                                       BuildAssetBundleOptions.DeterministicAssetBundle;
+                const BuildAssetBundleOptions option = BuildAssetBundleOptions.ForceRebuildAssetBundle |
+                                                       BuildAssetBundleOptions.ChunkBasedCompression;
                 
                 // 경로
                 var path = Path.Combine(AssetBundleConfig.BundleExportPath, targetName);
@@ -113,6 +110,7 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 // EditorUserBuildSettings.SwitchActiveBuildTarget(targetGroup, target);
                 
                 var result = BuildPipeline.BuildAssetBundles(path, option, target);
+                
                 return result.GetAllAssetBundles();
             }
             catch (Exception e)
