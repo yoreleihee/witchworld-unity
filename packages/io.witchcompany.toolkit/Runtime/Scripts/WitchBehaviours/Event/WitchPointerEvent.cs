@@ -28,12 +28,18 @@ namespace WitchCompany.Toolkit.Module
         public bool ActiveOutline => activeOutline;
         
 #if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
+        public override ValidationReport ValidationCheckReport()
         {
-            if(!TryGetComponent(out Collider col))
-                return NullError("Collider"); 
+            var report = new ValidationReport();
 
-            return base.ValidationCheck();
+            if (!TryGetComponent(out Collider col))
+                report.Append(NullError("Collider"));
+
+            report.Append(EventHandlerCheck(pointerEnter));
+            report.Append(EventHandlerCheck(pointerClick));
+            report.Append(EventHandlerCheck(pointerExit));
+
+            return report;
         }
 #endif
     }

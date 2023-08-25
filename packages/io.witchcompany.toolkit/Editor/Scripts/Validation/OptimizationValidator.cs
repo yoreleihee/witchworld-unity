@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Codice.Client.BaseCommands.BranchExplorer.Layout;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
 using WitchCompany.Toolkit.Editor.GUI;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Module;
+using WitchCompany.Toolkit.Module.Event;
 using WitchCompany.Toolkit.Validation;
 using Object = UnityEngine.Object;
 
@@ -341,7 +344,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 if (textureSizes[i] > 0f)
                     Debug.Log($"[Texture]{textureNames[i]}: {Math.Round(textureSizes[i] / 1024 / 1024, 3)}MB");
             }
-            
         }
 
         /// <summary> 유니크 머테리얼 개수 </summary>
@@ -498,7 +500,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         }
 
         /// <summary> Audio Clip Preset 사용 여부 검사 </summary>
-        public static ValidationReport ValidationAudioClipPreset(IEnumerable<AudioClip> audioClipList)
+        private static ValidationReport ValidationAudioClipPreset(IEnumerable<AudioClip> audioClipList)
         {
             var report = new ValidationReport();
             

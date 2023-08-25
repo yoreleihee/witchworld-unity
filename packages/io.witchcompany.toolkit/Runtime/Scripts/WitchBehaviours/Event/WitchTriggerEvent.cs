@@ -30,15 +30,21 @@ namespace WitchCompany.Toolkit.Module
 
 
 #if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
+        public override ValidationReport ValidationCheckReport()
         {
+            var report = new ValidationReport();
+            
             if (!TryGetComponent(out Collider col))
-                return NullError("Collider");
+                report.Append(NullError("Collider"));
             
             if (!col.isTrigger)
-                return Error($"{col.name}의 Collider에 isTrigger가 활성화되어야 합니다.");
+                report.Append(Error($"{col.name}의 Collider에 isTrigger가 활성화되어야 합니다."));
             
-            return base.ValidationCheck();
+            report.Append(EventHandlerCheck(triggerEnter));
+            report.Append(EventHandlerCheck(triggerStay));
+            report.Append(EventHandlerCheck(triggerExit));
+
+            return report;
         }
 #endif
     }

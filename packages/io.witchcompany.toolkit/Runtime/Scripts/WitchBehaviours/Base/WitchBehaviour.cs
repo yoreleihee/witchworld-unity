@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
@@ -30,6 +31,21 @@ namespace WitchCompany.Toolkit.Module
         protected ValidationError RayLayerError(GameObject target) =>
             Error($"{name}의 {target.name}의 레이어는 Ignore Raycast일 수 없습니다.");
         protected ValidationError StaticError(GameObject target) => Error($"{name}의 static을 해제해야 합니다.");
+        protected ValidationError EventHandlerCheck(UnityEvent unityEvent)
+        {
+            for (var i = 0; i < unityEvent.GetPersistentEventCount(); i++)
+            {
+                var target = unityEvent.GetPersistentTarget(i);
+
+                if (target == null)
+                    return NullError("Event");
+                if (target.GetType() != typeof(GameObject)
+                    && target is not MonoBehaviour)
+                    return Error($"{name}에 {target}은 연결시킬 수 없습니다.");
+            }
+
+            return null;
+        }
 #endif
     }
 }

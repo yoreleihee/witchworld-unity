@@ -14,6 +14,7 @@
         public const string TagAudioClip = "Audio Clip";
         public const string TagMeshCollider = "Mesh Collider";
         public const string TagRigidbody = "Rigidbody";
+        public const string TagEvent = "Event";
         public const string TagDirectionalLight = "Directional";
         public const string TagRealtimeLight = "Point, Spot";
         public const string TagEtcRealtimeLight = "Realtime";

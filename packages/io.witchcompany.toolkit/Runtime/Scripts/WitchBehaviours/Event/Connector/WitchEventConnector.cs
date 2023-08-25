@@ -17,12 +17,16 @@ namespace WitchCompany.Toolkit.Module.Event
         [field: SerializeField] public UnityEvent OnEvent { get; private set; }
         
 #if UNITY_EDITOR
-        public override ValidationError ValidationCheck()
+        public override ValidationReport ValidationCheckReport()
         {
+            var report = new ValidationReport();
+            
             if (TargetEvent == null)
-                return NullError("타겟 이벤트가 null입니다.");
+                report.Append(NullError("Target Event"));
 
-            return base.ValidationCheck();
+            report.Append(EventHandlerCheck(OnEvent));
+            
+            return report;
         }
 #endif
     }

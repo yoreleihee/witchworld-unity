@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Validation;
+using Object = UnityEngine.Object;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -50,14 +51,18 @@ namespace WitchCompany.Toolkit.Module
         /// <summary>위치 요소를 카운팅한 딕셔너리</summary>
         public Dictionary<Type, (WitchBehaviour behaviour, int count)> BehaviourCounter { get; private set; }
         
-        public override ValidationError ValidationCheck()
+        public override ValidationReport ValidationCheckReport()
         {
-            if (spawnPoint == null) return NullError(nameof(spawnPoint));
-            if (transform.position != Vector3.zero) return Error("매니저의 좌표는 0이어야 합니다.");
-            if (transform.rotation != Quaternion.identity) return Error("매니저의 회전값은 0이어야 합니다.");
-            if (transform.localScale != Vector3.one) return Error("매니저의 스케일은 1이어야 합니다.");
+            var report = new ValidationReport();
             
-            return null;
+            if (spawnPoint == null) report.Append(NullError(nameof(spawnPoint)));
+            if (transform.position != Vector3.zero) report.Append(Error("매니저의 좌표는 0이어야 합니다."));
+            if (transform.rotation != Quaternion.identity) report.Append(Error("매니저의 회전값은 0이어야 합니다."));
+            if (transform.localScale != Vector3.one) report.Append(Error("매니저의 스케일은 1이어야 합니다."));
+
+            report.Append(EventHandlerCheck(respawnEvent));
+            
+            return report;
         }
 
         /// <summary>포함한 위치 요소를 모두 검색하고, 카운팅한다.</summary>
