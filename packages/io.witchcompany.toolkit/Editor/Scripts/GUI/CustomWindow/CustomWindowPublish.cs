@@ -201,7 +201,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);
             
             // 데이터 매니저 없으면 랭킹 키값 확인 안함
-            if (dataManager == null) return null;
+            if (dataManager == null || dataManager.RankingKeys.Count < 1) return null;
             
             var rankingKey = dataManager.RankingKeys[0];
             return new JRankingKey
