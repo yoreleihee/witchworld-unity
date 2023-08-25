@@ -18,17 +18,26 @@ namespace WitchCompany.Toolkit.Module
 
         public override int MaximumCount => 1;
 
-        [Header("낙서장 비율")] 
+        [Header("낙서장 이용 권한(모두, 로그인 유저만, 블록 오너만)")]
+        [SerializeField] private Permission drawPermission;
+        
+        [Header("낙서장 해상도 X,Y")] 
         [SerializeField] private Ratio paintRatioX = Ratio._512;
         [SerializeField] private Ratio paintRatioY = Ratio._512;
 
-        [Header("기본 브러쉬 색상")] 
+        [Header("기본 브러쉬 색상, 크기")] 
         [SerializeField] private Color brushColor = Color.black;
-        [Header("기본 브러쉬 반지름")] 
         [SerializeField, Range(0.01f, 0.5f)] private float brushRadius = 0.1f;
+        
         [Header("기본 텍스쳐 (빈 값 가능)")]
         [SerializeField] private Texture2D baseTexture;
 
+        public Permission DrawPermission => drawPermission;
+        public Vector2Int PaintRatio => new((int)paintRatioX, (int)paintRatioY);
+        public Color BrushColor => brushColor;
+        public float BrushRadius => brushRadius;
+        public Texture2D BaseTex => baseTexture;
+        
         private enum Ratio
         {
             _128 = 128,
@@ -37,10 +46,12 @@ namespace WitchCompany.Toolkit.Module
             _1024 = 1024
         }
 
-        public Vector2Int PaintRatio => new((int)paintRatioX, (int)paintRatioY);
-        public Color BrushColor => brushColor;
-        public float BrushRadius => brushRadius;
-        public Texture2D BaseTex => baseTexture;
+        public enum Permission
+        {
+            All = 0,
+            LoginUser = 1,
+            BlockOwnerOnly = 2
+        }
 
 #if UNITY_EDITOR
         public override ValidationError ValidationCheck()
