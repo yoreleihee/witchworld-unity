@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
-using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.GUI;
 using WitchCompany.Toolkit.Editor.Tool;
+using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 using Object = UnityEngine.Object;
@@ -90,7 +91,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             validationReport.Append(ValidateMeshCollider());
             validationReport.Append(ValidateLight());
             validationReport.Append(ValidateReflectionProbe());
-            validationReport.Append(ValidationUseCrunchCompression());
+            validationReport.Append(ValidationAudioClipPreset(findAudioClips));
+            validationReport.Append(ValidationUseCrunchCompression(findTexture));
             // validationReport.Append(ScriptRuleValidator.ValidateMissingComponents(SceneManager.GetActiveScene()));
             
             return validationReport;
@@ -495,44 +497,54 @@ namespace WitchCompany.Toolkit.Editor.Validation
             return report;
         }
 
-        /// <summary> Use Crunch Compression 사용 여부 검사 </summary>
-        private static ValidationReport ValidationUseCrunchCompression()
+        /// <summary> Audio Clip Preset 사용 여부 검사 </summary>
+        public static ValidationReport ValidationAudioClipPreset(IEnumerable<AudioClip> audioClipList)
         {
             var report = new ValidationReport();
             
-            var foundTextures = new List<Texture>();
-            var renderers  = Object.FindObjectsOfType<Renderer>(true);
+            var foundAudioClips = audioClipList;
 
-            foreach (var renderer in renderers)
+            // Audio Clip Preset 적용 확인
+            foreach (var audioClip in foundAudioClips)
             {
-                // 랜더러의 shardMaterial 배열 탐색
-                foreach (var material in renderer.sharedMaterials)
-                {
-                    if (material == null)
-                        continue;
+                var path = AssetDatabase.GetAssetPath(audioClip);
+                var importer = AssetImporter.GetAtPath(path) as AudioImporter;
 
-                    // 머티리얼의 texture 배열 탐색 -> texture 찾아서 리스트에 추가 (foundTextures)
-                    foreach (var texName in material.GetTexturePropertyNames())
-                    {
-                        var tex = material.GetTexture(texName);
-                        if (tex != null)
-                        {
-                            foundTextures.Add(tex);
-                        }
-                    }
-                }
+                if (importer == null) continue;
+                
+                // Preset 적용 확인할 if문
+                if (importer.forceToMono == true && importer.loadInBackground == false && importer.ambisonic == false &&
+                    audioClip.loadType == AudioClipLoadType.CompressedInMemory && audioClip.preloadAudioData == true) continue;
+                if (importer.forceToMono == false && importer.loadInBackground == true && importer.ambisonic == false &&
+                    audioClip.loadType == AudioClipLoadType.Streaming) continue;
+
+                var error = new ValidationError($"Audio Clip: {audioClip.name}\nAudio Clip Preset을 적용해야 합니다.",
+                    ValidationTag.TagAudioClip, audioClip);
+                report.Append(error);
             }
+
+            return report;
+        }
+
+        /// <summary> Use Crunch Compression 사용 여부 검사 </summary>
+        private static ValidationReport ValidationUseCrunchCompression(IEnumerable<Texture> textureList)
+        {
+            var report = new ValidationReport();
             
-            // crunch compress 설정 확인 - 중복 제거
-            foreach (var texture in foundTextures.Distinct())
+            var foundTextures = textureList;
+
+            // crunch compress 설정 확인
+            foreach (var texture in foundTextures)
             {
                 var path = AssetDatabase.GetAssetPath(texture);
                 var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-                if (importer != null && !importer.crunchedCompression)
-                {
-                    var error = new ValidationError($"Texture: {texture.name}\nCrunch Compression 기능을 활성화해야 합니다.", ValidationTag.TagTexture, texture);
-                    report.Append(error);
-                }
+
+                if (importer == null) continue;
+                if (importer.crunchedCompression) continue;
+                
+                var error = new ValidationError($"Texture: {texture.name}\nCrunch Compression 기능을 활성화해야 합니다.",
+                    ValidationTag.TagTexture, texture);
+                report.Append(error);
             }
 
             return report;
