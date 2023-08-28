@@ -11,5 +11,6 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
         
         public SceneAsset targetScene;
         public BundleTheme theme;
+        public bool isOfficial;
     }
 }

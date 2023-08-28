@@ -113,6 +113,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     PublishConfig.Capacity = capacity <= 20 ? capacity : 20;
             }
 
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                var official = EditorGUILayout.Toggle("Official", PublishConfig.Official);
+                if (check.changed)
+                    PublishConfig.Official = official;
+            }
+
             EditorGUILayout.EndVertical();
         }
 

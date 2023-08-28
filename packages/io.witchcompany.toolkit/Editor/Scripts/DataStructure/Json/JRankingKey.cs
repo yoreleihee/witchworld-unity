@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace WitchCompany.Toolkit.Editor.DataStructure
 {
+    [System.Serializable]
     public class JRankingKey
     {
         public string level;
