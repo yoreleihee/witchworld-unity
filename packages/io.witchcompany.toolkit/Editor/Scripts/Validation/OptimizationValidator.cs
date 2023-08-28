@@ -368,8 +368,15 @@ namespace WitchCompany.Toolkit.Editor.Validation
             var report = new ValidationReport();
             
             var meshColliders = Object.FindObjectsOfType<MeshCollider>(true);
+            var meshCount = 0;
+            foreach (var meshCollider in meshColliders)
+            {
+                // 페인트에서 사용중이지 않은 것만 검사
+                if (meshCollider.GetComponent<WitchPaintWall>() == null) 
+                    meshCount++;
+            }
 
-            if (meshColliders.Length > OptimizationConfig.MaxMeshColliderCount)
+            if (meshCount > OptimizationConfig.MaxMeshColliderCount)
             {
                 var errorMessage = $"Mesh Collider의 최대 개수는 {OptimizationConfig.MaxMeshColliderObject}개입니다." + 
                                    $" ({meshColliders.Length} / {OptimizationConfig.MaxMeshColliderObject})\n" +

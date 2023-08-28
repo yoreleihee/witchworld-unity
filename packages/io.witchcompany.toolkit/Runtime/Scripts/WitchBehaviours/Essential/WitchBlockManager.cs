@@ -88,6 +88,8 @@ namespace WitchCompany.Toolkit.Module
 
             var displayPhotos = new List<WitchDisplayFrame>();
             var displayVideos = new List<WitchDisplayFrame>();
+
+            var _publicPaintCount = 0;
             
             foreach (var behaviour in behaviours)
             {
@@ -106,6 +108,21 @@ namespace WitchCompany.Toolkit.Module
                         displayPhotos.Add(display);
                     else
                         displayVideos.Add(display);
+                }
+                
+                // 낙서 카운팅
+                if (type == typeof(WitchPaintWall))
+                {
+                    var paintWall = (WitchPaintWall) behaviour;
+                    if (paintWall.DrawPermission != WitchPaintWall.Permission.BlockOwnerOnly)
+                    {
+                        _publicPaintCount++;
+                        paintWall.Editor_SetInvalid(_publicPaintCount > 1 );
+                    }
+                    else
+                    {
+                        paintWall.Editor_SetInvalid(false);
+                    }
                 }
             }
             

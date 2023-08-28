@@ -110,9 +110,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             if(_timeStamp == timeStamp) return;
             _timeStamp = timeStamp;
 
-            if (_currentBlockManager == null) _currentBlockManager = FindObjectOfType<WitchBlockManager>();
-
-            _currentBlockManager.FindWitchBehaviours(ToolkitConfig.UnityVersion, ToolkitConfig.WitchToolkitVersion);
+            _currentBlockManager ??= FindObjectOfType<WitchBlockManager>();
+            if(_currentBlockManager != null)
+                _currentBlockManager.FindWitchBehaviours(ToolkitConfig.UnityVersion, ToolkitConfig.WitchToolkitVersion);
         }
 
         public override void OnInspectorGUI()
