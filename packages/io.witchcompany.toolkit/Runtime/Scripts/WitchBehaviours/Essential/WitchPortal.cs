@@ -7,6 +7,9 @@ namespace WitchCompany.Toolkit.Module
     [RequireComponent(typeof(SphereCollider))]
     public class WitchPortal : WitchBehaviourUnique
     {
+        [Obsolete("더이상 사용하지 않습니다.")]
+        public string TargetUrl => "";
+        
         public override string BehaviourName => "통로: 포탈";
         public override string Description => "다른 실내/실외 공간으로 연결되는 포탈입니다.\n" +
                                               "입구로 사용될 SphereCollider가 필요합니다.(IsTrigger 필요).\n" +
@@ -17,6 +20,7 @@ namespace WitchCompany.Toolkit.Module
         [Header("출구")]
         [SerializeField] private Transform exit;
         public Transform Exit => exit;
+
 
         public static WitchPortal InstantiateDefaultPortal(Transform parent, Vector3 pos, Quaternion rot, string portalName)
         {

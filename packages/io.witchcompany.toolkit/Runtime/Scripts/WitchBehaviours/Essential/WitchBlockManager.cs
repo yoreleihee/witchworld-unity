@@ -10,6 +10,9 @@ namespace WitchCompany.Toolkit.Module
 {
     public class WitchBlockManager : WitchBehaviourUnique
     {
+        [Obsolete("더이상 사용하지 않습니다.")]
+        public Transform SpawnPoint => transform;
+        
         public override string BehaviourName => "필수: 블록 매니저";
 
         public override string Description => "블록의 기본이 되는 요소입니다.\n" +
@@ -40,7 +43,7 @@ namespace WitchCompany.Toolkit.Module
         // 외부 접근
         public string ToolkitVersion => toolkitVersion;
         public AudioClip DefaultBGM => defaultBGM;
-        public PointOfView Pov => pov;
+        public PointOfView POV => pov;
         public List<WitchBehaviour> Behaviours => behaviours;
 
         public void Respawn() => respawnEvent.Invoke();
