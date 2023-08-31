@@ -26,7 +26,7 @@ namespace WitchCompany.Toolkit.Module
         protected ValidationError Error(string msg) => new(msg, ValidationTag.TagScript, this);
         protected ValidationError NullError(string scriptName) => Error($"{name}의 {scriptName}를 설정해주세요.");
         protected ValidationError ChildError(string scriptName) => Error($"{name}의 {scriptName}는 자식 오브젝트여야 합니다.");
-        protected ValidationError TriggerError(Collider col) => Error($"{name}의 {col.name}은 IsTrigger 체크되어야 합니다.");
+        protected ValidationError TriggerError(Collider col) => Error($"{name}의 콜라이더({col.name})는 IsTrigger 체크되어야 합니다.");
         protected ValidationError NotTriggerError(Collider col) => Error($"{name}의 {col.name}은 IsTrigger 체크될 수 없습니다.");
         protected ValidationError RayLayerError(GameObject target) =>
             Error($"{name}의 {target.name}의 레이어는 Ignore Raycast일 수 없습니다.");

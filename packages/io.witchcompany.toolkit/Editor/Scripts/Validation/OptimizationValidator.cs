@@ -195,11 +195,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// <summary> 오디오 클립 불러오기 </summary>
         public static IEnumerable<AudioClip> FindAudioClipList()
         {
+            var blockManager = Object.FindObjectOfType<WitchBlockManager>(true);
+            if (blockManager == null)
+                return null;
+            
             var loadSoundEffects = new List<AudioClip>();
             var soundEffects = Object.FindObjectsOfType<WitchSoundEffect>(true);
-            
-            var blockManager = Object.FindObjectOfType<WitchBlockManager>(true);
-            
+
             // Witch Sound Effect의 Target Clip (Audio Clip) 탐색 -> Audio Clip 찾아서 리스트에 추가 (foundAudioClip)
             foreach (var soundEffect in soundEffects)
             {
@@ -339,11 +341,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 }
             }
 
-            for (var i = 0; i < textureSizes.Length; i++)
-            {
-                if (textureSizes[i] > 0f)
-                    Debug.Log($"[Texture]{textureNames[i]}: {Math.Round(textureSizes[i] / 1024 / 1024, 3)}MB");
-            }
+            // for (var i = 0; i < textureSizes.Length; i++)
+            // {
+            //     if (textureSizes[i] > 0f)
+            //         Debug.Log($"[Texture]{textureNames[i]}: {Math.Round(textureSizes[i] / 1024 / 1024, 3)}MB");
+            // }
         }
 
         /// <summary> 유니크 머테리얼 개수 </summary>

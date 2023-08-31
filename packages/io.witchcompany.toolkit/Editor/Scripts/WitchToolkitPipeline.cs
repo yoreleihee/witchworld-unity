@@ -65,11 +65,9 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 if(validationReport.Append(WhiteListValidator.ValidationCheck()).result != ValidationReport.Result.Success)
                     throw new Exception("화이트리스트 검사 실패");
                 Log("화이트리스트 검사 성공!");
-
-                // // Static 풀어주기
-                // if(validationReport.Append(StaticRevertTool.SaveAndClearFlags()).result != ValidationReport.Result.Success)
-                //     throw new Exception("static 캐싱 실패");
-                // EditorSceneManager.SaveOpenScenes();
+                
+                // 파이프라인 진행 전, 씬 저장 
+                EditorSceneManager.SaveOpenScenes();
 
                 //// 에셋번들 빌드
                 // 번들 전부 지우기
@@ -81,10 +79,6 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 // 번들 빌드
                 var bundles = AssetBundleTool.BuildAssetBundle();
                 Log("번들 빌드 성공!");
-                
-                // // Static 되돌려주기
-                // StaticRevertTool.RevertFlags();
-                // EditorSceneManager.SaveOpenScenes();
 
                 // 업로드 룰 검증
                 foreach (var (target, bundle) in bundles)

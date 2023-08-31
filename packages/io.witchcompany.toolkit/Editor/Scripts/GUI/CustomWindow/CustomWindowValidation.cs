@@ -22,7 +22,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             if (GUILayout.Button("Check"))
             {
-                OnClickCheck().Forget();
+                //OnClickCheck().Forget();
+                OnClickCheck();
                 // todo : window 열릴 때 초기화하도록 변경 -> showWitchToolkit()
                 CustomWindow.InitialStyles();
             }
@@ -61,28 +62,28 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorGUILayout.EndVertical();
         }
 
-        private static async UniTask ValidationCheck()
+        private static void ValidationCheck()
         {
-            var task = AwaitValidator.ValidationCheck();
+            //var task = AwaitValidator.ValidationCheck();
             
             validationReport = OptimizationValidator.ValidationCheck();
             validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
             validationReport.Append(ObjectValidator.ValidationCheck());
             validationReport.Append(WhiteListValidator.ValidationCheck());
             validationReport.Append(EssentialComponentValidator.ValidationCheck());
-            validationReport.Append(await task);
+            //validationReport.Append(await task);
 
             // BlockDataValidator.GetBlockData();
         }
 
 
-        private static async UniTask OnClickCheck()
+        private static void OnClickCheck()
         {
             // 업로드
             CustomWindow.IsInputDisable = true;
             EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Checking to validation...", 1.0f);
 
-            await ValidationCheck();
+            ValidationCheck();
                     
             EditorUtility.ClearProgressBar();
             CustomWindow.IsInputDisable = false;
