@@ -13,6 +13,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static JUnityKeyDetail posting = new("posting");
         private static JUnityKeyDetail doodling = new("doodling");
         private static JUnityKeyDetail ranking = new("ranking");
+        private static JUnityKeyDetail freeArt = new("freeArt");
         
         private static Dictionary<string, JUnityKeyDetail> assetData = new ()
         {
@@ -21,6 +22,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {"posting", posting},
             {"doodling", doodling},
             {"ranking", ranking},
+            {"freeArt", freeArt}
         };
         
         public static Dictionary<string, JUnityKeyDetail> GetAssetData()
@@ -40,6 +42,12 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     // 비디오
                     else if (displayFrame.MediaType == MediaType.Video)
                         video.count++;
+                }
+                //자유배치 에셋
+                if (transform.TryGetComponent(out WitchFreeDisplay freeDisplay))
+                {
+                    //art.count++;
+                    freeArt.count++;
                 }
                 // 낙서장
                 if (transform.TryGetComponent(out WitchPaintWall paintWall))
