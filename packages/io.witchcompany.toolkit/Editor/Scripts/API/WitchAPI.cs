@@ -128,7 +128,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 capacity = PublishConfig.Capacity,
                 isOfficial = PublishConfig.Official ? 1 : 0,
                 unityKeyDetail = AssetDataValidator.GetAssetData().Values.ToList(),
-                isPrivate = !(ToolkitConfig.DeveloperMode || !PublishConfig.Official),
+                isPrivate = PublishConfig.Hide,
                 gameUnityKey = rankingKey
             };
 

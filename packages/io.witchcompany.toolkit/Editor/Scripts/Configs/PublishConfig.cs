@@ -14,6 +14,7 @@ namespace WitchCompany.Toolkit.Editor.Configs
         private const string Prefs_Level = "publish_level";
         private const string Prefs_Capacity = "publish_capacity";
         private const string Prefs_Official = "publish_official";
+        private const string Prefs_Hide = "publish_private";
         public static SceneAsset Scene
         {
             get => AssetDatabase.LoadAssetAtPath<SceneAsset>(EditorPrefs.GetString(Prefs_Scene, ""));
@@ -49,6 +50,12 @@ namespace WitchCompany.Toolkit.Editor.Configs
         {
             get => EditorPrefs.GetBool(Prefs_Official, false);
             set => EditorPrefs.SetBool(Prefs_Official, value);
+        }
+        
+        public static bool Hide
+        {
+            get => EditorPrefs.GetBool(Prefs_Hide, true);
+            set => EditorPrefs.SetBool(Prefs_Hide, value);
         }
     }
 }
