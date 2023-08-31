@@ -9,7 +9,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static readonly string[] ComponentTypeWhiteList = 
         {
             "Transform",
-            "Terrain",
             "ParticleSystem",
             "Collider",
             "Animator",
