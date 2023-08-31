@@ -120,12 +120,12 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     PublishConfig.Official = official;
             }
             
-            using (var check = new EditorGUI.ChangeCheckScope())
-            {
-                var hide = EditorGUILayout.Toggle("Hide", PublishConfig.Hide);
-                if (check.changed)
-                    PublishConfig.Hide = hide;
-            }
+            // using (var check = new EditorGUI.ChangeCheckScope())
+            // {
+            //     var hide = EditorGUILayout.Toggle("Hide", PublishConfig.Hide);
+            //     if (check.changed)
+            //         PublishConfig.Hide = hide;
+            // }
 
             EditorGUILayout.EndVertical();
         }

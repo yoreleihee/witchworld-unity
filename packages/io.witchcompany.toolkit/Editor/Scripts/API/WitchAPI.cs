@@ -128,7 +128,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 capacity = PublishConfig.Capacity,
                 isOfficial = PublishConfig.Official ? 1 : 0,
                 unityKeyDetail = AssetDataValidator.GetAssetData().Values.ToList(),
-                isPrivate = PublishConfig.Hide,
+                isPrivate = option.theme == BundleTheme.Brand,
                 gameUnityKey = rankingKey
             };
 

@@ -2,8 +2,9 @@
 {
     public enum BundleTheme
     {
+        Social,
         Game,
         Store,
-        Social
+        Brand
     }
 }
