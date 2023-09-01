@@ -40,7 +40,8 @@ namespace WitchCompany.Toolkit.Module
                 if (target == null)
                     return NullError("Event");
                 if (target.GetType() != typeof(GameObject)
-                    && target is not MonoBehaviour)
+                    && target is not MonoBehaviour
+                    && target is not Animator)
                     return Error($"{name}에 {target}은 연결시킬 수 없습니다.");
             }
 
