@@ -1,10 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
 {
-    [Obsolete("더이상 사용되지 않는 기능입니다.", false)]
     public class WitchSpawnPoint : WitchBehaviourUnique
     {
         public override string BehaviourName => "필수: 스폰 포인트";
@@ -13,13 +11,12 @@ namespace WitchCompany.Toolkit.Module
         public override int MaximumCount => 1;
                 
 #if UNITY_EDITOR
-        public override ValidationError ValidationCheck() => Error("더이상 사용되지 않는 기능입니다. 대신 WitchPortal을 배치해주세요.");
-        // public override ValidationError ValidationCheck()
-        // {
-        //     if (transform.position.y < 0) return Error("스폰 포인트의 y좌표는 0 이상이어야 합니다.");
-        //     
-        //     return base.ValidationCheck();
-        // }
+        public override ValidationError ValidationCheck()
+        {
+            if (transform.position.y < 0) return Error("스폰 포인트의 y좌표는 0 이상이어야 합니다.");
+            
+            return base.ValidationCheck();
+        }
 #endif
     }
 }

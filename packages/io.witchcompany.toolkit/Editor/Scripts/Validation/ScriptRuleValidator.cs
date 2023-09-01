@@ -94,7 +94,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
 
             // 개별 요소 검증
             report.Append(manager.ValidationCheck());
-            report.Append(manager.ValidationCheckReport());
             foreach (var behaviour in manager.Behaviours)
             {
                 report.Append(behaviour.ValidationCheck());
@@ -102,8 +101,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
 
             // 최소 포함요소 검증
-            // if (!manager.BehaviourCounter.ContainsKey(typeof(WitchSpawnPoint)))
-            //     report.Append("최소 하나 이상의 SpawnPoint를 포함해야 합니다.", ValidationTag.TagScript, manager);
+            if (!manager.BehaviourCounter.ContainsKey(typeof(WitchSpawnPoint)))
+                report.Append("최소 하나 이상의 SpawnPoint를 포함해야 합니다.", ValidationTag.TagScript, manager);
             
             // 요소 개수 검증
             foreach (var (obj, count) in manager.BehaviourCounter.Values)

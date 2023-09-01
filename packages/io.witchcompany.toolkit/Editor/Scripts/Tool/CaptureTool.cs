@@ -11,14 +11,13 @@ namespace WitchCompany.Toolkit.Editor.Tool
         public static void CaptureAndSave(string savePath)
         {
             var offset = new Vector3(0, 1.8f, 0);
-            var cameraParent = Object.FindObjectOfType<WitchBlockManager>()?.EntrancePortal?.Exit;
+            var cameraParent = GameObject.FindObjectOfType<WitchSpawnPoint>().transform;
             
             //cameraParent에 카메라 생성
             var cam = new GameObject("Capture Camera").AddComponent<Camera>();
             
             //camera Transform 설정
-            if(cameraParent != null)
-                cam.transform.SetParent(cameraParent);
+            cam.transform.SetParent(cameraParent);
             cam.transform.position = cameraParent.position + offset;
             cam.transform.forward = cameraParent.forward;
 

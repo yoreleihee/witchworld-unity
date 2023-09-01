@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.DataStructure;
-using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 namespace WitchCompany.Toolkit.Editor.Validation
 {
@@ -15,16 +14,14 @@ namespace WitchCompany.Toolkit.Editor.Validation
         // 모든 테마 필수 컴포넌트
         private static readonly string[] CommonEssentialComponents =
         {
-            nameof(WitchBlockManager),
-            //nameof(WitchPortal)
-            //"WitchSpawnPoint"
+            "WitchBlockManager",
+            "WitchSpawnPoint"
         };
         
         // 게임 테마 필수 컴포넌트
         private static readonly string[] GameEssentialComponents =
         {
-            nameof(WitchLeaderboard)
-            //"WitchLeaderboard"
+            "WitchLeaderboard"
         };
         
         /// <summary> 필수 컴포넌트 검사 </summary>
