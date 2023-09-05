@@ -341,11 +341,11 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 }
             }
 
-            // for (var i = 0; i < textureSizes.Length; i++)
-            // {
-            //     if (textureSizes[i] > 0f)
-            //         Debug.Log($"[Texture]{textureNames[i]}: {Math.Round(textureSizes[i] / 1024 / 1024, 3)}MB");
-            // }
+            for (var i = 0; i < textureSizes.Length; i++)
+            {
+                if (textureSizes[i] > 0f)
+                    Debug.Log($"[Texture]{textureNames[i]}: {Math.Round(textureSizes[i] / 1024 / 1024, 3)}MB");
+            }
         }
 
         /// <summary> 유니크 머테리얼 개수 </summary>
