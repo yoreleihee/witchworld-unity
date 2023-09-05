@@ -5,17 +5,19 @@ using UnityEngine;
 using UnityEngine.Events;
 using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Validation;
-using Object = UnityEngine.Object;
 
 namespace WitchCompany.Toolkit.Module
 {
     public class WitchBlockManager : WitchBehaviourUnique
     {
+        [Obsolete("더이상 사용하지 않습니다.")]
+        public Transform SpawnPoint => transform;
+        
         public override string BehaviourName => "필수: 블록 매니저";
+
         public override string Description => "블록의 기본이 되는 요소입니다.\n" +
                                               "모든 오브젝트의 최상위 부모이며, 기본 좌표에 있어야 합니다.\n" +
-                                              "한 씬에 하나만 배치할 수 있습니다.\n" +
-                                              "중력값은 기본이 1입니다.";
+                                              "한 씬에 하나만 배치할 수 있습니다.";
         public override string DocumentURL => "https://www.notion.so/witchcompany/WitchBlockManager-27694686287943d28baa4cfbf1803b28?pvs=4";
         public override int MaximumCount => 1;
 
@@ -23,26 +25,25 @@ namespace WitchCompany.Toolkit.Module
         [SerializeField, ReadOnly] private string unityVersion;
         [SerializeField, ReadOnly] private string toolkitVersion;
         [SerializeField, ReadOnly] private string updatedDateUtc;
-        public string UnityVersion => unityVersion;
-        public string ToolkitVersion => toolkitVersion;
-        public string UpdatedDateUtc => updatedDateUtc;
-        
+
         [Header("연결된 behaviours")]
         [SerializeField, ReadOnly] private List<WitchBehaviour> behaviours;
-
-        [Header("BGM")] 
-        [SerializeField] private AudioClip defaultBGM;
-
-        [Header("시점")] 
-        [SerializeField] private PointOfView pov = PointOfView.Free;
-        public PointOfView POV => pov;
         
-        [SerializeField, HideInInspector] private WitchSpawnPoint spawnPoint;
-        [Header("캐릭터 리스폰 이벤트"), Tooltip("캐릭터 리스폰되면 이벤트 실행")]
+        [field:Header("필수 정보")] 
+        [field:SerializeField] public WitchPortal EntrancePortal { get;  set; }
+        [field:SerializeField] public WitchPortal ExitPortal { get;  set; }
+        
+        [Header("선택 정보")]
+        [SerializeField] private AudioClip defaultBGM;
+        [SerializeField] private PointOfView pov = PointOfView.Free;
+        
+        [Header("리스폰 이벤트")]
         public UnityEvent respawnEvent;
 
+        // 외부 접근
+        public string ToolkitVersion => toolkitVersion;
         public AudioClip DefaultBGM => defaultBGM;
-        public Transform SpawnPoint => spawnPoint.transform;
+        public PointOfView POV => pov;
         public List<WitchBehaviour> Behaviours => behaviours;
 
         public void Respawn() => respawnEvent.Invoke();
@@ -55,11 +56,16 @@ namespace WitchCompany.Toolkit.Module
         {
             var report = new ValidationReport();
             
-            if (spawnPoint == null) report.Append(NullError(nameof(spawnPoint)));
+            // 기본 transform 체크
             if (transform.position != Vector3.zero) report.Append(Error("매니저의 좌표는 0이어야 합니다."));
             if (transform.rotation != Quaternion.identity) report.Append(Error("매니저의 회전값은 0이어야 합니다."));
             if (transform.localScale != Vector3.one) report.Append(Error("매니저의 스케일은 1이어야 합니다."));
-
+            
+            // 포탈 체크
+            if (EntrancePortal == null) report.Append(NullError("entrancePortal"));
+            if (ExitPortal == null) report.Append(NullError("exitPortal"));
+            
+            // 이벤트 체크
             report.Append(EventHandlerCheck(respawnEvent));
             
             return report;
@@ -79,9 +85,6 @@ namespace WitchCompany.Toolkit.Module
             behaviours = transform.GetComponentsInChildren<WitchBehaviour>(true).ToList();
             behaviours.Remove(this);
 
-            // 스폰포인트 설정
-            spawnPoint = behaviours.Find(x => x.GetType() == typeof(WitchSpawnPoint)) as WitchSpawnPoint;
-            
             // 카운터 초기화
             BehaviourCounter ??= new Dictionary<Type, (WitchBehaviour obj, int count)>();
             BehaviourCounter.Clear();
@@ -89,7 +92,7 @@ namespace WitchCompany.Toolkit.Module
             var displayPhotos = new List<WitchDisplayFrame>();
             var displayVideos = new List<WitchDisplayFrame>();
 
-            var _publicPaintCount = 0;
+            var publicPaintCount = 0;
             
             foreach (var behaviour in behaviours)
             {
@@ -116,8 +119,8 @@ namespace WitchCompany.Toolkit.Module
                     var paintWall = (WitchPaintWall) behaviour;
                     if (paintWall.DrawPermission != WitchPaintWall.Permission.BlockOwnerOnly)
                     {
-                        _publicPaintCount++;
-                        paintWall.Editor_SetInvalid(_publicPaintCount > 1 );
+                        publicPaintCount++;
+                        paintWall.Editor_SetInvalid(publicPaintCount > 1 );
                     }
                     else
                     {
@@ -132,6 +135,47 @@ namespace WitchCompany.Toolkit.Module
             //비디오 인덱스 세팅
             for (var i = 0; i < displayVideos.Count; i++)
                 displayVideos[i].Editor_SetIndex(displayPhotos.Count + i);
+        }
+
+        [UnityEditor.MenuItem("GameObject/WitchToolkit/BlockManager", false, 0)]
+        private static void CreateDefaultObject(UnityEditor.MenuCommand menuCommand)
+        {
+            // 경고
+            if (FindObjectOfType<WitchBlockManager>() != null)
+            {
+                UnityEditor.EditorUtility.DisplayDialog("Error", "이미 블록 매니저가 있습니다.", "OK");
+                return;
+            }
+            
+            // 오브젝트 생성
+            var blockManager = new GameObject("Witch Block Manager").AddComponent<WitchBlockManager>();
+            var behaviours = new GameObject("Behaviours");
+            
+            // 포탈 생성
+            WitchPortal.CreateDefaultObject(menuCommand);
+            var entrance = UnityEditor.Selection.activeObject as WitchPortal;
+            WitchPortal.CreateDefaultObject(menuCommand);
+            var exit = UnityEditor.Selection.activeObject as WitchPortal;
+            
+            // 부모 설정
+            UnityEditor.GameObjectUtility.SetParentAndAlign(blockManager.gameObject, null);
+            UnityEditor.GameObjectUtility.SetParentAndAlign(behaviours, blockManager.gameObject);
+            UnityEditor.GameObjectUtility.SetParentAndAlign(entrance.gameObject, behaviours);
+            UnityEditor.GameObjectUtility.SetParentAndAlign(exit.gameObject, behaviours);
+            
+            // 설정
+            entrance.gameObject.name = "Witch Portal - Entrance";
+            exit.gameObject.name = "Witch Portal - Exit";
+            exit.transform.localPosition = Vector3.forward * 3f;
+            
+            blockManager.EntrancePortal = entrance;
+            blockManager.ExitPortal = exit;
+
+            // 4. 생성한 오브젝트를 선택한다.
+            UnityEditor.Selection.activeObject = blockManager;
+
+            // 위치 비헤이비어 초기화
+            blockManager.FindWitchBehaviours("", "");
         }
 #endif
     }
