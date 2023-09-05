@@ -125,7 +125,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var bundleInfos = new Dictionary<string, JBundleInfo>();
             foreach (var bundleType in bundleTypes)
             {
-                var bundlePath = Path.Combine(UploadBundleConfig.BundleFolderPath, $"{bundleName}_{bundleType}.bundle");
+                var bundlePath = Path.Combine(UploadBundleConfig.BundleFolderPath, $"{bundleName}_{bundleType}.bundle".ToLower());
                 var bundleInfo = new JBundleInfo();
                 var crc = AssetBundleTool.ReadManifest(bundlePath);
                 if (crc != null)

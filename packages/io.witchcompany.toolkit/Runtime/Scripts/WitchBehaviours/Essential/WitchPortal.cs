@@ -31,7 +31,7 @@ namespace WitchCompany.Toolkit.Module
             portalObj.transform.SetPositionAndRotation(pos, rot);
             
             exitObj.SetParent(portalObj);
-            exitObj.transform.localPosition = Vector3.forward * 1f;
+            exitObj.transform.localPosition = Vector3.forward * 2f;
             
             var portal = portalObj.gameObject.AddComponent<WitchPortal>();
             portal.GetComponent<SphereCollider>().isTrigger = true;
