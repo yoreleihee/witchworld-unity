@@ -58,7 +58,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 validationReport.Append(error);
             }
             
-            //  오디오 클립 검사
+             // 오디오 클립 검사
             var findAudioClips = FindAudioClipList();
             var audioClipSize = GetAudioClipMB(findAudioClips);
             if (audioClipSize > OptimizationConfig.MaxAudioClipMb)
@@ -222,6 +222,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// <summary> 전체 오디오 클립 용량 : 소숫점 아래 3번째 자리까지 표시 </summary>
         public static double GetAudioClipMB(IEnumerable<AudioClip> audioClipList)
         {
+            if (audioClipList == null) return 0;
+            
             var foundAudioClips = audioClipList;
             
             // 오디오 클립 사이즈 계산
@@ -240,8 +242,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
         /// <summary> 가장 용량이 큰 오디오 클립: 5개까지 표시 </summary>
         public static void GetLargestAudioClipArray(IEnumerable<AudioClip> audioClipList)
         {
-            var foundAudioClips = audioClipList;
+            if (audioClipList == null) return;
             
+            var foundAudioClips = audioClipList;
             var audioClipNames = new[] { "", "", "", "", "" };
             var audioClipSizes = new[] { 0D, 0, 0, 0, 0 };
             
