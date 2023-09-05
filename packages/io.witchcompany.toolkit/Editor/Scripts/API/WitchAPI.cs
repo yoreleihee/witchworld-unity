@@ -374,11 +374,11 @@ namespace WitchCompany.Toolkit.Editor.API
         {
             var auth = AuthConfig.Auth;
             var jsonData = JsonConvert.SerializeObject(itemBundleData);
-            var iteData = itemBundleData.itemData;
+            var itemData = itemBundleData.itemData;
             
             // bundle 
-            var webglBundleKey = $"{iteData.name}_{AssetBundleConfig.Webgl}.bundle";
-            var webglMobileBundleKey = $"{iteData.name}_{AssetBundleConfig.WebglMobile}.bundle";
+            var webglBundleKey = $"{itemData.name}_{AssetBundleConfig.Webgl}.bundle".ToLower();
+            var webglMobileBundleKey = $"{itemData.name}_{AssetBundleConfig.WebglMobile}.bundle".ToLower();
             
             var webglBundlePath = Path.Combine(bundleFolderPath, webglBundleKey);
             var webglMobileBundlePath = Path.Combine(bundleFolderPath, webglMobileBundleKey);
@@ -389,9 +389,7 @@ namespace WitchCompany.Toolkit.Editor.API
             // gltf
             var gltfName = modelPath.Split("/")[^1];
             var gltfData = await GetByte(modelPath);
-            
-            Debug.Log("gltfData : " + gltfName);
-            
+
             var form = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("json", jsonData, "application/json"),
