@@ -13,7 +13,7 @@ namespace WitchCompany.Toolkit.Module
         public override string DocumentURL => "https://www.notion.so/witchcompany/WitchDataManager-8f1f537bf7f04a1d8862f6b0e33b7bfc?pvs=4";
         public override int MaximumCount => 1;
 
-        [field: Header("랭킹보드에서 사용할 키값 (최대 1개, 타이머: @timer, 경과시간: @timespan)")]
+        [field: Header("랭킹보드에서 사용할 키값\n(최대 1개, 타이머: @timer, 경과시간: @timespan)")]
         [field: SerializeField] public List<KeyGroup> RankingKeys { get; private set; }
         
         [field: Header("데이터 변경 등록")]
