@@ -77,13 +77,15 @@ namespace WitchCompany.Toolkit.Editor.Validation
         
         private static ValidationReport ValidateWitchBehaviours(Scene scene)
         {
+            // 리포트 생성
+            var report = new ValidationReport();
+            
             // 블록 매니저를 찾고, WitchBehaviours 찾아서 저장
-            var manager = scene.GetRootGameObjects()[0].GetComponent<WitchBlockManager>();
+            if (!scene.GetRootGameObjects()[0].TryGetComponent<WitchBlockManager>(out var manager)) return report;
+            
             manager.FindWitchBehaviours(ToolkitConfig.UnityVersion, ToolkitConfig.WitchToolkitVersion);
             EditorSceneManager.SaveOpenScenes();
             
-            // 리포트 생성
-            var report = new ValidationReport();
             
             // 블록매니저 중복 검증
             foreach (var behaviour in manager.Behaviours)

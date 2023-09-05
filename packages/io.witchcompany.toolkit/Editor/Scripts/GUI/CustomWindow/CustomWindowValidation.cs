@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -64,16 +65,20 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static void ValidationCheck()
         {
-            //var task = AwaitValidator.ValidationCheck();
-            
-            validationReport = OptimizationValidator.ValidationCheck();
-            validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
-            validationReport.Append(ObjectValidator.ValidationCheck());
-            validationReport.Append(WhiteListValidator.ValidationCheck());
-            validationReport.Append(EssentialComponentValidator.ValidationCheck());
-            //validationReport.Append(await task);
+            try
+            {
+                validationReport = OptimizationValidator.ValidationCheck();
+                validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
+                validationReport.Append(ObjectValidator.ValidationCheck());
+                validationReport.Append(WhiteListValidator.ValidationCheck());
+                validationReport.Append(EssentialComponentValidator.ValidationCheck());
 
-            // BlockDataValidator.GetBlockData();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                validationReport.Append("Validation 에러가 발생했습니다. 콘솔창을 확인해주세요.", "Validation Error");
+            }
         }
 
 
@@ -84,7 +89,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Checking to validation...", 1.0f);
 
             ValidationCheck();
-                    
+            
             EditorUtility.ClearProgressBar();
             CustomWindow.IsInputDisable = false;
         }
