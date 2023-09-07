@@ -13,10 +13,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
 {
     public static class ScriptRuleValidator
     {
-        
-        
-        
-        
         /// <summary>
         /// 위치월드 스크립트 룰 관련 유효성 검사
         /// - 블록 옵션 검증

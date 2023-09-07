@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Codice.Client.BaseCommands.BranchExplorer.Layout;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Profiling;
-using UnityEngine.SceneManagement;
-using WitchCompany.Toolkit.Editor.GUI;
-using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Module;
-using WitchCompany.Toolkit.Module.Event;
 using WitchCompany.Toolkit.Validation;
 using Object = UnityEngine.Object;
 
@@ -515,6 +508,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static ValidationReport ValidationAudioClipPreset(IEnumerable<AudioClip> audioClipList)
         {
             var report = new ValidationReport();
+            if (audioClipList == null) return report;
             
             var foundAudioClips = audioClipList;
 
@@ -544,6 +538,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static ValidationReport ValidationUseCrunchCompression(IEnumerable<Texture> textureList)
         {
             var report = new ValidationReport();
+            if (textureList == null) return report;
             
             var foundTextures = textureList;
 
