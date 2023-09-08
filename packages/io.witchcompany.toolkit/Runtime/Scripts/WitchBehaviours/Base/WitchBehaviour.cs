@@ -43,6 +43,7 @@ namespace WitchCompany.Toolkit.Module
                     // Event Validation 예외 처리
                     && target is not MonoBehaviour
                     && target is not Animator
+                    && target is not ParticleSystem
                     && target is not WitchDataChangerSO)
                     return Error($"{name}에 {target}은 연결시킬 수 없습니다.");
             }
