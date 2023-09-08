@@ -16,7 +16,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static readonly string[] CommonEssentialComponents =
         {
             nameof(WitchBlockManager),
-            nameof(WitchBlockAssetPoint),
+            // nameof(WitchBlockAssetPoint),
             //nameof(WitchPortal)
             //"WitchSpawnPoint"
         };
