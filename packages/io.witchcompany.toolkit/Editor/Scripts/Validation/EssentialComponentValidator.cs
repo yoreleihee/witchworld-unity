@@ -16,7 +16,6 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static readonly string[] CommonEssentialComponents =
         {
             nameof(WitchBlockManager),
-            // nameof(WitchBlockAssetPoint),
             //nameof(WitchPortal)
             //"WitchSpawnPoint"
         };
@@ -25,6 +24,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static readonly string[] GameEssentialComponents =
         {
             nameof(WitchLeaderboard)
+            //"WitchLeaderboard"
         };
         
         /// <summary> 필수 컴포넌트 검사 </summary>
