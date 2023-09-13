@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using WitchCompany.Toolkit.Validation;
 
 namespace WitchCompany.Toolkit.Module
 {
@@ -14,5 +16,28 @@ namespace WitchCompany.Toolkit.Module
         private BoothType boothType;
 
         public BoothType BoothType => boothType;
+
+#if UNITY_EDITOR
+
+        [SerializeField]
+        private float radius = 10f;        
+        public override ValidationError ValidationCheck()
+        {
+            var colliders = Physics.OverlapSphere(transform.position, radius);
+            foreach (var col in colliders)
+            {
+                if (col.name == "Plane") continue;
+                if (col != null) return DistanceError(col);
+            }
+            
+            return null;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(this.transform.position, radius);
+        }
+#endif
     }
 }
