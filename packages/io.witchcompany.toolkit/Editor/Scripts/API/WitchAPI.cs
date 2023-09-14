@@ -140,7 +140,6 @@ namespace WitchCompany.Toolkit.Editor.API
             
             // Json
             var jsonData = JsonConvert.SerializeObject(bundleData);
-            Debug.Log(JsonConvert.SerializeObject(bundleData, Formatting.Indented));
 
             // thumbnail
             var thumbnailData = await File.ReadAllBytesAsync(PublishConfig.ThumbnailPath);
