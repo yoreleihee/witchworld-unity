@@ -14,6 +14,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static JUnityKeyDetail doodling = new("doodling");
         private static JUnityKeyDetail ranking = new("ranking");
         private static JUnityKeyDetail freeArt = new("freeArt");
+        private static JUnityKeyDetail stall = new("stall");
         
         private static Dictionary<string, JUnityKeyDetail> assetData = new ()
         {
@@ -22,7 +23,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {"posting", posting},
             {"doodling", doodling},
             {"ranking", ranking},
-            {"freeArt", freeArt}
+            {"freeArt", freeArt},
+            {"stall", stall}
         };
         
         public static Dictionary<string, JUnityKeyDetail> GetAssetData()
@@ -49,6 +51,13 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     //art.count++;
                     freeArt.count++;
                 }
+
+                //가판대 에셋
+                if (transform.TryGetComponent(out WitchStallDisplay stallDisplay))
+                {
+                    stall.count++;
+                }
+                
                 // 낙서장
                 if (transform.TryGetComponent(out WitchPaintWall paintWall))
                     doodling.count++;
