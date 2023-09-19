@@ -11,5 +11,8 @@ namespace WitchCompany.Toolkit.Module
                                              "블록 주인 뿐 아니라 방문하는 사람도 아이템을 등록할 수 있습니다.";
         public override string DocumentURL =>"";
         public virtual int MaximumCount => 40;
+
+        [field:Header("부스 사용")]
+        [field:SerializeField] public bool isBooth { get; private set; }
     }
 }
