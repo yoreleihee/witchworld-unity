@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Module;
@@ -15,6 +16,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static JUnityKeyDetail ranking = new("ranking");
         private static JUnityKeyDetail freeArt = new("freeArt");
         private static JUnityKeyDetail stall = new("stall");
+        private static JUnityKeyDetail auctionBooth = new("auctionBooth");
+        private static JUnityKeyDetail beggingBooth = new("beggingBooth");
         
         private static Dictionary<string, JUnityKeyDetail> assetData = new ()
         {
@@ -24,7 +27,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
             {"doodling", doodling},
             {"ranking", ranking},
             {"freeArt", freeArt},
-            {"stall", stall}
+            {"stall", stall},
+            {"auctionBooth", auctionBooth},
+            {"beggingBooth", beggingBooth}
         };
         
         public static Dictionary<string, JUnityKeyDetail> GetAssetData()
@@ -69,6 +74,15 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 // 랭킹보드
                 if (transform.TryGetComponent(out WitchLeaderboard leaderboard))
                     ranking.count++;
+                
+                // 구걸 부스, 경매 부스
+                if (transform.TryGetComponent(out WitchBooth witchBooth))
+                {
+                    if (witchBooth.BoothType == BoothType.Auction)
+                        auctionBooth.count++;
+                    else if (witchBooth.BoothType == BoothType.Begging)
+                        beggingBooth.count++;
+                }
             }
             
             return assetData;
