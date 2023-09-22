@@ -78,7 +78,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 // 구걸 부스, 경매 부스
                 if (transform.TryGetComponent(out WitchBooth witchBooth))
                 {
-                    if (witchBooth.BoothType == BoothType.Auction)
+                    if (witchBooth.BoothType == BoothType.Market)
                         auctionBooth.count++;
                     else if (witchBooth.BoothType == BoothType.Begging)
                         beggingBooth.count++;
