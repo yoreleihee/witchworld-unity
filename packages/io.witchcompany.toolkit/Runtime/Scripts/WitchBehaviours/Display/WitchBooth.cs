@@ -21,27 +21,6 @@ namespace WitchCompany.Toolkit.Module
         public BoothType BoothType => boothType;
 
 #if UNITY_EDITOR
-        
-//         타 오브젝트의 콜라이더와 겹치지 않게
-//         [SerializeField]
-//         private float radius = 10f;        
-//         public override ValidationError ValidationCheck()
-//         {
-//             var colliders = Physics.OverlapSphere(transform.position, radius);
-//             foreach (var col in colliders)
-//             {
-//                 if (col.name == "Plane") continue;
-//                 if (col != null) return DistanceError(col);
-//             }
-//             
-//             return null;
-//         }
-//
-//         private void OnDrawGizmos()
-//         {
-//             Gizmos.color = Color.green;
-//             Gizmos.DrawWireSphere(this.transform.position, radius);
-//         }
         public void Editor_SetIndex(int idx) => index = idx;
 #endif
     }
