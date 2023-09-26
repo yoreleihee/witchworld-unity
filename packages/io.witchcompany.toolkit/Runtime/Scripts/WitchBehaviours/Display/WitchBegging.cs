@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using WitchCompany.Toolkit.Attribute;
 using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 
@@ -13,13 +15,21 @@ namespace WitchCompany.Toolkit
         public override string DocumentURL => "";
         public override int MaximumCount => 20;
 
+        [Header("구걸함 Index")]
+        [SerializeField, ReadOnly] private int index;
         [Header("구걸 비활성화 상태일 때 나타낼 오브젝트")]
         [SerializeField] private GameObject disableObject;
         [Header("구걸 활성화 상태일 때 나타낼 오브젝트")]
         [SerializeField] private GameObject enableObject;
+        [Header("구걸 wit를 표시할 텍스트")]
+        [SerializeField] private TMP_Text priceText;
 
-        // public Collider Collider => GetComponent<Collider>();
-
+        public int Index => index;
+        public GameObject DisableObject => disableObject;
+        public GameObject EnableObject => enableObject;
+        public TMP_Text PriceText => priceText;
+        
+#if UNITY_EDITOR
         public override ValidationError ValidationCheck()
         {
             // 오브젝트 null 검사
@@ -40,5 +50,8 @@ namespace WitchCompany.Toolkit
 
             return base.ValidationCheck();
         }
+        
+        public void Editor_SetIndex(int idx) => index = idx;
+#endif
     }
 }

@@ -94,6 +94,7 @@ namespace WitchCompany.Toolkit.Module
 
             var publicPaintCount = 0;
             var boothCount = 0;            
+            var beggingCount = 0;            
             
             foreach (var behaviour in behaviours)
             {
@@ -134,6 +135,12 @@ namespace WitchCompany.Toolkit.Module
                 {
                     var booth = (WitchBooth) behaviour;
                     booth.Editor_SetIndex(boothCount++);
+                }
+                // 구걸함 카운팅
+                if (type == typeof(WitchBegging))
+                {
+                    var begging = (WitchBegging)behaviour;
+                    begging.Editor_SetIndex(beggingCount++);
                 }
             }
             
