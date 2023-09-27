@@ -158,7 +158,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     }
                 }
 
-                var boothArea = 10f;
+                var boothArea = 5f;
                 
                 // 부스를 가진 오브젝트끼리 거리 비교
                 for (var i = 0; i < booths.Count - 1; i++)
