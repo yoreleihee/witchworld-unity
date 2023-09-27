@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +31,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
                 .Append(ValidateBlockOption(option))
                 .Append(ValidateHierarchy(scene))
                 .Append(ValidateWitchBehaviours(scene))
-                .Append(ValidateMissingScripts(scene));
+                .Append(ValidateMissingScripts(scene))
+                .Append(ValidationBoothDistance(scene));
         }
 
         private static string ValidateBlockOption(BlockPublishOption option)
@@ -127,6 +131,53 @@ namespace WitchCompany.Toolkit.Editor.Validation
                     var error = new ValidationError($"Object : {tr.gameObject.name}\n찾을 수 없는 스크립트가 포함되어 있습니다.", ValidationTag.TagMissingScript, tr);
                     report.Append(error);
                 }
+            }
+            return report;
+        }
+
+        private static ValidationReport ValidationBoothDistance(Scene scene)
+        {
+            var report = new ValidationReport();
+            try
+            {
+                var booths = new List<WitchBooth>();
+                
+                
+                var rootObject = scene.GetRootGameObjects()[0].transform;
+                var children = HierarchyTool.GetAllChildren(rootObject);
+
+                //부스를 가진 오브젝트의 transform 가져오기
+                foreach (var tr in children)
+                {
+                    var objectType = tr.GetComponent<WitchBooth>();
+                    if(objectType == null) continue;
+                    
+                    if (objectType.GetType() == typeof(WitchBooth))
+                    {
+                        booths.Add(tr.GetComponent<WitchBooth>());
+                    }
+                }
+
+                var boothArea = 10f;
+                
+                // 부스를 가진 오브젝트끼리 거리 비교
+                for (var i = 0; i < booths.Count - 1; i++)
+                {
+                    for (var j = i + 1; j < booths.Count; j++)
+                    {
+                        var distance = Vector3.Distance(booths[i].transform.position, booths[j].transform.position);
+
+                        if (distance < boothArea)
+                        {
+                            var error = new ValidationError($"{booths[i].name}과 {booths[j].name}의 거리가 너무 가깝습니다.","booth",booths[i]);
+                            report.Append(error);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
             }
             return report;
         }

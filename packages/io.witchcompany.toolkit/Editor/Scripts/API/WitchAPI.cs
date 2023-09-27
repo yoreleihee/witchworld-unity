@@ -131,7 +131,7 @@ namespace WitchCompany.Toolkit.Editor.API
                 isPrivate = option.theme == BundleTheme.Brand,
                 gameUnityKey = rankingKey
             };
-
+            
             var bundleData = new JBundle
             {
                 blockData = blockData,
@@ -140,7 +140,6 @@ namespace WitchCompany.Toolkit.Editor.API
             
             // Json
             var jsonData = JsonConvert.SerializeObject(bundleData);
-            Debug.Log(JsonConvert.SerializeObject(bundleData, Formatting.Indented));
 
             // thumbnail
             var thumbnailData = await File.ReadAllBytesAsync(PublishConfig.ThumbnailPath);

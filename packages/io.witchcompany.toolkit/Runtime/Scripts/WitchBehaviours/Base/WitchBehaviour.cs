@@ -31,6 +31,7 @@ namespace WitchCompany.Toolkit.Module
         protected ValidationError RayLayerError(GameObject target) =>
             Error($"{name}의 {target.name}의 레이어는 Ignore Raycast일 수 없습니다.");
         protected ValidationError StaticError(GameObject target) => Error($"{name}의 static을 해제해야 합니다.");
+        protected ValidationError DistanceError(Collider col) => Error($"{name}가 {col.name}와 너무 가까이 있습니다.");
         protected ValidationError EventHandlerCheck(UnityEvent unityEvent)
         {
             for (var i = 0; i < unityEvent.GetPersistentEventCount(); i++)
