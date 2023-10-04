@@ -31,14 +31,9 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 var bundleName = $"{ExportBundleConfig.Prefab.name}_{platform}.bundle";
                 AssetBundleTool.AssignAssetBundle(ExportBundleConfig.PrefabPath, bundleName);
                 
-                // var webglMobBundleName = $"{ProductConfig.Prefab.name}_{AssetBundleConfig.WebglMobile}.bundle";
-                // AssetBundleTool.AssignAssetBundle(ProductConfig.PrefabPath, webglMobBundleName);
-                
-                
                 // 번들 빌드
                 var bundles = BuildAssetBundle(platform);
                 Debug.Log("상품 번들 빌드 성공");
-
                 
                 // 빌드 리포트 작성
                 buildReport.result = JBuildReport.Result.Success;
@@ -72,8 +67,13 @@ namespace WitchCompany.Toolkit.Editor.Tool
             {
                 var result = new Dictionary<string, string[]>();
                 
+                // Standalone
+                if (string.Equals(AssetBundleConfig.Standalone, platform))
+                {
+                    result.Add(AssetBundleConfig.Standalone, BuildBundle(BuildTarget.StandaloneWindows64));
+                }
                 // WebGL
-                if (string.Equals(AssetBundleConfig.Webgl, platform))
+                else if (string.Equals(AssetBundleConfig.Webgl, platform))
                 {
                     EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.DXT;
                     result.Add(AssetBundleConfig.Webgl, BuildBundle(BuildTarget.WebGL));
