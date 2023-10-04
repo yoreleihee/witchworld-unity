@@ -131,6 +131,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
             if (validationReport.result == ValidationReport.Result.Success)
             {
+                buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.Standalone);
                 buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.Webgl);
                 buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.WebglMobile);
             }

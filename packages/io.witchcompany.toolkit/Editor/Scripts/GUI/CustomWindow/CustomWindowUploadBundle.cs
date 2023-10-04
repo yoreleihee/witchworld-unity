@@ -17,9 +17,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
     {
         private static string[] bundleTypes =
         {
+            AssetBundleConfig.Standalone,
             AssetBundleConfig.Webgl,
             AssetBundleConfig.WebglMobile,
-            // AssetBundleConfig.Standalone,
             // AssetBundleConfig.Android,
             // AssetBundleConfig.Ios,
             // AssetBundleConfig.Vr
@@ -125,7 +125,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var bundleInfos = new Dictionary<string, JBundleInfo>();
             foreach (var bundleType in bundleTypes)
             {
-                var bundlePath = Path.Combine(UploadBundleConfig.BundleFolderPath, $"{bundleName}_{bundleType}.bundle");
+                var bundlePath = Path.Combine(UploadBundleConfig.BundleFolderPath, $"{bundleName}_{bundleType}.bundle".ToLower());
                 var bundleInfo = new JBundleInfo();
                 var crc = AssetBundleTool.ReadManifest(bundlePath);
                 if (crc != null)
@@ -140,9 +140,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
             var itemBundleData = new JItemBundleData
             {
                 itemData = itemData,
+                standalone = bundleInfos[AssetBundleConfig.Standalone],
                 webgl = bundleInfos[AssetBundleConfig.Webgl],
                 webglMobile = bundleInfos[AssetBundleConfig.WebglMobile],
-                // standalone = bundleInfos[AssetBundleConfig.Standalone],
                 // android = bundleInfos[AssetBundleConfig.Android],
                 // ios = bundleInfos[AssetBundleConfig.Ios],
                 // vr = bundleInfos[AssetBundleConfig.Vr],

@@ -369,34 +369,36 @@ namespace WitchCompany.Toolkit.Editor.API
             return response != null && response.success;
         }
 
+        private static async UniTask<(string key, byte[] data)> GetBundleData(string name, string folderPath, string platform)
+        {
+            var key = $"{name}_{platform}.bundle".ToLower();
+            var bundlePath = Path.Combine(folderPath, key);
+            
+            return (key, await GetByte(bundlePath));
+        }
+        
         public static async UniTask<bool> UploadItemData(JItemBundleData itemBundleData, string bundleFolderPath, string modelPath)
         {
             var auth = AuthConfig.Auth;
             var jsonData = JsonConvert.SerializeObject(itemBundleData);
-            var iteData = itemBundleData.itemData;
+            var itemData = itemBundleData.itemData;
             
-            // bundle 
-            var webglBundleKey = $"{iteData.name}_{AssetBundleConfig.Webgl}.bundle";
-            var webglMobileBundleKey = $"{iteData.name}_{AssetBundleConfig.WebglMobile}.bundle";
-            
-            var webglBundlePath = Path.Combine(bundleFolderPath, webglBundleKey);
-            var webglMobileBundlePath = Path.Combine(bundleFolderPath, webglMobileBundleKey);
-            
-            var webglBundleData = await GetByte(webglBundlePath);
-            var webglMobileBundleData = await GetByte(webglMobileBundlePath);
-            
+            // bundle
+            var standaloneBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Standalone);
+            var webglBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Webgl);
+            var webglMobileBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.WebglMobile);
+   
             // gltf
             var gltfName = modelPath.Split("/")[^1];
             var gltfData = await GetByte(modelPath);
-            
-            Debug.Log("gltfData : " + gltfName);
             
             var form = new List<IMultipartFormSection>
             {
                 new MultipartFormDataSection("json", jsonData, "application/json"),
                 new MultipartFormFileSection("model", gltfData, gltfName, ""),
-                new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, webglBundleKey, ""),
-                new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, webglMobileBundleKey, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundle.data, standaloneBundle.key, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundle.data, webglBundle.key, ""),
+                new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundle.data, webglMobileBundle.key, ""),
             };
             
             var response = await Request<JBlockStatus>(new RequestHelper
