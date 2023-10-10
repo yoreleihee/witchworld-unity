@@ -26,7 +26,7 @@ namespace WitchCompany.Toolkit.Module
         [field: Header("이름표")] 
         [field: SerializeField] public int saleId { get; private set; }
         [field: SerializeField] public List<GameObject> nameTags { get; private set; }
-        [HideInInspector] public TMP_Text[] names;
+        [SerializeField, ReadOnly] public TMP_Text[] names;
 
         [field: Header("진행도 UI")]
         [field: SerializeField] public Transform uiPos { get; private set; }
@@ -45,15 +45,21 @@ namespace WitchCompany.Toolkit.Module
         {
             names = new TMP_Text[nameTags.Count];
             
-            // 날짜 형식
-            if (eventSettingInTookit && 
-                (!DateTime.TryParseExact(startDate, "yyyy-MM-ddTHH:mm:ssZ", 
-                    System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out checkDate)
-                || !DateTime.TryParseExact(endDate, "yyyy-MM-ddTHH:mm:ssZ", 
-                    System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out checkDate)))
+            for (int i = 0; i < nameTags.Count; ++i)
             {
-                return Error("이벤트 날짜 형식이 올바르지 않습니다. 0000-00-00T00:00:00Z 형식으로 작성해주세요");
+                names[i] = nameTags[i].GetComponentInChildren<TMP_Text>();
+                nameTags[i].SetActive(false);
             }
+
+            // // 날짜 형식
+            // if (eventSettingInTookit && 
+            //     (!DateTime.TryParseExact(startDate, "yyyy-MM-ddTHH:mm:ssZ", 
+            //         System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out checkDate)
+            //     || !DateTime.TryParseExact(endDate, "yyyy-MM-ddTHH:mm:ssZ", 
+            //         System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out checkDate)))
+            // {
+            //     return Error("이벤트 날짜 형식이 올바르지 않습니다. 0000-00-00T00:00:00Z 형식으로 작성해주세요");
+            // }
 
             return null;
         }
