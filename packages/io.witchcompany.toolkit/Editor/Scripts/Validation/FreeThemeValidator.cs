@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using WitchCompany.Toolkit.Editor.Configs;
+using WitchCompany.Toolkit.Editor.DataStructure;
 using WitchCompany.Toolkit.Module;
 using WitchCompany.Toolkit.Validation;
 
@@ -37,17 +38,21 @@ namespace WitchCompany.Toolkit.Editor.Validation
             }
 
             // 무료 번들이라면
-            foreach (var component in PaidComponents)
+            if (PublishConfig.SalesType == SalesType.Free)
             {
-                var isExist = allComponents.ContainsKey(component);
-
-                if (isExist)
+                foreach (var component in PaidComponents)
                 {
-                    var error = new ValidationError($"무료 테마에는 {component}가 포함될 수 없습니다.", "Pay Asset", allComponents[component]);
+                    var isExist = allComponents.ContainsKey(component);
 
-                    report.Append(error);
+                    if (isExist)
+                    {
+                        var error = new ValidationError($"무료 테마에는 {component}가 포함될 수 없습니다.", "Pay Asset", allComponents[component]);
+
+                        report.Append(error);
+                    }
                 }
             }
+            
             return report;
         }
     }
