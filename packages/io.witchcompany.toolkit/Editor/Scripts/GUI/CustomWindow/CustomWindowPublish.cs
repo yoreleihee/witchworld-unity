@@ -107,7 +107,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
             PublishConfig.SalesType = salesType;
             
             // 유료 테마일 경우 가격, 수량, 컬렉션 표시
-            if (PublishConfig.SalesType == SalesType.Pay)
+            if (PublishConfig.SalesType == SalesType.Premium)
             {
                 // 컬렉션
                 var collection = (CollectionType)EditorGUILayout.EnumPopup("Collection", PublishConfig.Collection);

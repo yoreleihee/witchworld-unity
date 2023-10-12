@@ -1,8 +1,6 @@
 using System;
-using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using WitchCompany.Toolkit.Editor.Configs;
 using WitchCompany.Toolkit.Editor.Tool;
 using WitchCompany.Toolkit.Editor.Validation;
 using WitchCompany.Toolkit.Validation;
@@ -73,8 +71,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
             validationReport.Append(ObjectValidator.ValidationCheck());
             validationReport.Append(WhiteListValidator.ValidationCheck());
-            validationReport.Append(EssentialComponentValidator.ValidationCheck());
-            validationReport.Append(FreeThemeValidator.ValidationCheck());
+            validationReport.Append(ExistComponentValidator.ValidationCheck());
+            // validationReport.Append(FreeThemeValidator.ValidationCheck());
 
             //validationReport.Append(await task);
 
@@ -84,7 +82,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static void OnClickCheck()
         {
-            // 업로드
             try
             {
                 CustomWindow.IsInputDisable = true;
@@ -150,7 +147,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                         // 로그 종류에 따라 버튼 style 변경
                         if (error.context == null)
                         {
-                            GUILayout.Label(error.message, CustomWindow.LogTextStyle);
+                            GUILayout.Label(error.message, CustomWindow.LogButtonStyle);
                         }
                         else
                         {

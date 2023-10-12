@@ -511,6 +511,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         private static ValidationReport ValidationAudioClipPreset(IEnumerable<AudioClip> audioClipList)
         {
             var report = new ValidationReport();
+            if (audioClipList == null) return report;
             
             var foundAudioClips = audioClipList;
 
