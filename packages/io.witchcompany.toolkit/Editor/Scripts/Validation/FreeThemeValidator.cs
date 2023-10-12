@@ -12,7 +12,9 @@ namespace WitchCompany.Toolkit.Editor.Validation
     {
         private static readonly string[] PaidComponents =
         {
-            nameof(WitchBooth)
+            nameof(WitchBooth),
+            nameof(WitchTimer),
+            nameof(WitchLeaderboard)
         };
 
         public static ValidationReport ValidationCheck()
