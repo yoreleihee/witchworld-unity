@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -73,6 +74,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             validationReport.Append(ObjectValidator.ValidationCheck());
             validationReport.Append(WhiteListValidator.ValidationCheck());
             validationReport.Append(EssentialComponentValidator.ValidationCheck());
+            validationReport.Append(FreeThemeValidator.ValidationCheck());
+
             //validationReport.Append(await task);
 
             // BlockDataValidator.GetBlockData();
@@ -82,13 +85,21 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private static void OnClickCheck()
         {
             // 업로드
-            CustomWindow.IsInputDisable = true;
-            EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Checking to validation...", 1.0f);
+            try
+            {
+                CustomWindow.IsInputDisable = true;
+                EditorUtility.DisplayProgressBar("Witch Creator Toolkit", "Checking to validation...", 1.0f);
 
-            ValidationCheck();
-                    
+                ValidationCheck();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            
             EditorUtility.ClearProgressBar();
             CustomWindow.IsInputDisable = false;
+            
         }
         
         private static void DrawReport()
