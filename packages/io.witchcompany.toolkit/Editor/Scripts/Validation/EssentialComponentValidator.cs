@@ -54,8 +54,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             NotEssentialComponent(report, allComponentNames.ToArray(), CommonEssentialComponents, CommonText);
             
             // 게임
-            if(PublishConfig.Theme == BundleTheme.Game)
-                NotEssentialComponent(report, allComponentNames.ToArray(), GameEssentialComponents, BundleTheme.Game.ToString());
+            if(PublishConfig.BlockType == BlockType.Game)
+                NotEssentialComponent(report, allComponentNames.ToArray(), GameEssentialComponents, BlockType.Game.ToString());
             
             return report;
         }

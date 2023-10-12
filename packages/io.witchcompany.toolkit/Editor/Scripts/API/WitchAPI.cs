@@ -115,7 +115,6 @@ namespace WitchCompany.Toolkit.Editor.API
         /// 유니티 키 생성 (번들 업로드)
         /// 성공(1), 실패(-1), pathName 중복(-2)
         /// </summary>
-        ///
         public static async UniTask<int> UploadBundle(BlockPublishOption option, List<JBundleInfo> bundleInfos, JRankingKey rankingKey)
         {
             var auth = AuthConfig.Auth;
@@ -124,11 +123,11 @@ namespace WitchCompany.Toolkit.Editor.API
             var blockData = new JUnityKeyData
             {
                 pathName = option.Key,
-                theme = option.theme.ToString().ToLower(),
+                theme = option.type.ToString().ToLower(),
                 capacity = PublishConfig.Capacity,
                 isOfficial = PublishConfig.Official ? 1 : 0,
                 unityKeyDetail = AssetDataValidator.GetAssetData().Values.ToList(),
-                isPrivate = option.theme == BundleTheme.Brand,
+                isPrivate = option.type == BlockType.Brand,
                 gameUnityKey = rankingKey
             };
             
@@ -191,7 +190,7 @@ namespace WitchCompany.Toolkit.Editor.API
             });
             
             if (response.statusCode == 200) return 1;
-            if (response.statusCode == 409) return -2;
+            if (response.statusCode == 409) return -2;  
             return -1;
         }
         
@@ -211,71 +210,71 @@ namespace WitchCompany.Toolkit.Editor.API
             return response.success ? response.payload : null;
         }
         
-        /// <summary>
-        /// 유니티 키로 블록 생성
-        /// 성공(blockId), 실패(-1), pathName 중복(-2)
-        /// </summary>
-        public static async UniTask<int> UploadBlock(JBlockData blockData)
-        {
-            var auth = AuthConfig.Auth;
-            if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
+        // /// <summary>
+        // /// 유니티 키로 블록 생성
+        // /// 성공(blockId), 실패(-1), pathName 중복(-2)
+        // /// </summary>
+        // public static async UniTask<int> UploadBlock(JBlockData blockData)
+        // {
+        //     var auth = AuthConfig.Auth;
+        //     if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
+        //     
+        //     
+        //     var thumbnailData = await GetByte(AdminConfig.ThumbnailPath);
+        //     var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
+        //     
+        //     
+        //     var form = new List<IMultipartFormSection> {
+        //         new MultipartFormDataSection("json", JsonConvert.SerializeObject(blockData), "application/json"),
+        //     };
+        //     
+        //     if(thumbnailData != null)
+        //         form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
+        //     
+        //     var response = await Request<DataStructure.Admin.JBlockData>(new RequestHelper
+        //     {
+        //         Method = "POST",
+        //         Uri = ApiConfig.URL("v2/toolkits/blocks"),
+        //         Headers = ApiConfig.TokenHeader(auth.accessToken),
+        //         FormSections = form
+        //     });
+        //     
+        //     if (response.statusCode == 200) return response.payload.blockId;
+        //     if (response.statusCode == 409) return -2;
+        //     return -1;
+        // }
 
-
-            var thumbnailData = await GetByte(AdminConfig.ThumbnailPath);
-            var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
-            
-            
-            var form = new List<IMultipartFormSection> {
-                new MultipartFormDataSection("json", JsonConvert.SerializeObject(blockData), "application/json"),
-            };
-            
-            if(thumbnailData != null)
-                form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
-            
-            var response = await Request<DataStructure.Admin.JBlockData>(new RequestHelper
-            {
-                Method = "POST",
-                Uri = ApiConfig.URL("v2/toolkits/blocks"),
-                Headers = ApiConfig.TokenHeader(auth.accessToken),
-                FormSections = form
-            });
-            
-            if (response.statusCode == 200) return response.payload.blockId;
-            if (response.statusCode == 409) return -2;
-            return -1;
-        }
-
-        /// <summary>
-        /// 블록 정보 수정
-        /// </summary>
-        /// <param name="blockData"></param>
-        public static async UniTask<bool> UpdateBlockData(DataStructure.Admin.JBlockData blockData)
-        {
-            var auth = AuthConfig.Auth;
-            if (string.IsNullOrEmpty(auth?.accessToken)) return false;
-            
-            
-            var thumbnailData = await GetByte(AdminConfig.ThumbnailPath);
-            var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
-            
-            
-            var form = new List<IMultipartFormSection> {
-                new MultipartFormDataSection("json", JsonConvert.SerializeObject(blockData), "application/json"),
-            };
-            
-            if(thumbnailData != null)
-                form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
-
-            var response = await Request<DataStructure.Admin.JBlockData>(new RequestHelper
-            {
-                Method = "POST",
-                Uri = ApiConfig.URL("v2/blocks/update/blockdata"),
-                Headers = ApiConfig.TokenHeader(auth.accessToken),
-                FormSections = form
-            });
-
-            return response is { success: true };
-        }
+        // /// <summary>
+        // /// 블록 정보 수정
+        // /// </summary>
+        // /// <param name="blockData"></param>
+        // public static async UniTask<bool> UpdateBlockData(DataStructure.Admin.JBlockData blockData)
+        // {
+        //     var auth = AuthConfig.Auth;
+        //     if (string.IsNullOrEmpty(auth?.accessToken)) return false;
+        //     
+        //     
+        //     var thumbnailData = await GetByte(AdminConfig.ThumbnailPath);
+        //     var thumbnailKey = AdminConfig.ThumbnailPath.Split("/")[^1];
+        //     
+        //     
+        //     var form = new List<IMultipartFormSection> {
+        //         new MultipartFormDataSection("json", JsonConvert.SerializeObject(blockData), "application/json"),
+        //     };
+        //     
+        //     if(thumbnailData != null)
+        //         form.Add(new MultipartFormFileSection("image", thumbnailData, thumbnailKey, "image/jpg"));
+        //
+        //     var response = await Request<DataStructure.Admin.JBlockData>(new RequestHelper
+        //     {
+        //         Method = "POST",
+        //         Uri = ApiConfig.URL("v2/blocks/update/blockdata"),
+        //         Headers = ApiConfig.TokenHeader(auth.accessToken),
+        //         FormSections = form
+        //     });
+        //
+        //     return response is { success: true };
+        // }
         
         
         /// <summary>
@@ -346,28 +345,28 @@ namespace WitchCompany.Toolkit.Editor.API
             return result.success ? result.payload : null;
         }
 
-        public static async UniTask<bool> UpdateBlockStatus(string pathName)
-        {
-            var auth = AuthConfig.Auth;
-
-            var blockStatusData = new JBlockStatus
-            {
-                pathname = pathName,
-                status = (int)AdminConfig.BlockStatus
-            };
-
-            var response = await Request<JBlockStatus>(new RequestHelper
-            {
-                Method = "POST",
-                Uri = ApiConfig.URL("v2/blocks/status/change"),
-                Headers = ApiConfig.TokenHeader(auth.accessToken),
-                BodyString = JsonConvert.SerializeObject(blockStatusData)
-            });
-
-             Debug.Log(JsonConvert.SerializeObject(blockStatusData));
-            
-            return response != null && response.success;
-        }
+        // public static async UniTask<bool> UpdateBlockStatus(string pathName)
+        // {
+        //     var auth = AuthConfig.Auth;
+        //
+        //     var blockStatusData = new JBlockStatus
+        //     {
+        //         pathname = pathName,
+        //         status = (int)AdminConfig.BlockStatus
+        //     };
+        //
+        //     var response = await Request<JBlockStatus>(new RequestHelper
+        //     {
+        //         Method = "POST",
+        //         Uri = ApiConfig.URL("v2/blocks/status/change"),
+        //         Headers = ApiConfig.TokenHeader(auth.accessToken),
+        //         BodyString = JsonConvert.SerializeObject(blockStatusData)
+        //     });
+        //
+        //      Debug.Log(JsonConvert.SerializeObject(blockStatusData));
+        //     
+        //     return response != null && response.success;
+        // }
 
         private static async UniTask<(string key, byte[] data)> GetBundleData(string name, string folderPath, string platform)
         {
