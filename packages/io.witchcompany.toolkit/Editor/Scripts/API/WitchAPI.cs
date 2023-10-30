@@ -194,6 +194,28 @@ namespace WitchCompany.Toolkit.Editor.API
             return -1;
         }
         
+        /// <summary>
+        /// 유니티 키 이름으로 조회 (v4)
+        /// </summary>
+        public static async UniTask<int> GetUnityKey(string pathname)
+        {
+            var auth = AuthConfig.Auth;
+            if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
+
+            
+            var response = await Request<JBundle>(new RequestHelper
+            {
+                Method = "POST",
+                Uri = ApiConfig.URL($"v4/toolkits/unity-key/{pathname}")
+            });
+            
+            
+            if (response.statusCode == 200) return 1;
+            if (response.statusCode == 409) return -2;  
+            return -1;
+        }
+        
+        
         /// <summary> 유니티 키 리스트 조회 </summary>
         public static async UniTask<List<JUnityKey>> GetUnityKeys(int page, int limit)
         {
@@ -410,6 +432,8 @@ namespace WitchCompany.Toolkit.Editor.API
 
             return response != null && response.success;
         }
+        
+        
     }
     
     public static partial class WitchAPI

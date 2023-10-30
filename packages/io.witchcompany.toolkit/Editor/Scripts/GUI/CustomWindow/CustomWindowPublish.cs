@@ -99,28 +99,33 @@ namespace WitchCompany.Toolkit.Editor.GUI
             PublishConfig.Capacity = capacity;
 
             // 공식 여부
-            var official = EditorGUILayout.Toggle("Official", PublishConfig.Official);
-                PublishConfig.Official = official;
+            PublishConfig.Official = EditorGUILayout.Toggle("Official", PublishConfig.Official);
 
             // 무료/유료 테마
             var salesType = (SalesType)EditorGUILayout.EnumPopup("Sales Type", PublishConfig.SalesType);
             PublishConfig.SalesType = salesType;
             
             // 유료 테마일 경우 가격, 수량, 컬렉션 표시
-            if (PublishConfig.SalesType == SalesType.Premium)
+            if (PublishConfig.SalesType == SalesType.Pay)
             {
                 // 컬렉션
-                var collection = (CollectionType)EditorGUILayout.EnumPopup("Collection", PublishConfig.Collection);
-                PublishConfig.Collection = collection;
+                PublishConfig.Collection = (CollectionType)EditorGUILayout.EnumPopup("Collection", PublishConfig.Collection);
                 
                 // 가격
-                var price = EditorGUILayout.IntSlider("Price", PublishConfig.Price, 1, 100000000);
-                PublishConfig.Price = price;
+                PublishConfig.Price = EditorGUILayout.IntSlider("Price", PublishConfig.Price, 1, 100000000);
                 
                 // 수량
-                var quantity = EditorGUILayout.IntSlider("Quantity", PublishConfig.Quantity, 1, 10000);
-                PublishConfig.Quantity = quantity;
-
+                PublishConfig.Quantity = EditorGUILayout.IntSlider("Quantity", PublishConfig.Quantity, 1, 10000);
+                
+                // 이름(ko)
+                PublishConfig.NameKo = EditorGUILayout.TextField("Name (ko)", PublishConfig.NameKo);
+                // 이름(en)
+                PublishConfig.NameEn = EditorGUILayout.TextField("Name (en)", PublishConfig.NameEn);
+                
+                // 설명 (ko)
+                PublishConfig.DescriptionKo = EditorGUILayout.TextField("Description (ko)", PublishConfig.DescriptionKo);
+                // 설명 (en)
+                PublishConfig.DescriptionEn = EditorGUILayout.TextField("Description (en)", PublishConfig.DescriptionEn );
             }
             
             EditorGUILayout.EndVertical();
