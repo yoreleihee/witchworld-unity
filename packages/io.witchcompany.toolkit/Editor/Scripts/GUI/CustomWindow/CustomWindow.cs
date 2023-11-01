@@ -21,11 +21,13 @@ namespace WitchCompany.Toolkit.Editor.GUI
         private const float LogHeight = 40;
         private static GUIStyle logTextStyle;
         private static GUIStyle logButtonStyle;
+        private static GUIStyle labelTextStyle;
         private static bool isInputDisable;
         private static bool isAdmin;
 
         public static GUIStyle LogTextStyle => logTextStyle;
         public static GUIStyle LogButtonStyle => logButtonStyle;
+        public static GUIStyle LabelTextStyle => labelTextStyle;
         public static bool IsInputDisable { set => isInputDisable = value; }
         
         
@@ -73,6 +75,9 @@ namespace WitchCompany.Toolkit.Editor.GUI
                     textColor = Color.white
                 }
             };
+            
+            labelTextStyle = EditorStyles.label;
+            labelTextStyle.fixedWidth = 120;
         }
 
         private static GUIContent[] defalutToolbarLabels = new GUIContent[4]

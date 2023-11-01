@@ -196,23 +196,32 @@ namespace WitchCompany.Toolkit.Editor.API
         
         /// <summary>
         /// 유니티 키 이름으로 조회 (v4)
+        /// 0 : 심사 상태
+        /// 1 : 심사 등록 가능 
+        /// -1 : 중복된 키 존재 (심사 승인된 키 존재)
+        /// -2 : 권한 오류
+        /// -3 : 통신 실패
         /// </summary>
-        public static async UniTask<int> GetUnityKey(string pathname)
+        public static async UniTask<(int status, JBundle bundle)> GetUnityKey(string pathname)
         {
-            var auth = AuthConfig.Auth;
-            if (string.IsNullOrEmpty(auth?.accessToken)) return -1;
-
-            
+            var status = 0;
             var response = await Request<JBundle>(new RequestHelper
             {
-                Method = "POST",
+                Method = "GET",
                 Uri = ApiConfig.URL($"v4/toolkits/unity-key/{pathname}")
             });
             
+            if (response.statusCode == 400)
+            {
+                // 등록 전
+                if (string.Equals(response.message,UnityKeyConfig.notExistMsg))
+                    status = 1;
+                // 진행 중
+                else if(string.Equals(response.message, UnityKeyConfig.approveMsg))
+                    status = -1;
+            }
             
-            if (response.statusCode == 200) return 1;
-            if (response.statusCode == 409) return -2;  
-            return -1;
+            return response.success ? (status, response.payload) : (status, null);
         }
         
         
@@ -547,7 +556,7 @@ namespace WitchCompany.Toolkit.Editor.API
             catch (Exception)
             {
                 LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
-                
+
                 return new JResponse<T>
                 {
                     message = request.error,
