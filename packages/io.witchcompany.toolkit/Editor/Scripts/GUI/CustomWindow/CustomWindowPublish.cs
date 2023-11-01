@@ -146,26 +146,15 @@ namespace WitchCompany.Toolkit.Editor.GUI
 
         private static async UniTaskVoid OnClickPublish()
         { 
-            // // 업로드 권한 확인
-            // var permission = await WitchAPI.CheckPermission();
-            //     
-            // if (permission < 0)
-            // {
-            //     var permissionMsg = permission > -2 ? AssetBundleConfig.AuthMsg : AssetBundleConfig.PermissionMsg;
-            //     EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
-            //     return;
-            // }
-            
-            // 유니티 키 조회
-            // var checkResponse = await WitchAPI.GetUnityKey(PublishConfig.Scene.name);            
-            var checkResponse = await WitchAPI.GetUnityKey("test");            
-            
-
-
-
-            return;
-
-
+            // 업로드 권한 확인
+            var permission = await WitchAPI.CheckPermission();
+                
+            if (permission < 0)
+            {
+                var permissionMsg = permission > -2 ? AssetBundleConfig.AuthMsg : AssetBundleConfig.PermissionMsg;
+                EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
+                return;
+            }
 
             // 썸네일 확인
             if (string.IsNullOrEmpty(PublishConfig.ThumbnailPath))
@@ -214,8 +203,6 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 }
                 bundleInfos.Add(bundleInfo);
             }
-
-
 
             var response = await WitchAPI.UploadBundle(option, bundleInfos, rankingKey);
             
