@@ -22,8 +22,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             AssetBundleConfig.Standalone,
             AssetBundleConfig.Webgl,
             AssetBundleConfig.WebglMobile,
-            // AssetBundleConfig.Android,
-            // AssetBundleConfig.Ios,
+            AssetBundleConfig.Android,
+            AssetBundleConfig.Ios,
             // AssetBundleConfig.Vr
         };
 
@@ -108,38 +108,38 @@ namespace WitchCompany.Toolkit.Editor.GUI
             // 공식 여부
             PublishConfig.Official = EditorGUILayout.Toggle("Official", PublishConfig.Official);
             
-            // 컬렉션
-            PublishConfig.Collection = (CollectionType)EditorGUILayout.EnumPopup("Collection", PublishConfig.Collection);
+            // // 컬렉션
+            // PublishConfig.Collection = (CollectionType)EditorGUILayout.EnumPopup("Collection", PublishConfig.Collection);
+            //
+            // // 가격 
+            // using (new EditorGUILayout.HorizontalScope())
+            // {
+            //     PublishConfig.Price = EditorGUILayout.IntField("Price ", PublishConfig.Price);
+            //     if (PublishConfig.Price < 0) PublishConfig.Price = 0;
+            //     if (PublishConfig.Price > 100000000) PublishConfig.Price = 100000000;
+            //
+            //     GUILayout.Label("0~100,000,000", CustomWindow.LabelTextStyle);
+            // }
+            //
+            // // 수량
+            // using (new EditorGUILayout.HorizontalScope())
+            // {
+            //     PublishConfig.Quantity = EditorGUILayout.IntField("Quantity", PublishConfig.Quantity);
+            //     if (PublishConfig.Quantity < 1) PublishConfig.Quantity = 1;
+            //     if (PublishConfig.Quantity > 10000) PublishConfig.Quantity = 10000;
+            //
+            //     GUILayout.Label("1~10,000",CustomWindow.LabelTextStyle);
+            // }
 
-            // 가격 
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                PublishConfig.Price = EditorGUILayout.IntField("Price ", PublishConfig.Price);
-                if (PublishConfig.Price < 0) PublishConfig.Price = 0;
-                if (PublishConfig.Price > 100000000) PublishConfig.Price = 100000000;
-
-                GUILayout.Label("0~100,000,000", CustomWindow.LabelTextStyle);
-            }
-
-            // 수량
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                PublishConfig.Quantity = EditorGUILayout.IntField("Quantity", PublishConfig.Quantity);
-                if (PublishConfig.Quantity < 1) PublishConfig.Quantity = 1;
-                if (PublishConfig.Quantity > 10000) PublishConfig.Quantity = 10000;
-
-                GUILayout.Label("1~10,000",CustomWindow.LabelTextStyle);
-            }
-
-
-            // 이름(ko)
-            PublishConfig.NameKo = EditorGUILayout.TextField("Name (ko)", PublishConfig.NameKo);
-            // 이름(en)
-            PublishConfig.NameEn = EditorGUILayout.TextField("Name (en)", PublishConfig.NameEn);    
-            // 설명 (ko)
-            PublishConfig.DescriptionKo = EditorGUILayout.TextField("Description (ko)", PublishConfig.DescriptionKo);
-            // 설명 (en)
-            PublishConfig.DescriptionEn = EditorGUILayout.TextField("Description (en)", PublishConfig.DescriptionEn);
+            //
+            // // 이름(ko)
+            // PublishConfig.NameKo = EditorGUILayout.TextField("Name (ko)", PublishConfig.NameKo);
+            // // 이름(en)
+            // PublishConfig.NameEn = EditorGUILayout.TextField("Name (en)", PublishConfig.NameEn);    
+            // // 설명 (ko)
+            // PublishConfig.DescriptionKo = EditorGUILayout.TextField("Description (ko)", PublishConfig.DescriptionKo);
+            // // 설명 (en)
+            // PublishConfig.DescriptionEn = EditorGUILayout.TextField("Description (en)", PublishConfig.DescriptionEn);
             
             EditorGUILayout.EndVertical();
         }
@@ -204,6 +204,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 bundleInfos.Add(bundleInfo);
             }
 
+            Debug.Log(JsonConvert.SerializeObject(bundleInfos, Formatting.Indented));
+            
             var response = await WitchAPI.UploadBundle(option, bundleInfos, rankingKey);
             
             DeleteBundleFile(option);

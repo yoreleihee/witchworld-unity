@@ -82,9 +82,10 @@ namespace WitchCompany.Toolkit.Editor.Tool
                 // webglMobile
                 EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
                 result.Add(AssetBundleConfig.WebglMobile, BuildBundle(AssetBundleConfig.WebglMobile, BuildTargetGroup.WebGL, BuildTarget.WebGL));
-                
-                // result.Add(AssetBundleConfig.Android, BuildBundle(AssetBundleConfig.Android, BuildTargetGroup.Android,BuildTarget.Android));
-                // result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTargetGroup.iOS,BuildTarget.iOS));
+                // android
+                result.Add(AssetBundleConfig.Android, BuildBundle(AssetBundleConfig.Android, BuildTargetGroup.Android,BuildTarget.Android));
+                // ios
+                result.Add(AssetBundleConfig.Ios, BuildBundle(AssetBundleConfig.Ios, BuildTargetGroup.iOS,BuildTarget.iOS));
             
                 return result;
             }
