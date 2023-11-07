@@ -134,6 +134,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.Standalone);
                 buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.Webgl);
                 buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.WebglMobile);
+                buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.Android);
+                buildReport = PrefabBuildPipeline.BuildReport(AssetBundleConfig.Ios);
             }
             
             EditorUtility.ClearProgressBar();

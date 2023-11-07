@@ -20,8 +20,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             AssetBundleConfig.Standalone,
             AssetBundleConfig.Webgl,
             AssetBundleConfig.WebglMobile,
-            // AssetBundleConfig.Android,
-            // AssetBundleConfig.Ios,
+            AssetBundleConfig.Android,
+            AssetBundleConfig.Ios,
             // AssetBundleConfig.Vr
         };
         
@@ -143,8 +143,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 standalone = bundleInfos[AssetBundleConfig.Standalone],
                 webgl = bundleInfos[AssetBundleConfig.Webgl],
                 webglMobile = bundleInfos[AssetBundleConfig.WebglMobile],
-                // android = bundleInfos[AssetBundleConfig.Android],
-                // ios = bundleInfos[AssetBundleConfig.Ios],
+                android = bundleInfos[AssetBundleConfig.Android],
+                ios = bundleInfos[AssetBundleConfig.Ios],
                 // vr = bundleInfos[AssetBundleConfig.Vr],
             };
             

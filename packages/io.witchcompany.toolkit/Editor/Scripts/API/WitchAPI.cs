@@ -412,6 +412,8 @@ namespace WitchCompany.Toolkit.Editor.API
             var standaloneBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Standalone);
             var webglBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Webgl);
             var webglMobileBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.WebglMobile);
+            var androidBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Android);
+            var iosBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Ios);
    
             // gltf
             var gltfName = modelPath.Split("/")[^1];
@@ -424,6 +426,8 @@ namespace WitchCompany.Toolkit.Editor.API
                 new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundle.data, standaloneBundle.key, ""),
                 new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundle.data, webglBundle.key, ""),
                 new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundle.data, webglMobileBundle.key, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Android, androidBundle.data, androidBundle.key, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundle.data, iosBundle.key, ""),
             };
             
             var response = await Request<JBlockStatus>(new RequestHelper
@@ -552,7 +556,7 @@ namespace WitchCompany.Toolkit.Editor.API
             {
                 LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
 
-                // Log(JsonConvert.DeserializeObject<JResponse<T>>(request.downloadHandler.text).message);
+                Log(JsonConvert.DeserializeObject<JResponse<T>>(request.downloadHandler.text).message);
                 
                 return new JResponse<T>
                 {
