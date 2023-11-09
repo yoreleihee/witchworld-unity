@@ -71,7 +71,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 validationReport.Append(ScriptRuleValidator.ValidationCheck(CustomWindowPublish.GetOption()));
                 validationReport.Append(ObjectValidator.ValidationCheck());
                 validationReport.Append(WhiteListValidator.ValidationCheck());
-                validationReport.Append(EssentialComponentValidator.ValidationCheck());
+                validationReport.Append(ExistComponentValidator.ValidationCheck());
                 // validationReport.Append(FreeThemeValidator.ValidationCheck());
                 //validationReport.Append(await task);
 
