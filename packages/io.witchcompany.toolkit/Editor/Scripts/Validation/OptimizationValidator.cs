@@ -221,6 +221,8 @@ namespace WitchCompany.Toolkit.Editor.Validation
             
             // 오디오 클립 사이즈 계산
             var totalBytes = 0L;
+            
+            
             foreach (var audioClip in foundAudioClips)
             {
                 var sizeInBytes = Profiler.GetRuntimeMemorySizeLong(audioClip);
@@ -236,7 +238,7 @@ namespace WitchCompany.Toolkit.Editor.Validation
         public static void GetLargestAudioClipArray(IEnumerable<AudioClip> audioClipList)
         {
             if (audioClipList == null) return;
-            
+
             var foundAudioClips = audioClipList;
             var audioClipNames = new[] { "", "", "", "", "" };
             var audioClipSizes = new[] { 0D, 0, 0, 0, 0 };

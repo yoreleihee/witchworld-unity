@@ -2,7 +2,9 @@
 {
     public enum BlockType
     {
-        Community = 0,
-        Personal
+        Social,
+        Game,
+        Store,
+        Brand
     }
 }

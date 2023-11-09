@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using UnityEngine.Serialization;
 
 namespace WitchCompany.Toolkit.Editor.DataStructure
 {
@@ -9,5 +7,8 @@ namespace WitchCompany.Toolkit.Editor.DataStructure
     {
         public JUnityKeyData blockData;
         public List<JBundleInfo> bundleInfoList;
+        public JReview review;
+        public JSalesUnityKeyData salesUnityKey;
+
     }
 }

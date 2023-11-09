@@ -22,8 +22,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
             AssetBundleConfig.Standalone,
             AssetBundleConfig.Webgl,
             AssetBundleConfig.WebglMobile,
-            // AssetBundleConfig.Android,
-            // AssetBundleConfig.Ios,
+            AssetBundleConfig.Android,
+            AssetBundleConfig.Ios,
             // AssetBundleConfig.Vr
         };
 
@@ -63,75 +63,89 @@ namespace WitchCompany.Toolkit.Editor.GUI
             
             using (new EditorGUILayout.HorizontalScope())
             {
-                using (var check = new EditorGUI.ChangeCheckScope())
-                {
-                    var blockScene = EditorGUILayout.ObjectField("Scene", PublishConfig.Scene, typeof(SceneAsset), false) as SceneAsset;
-                    if (check.changed)
-                        PublishConfig.Scene = blockScene;
+                // Scene
+                var blockScene = EditorGUILayout.ObjectField("Scene", PublishConfig.Scene, typeof(SceneAsset), false) as SceneAsset;
+                    PublishConfig.Scene = blockScene;
 
-                    if (GUILayout.Button("Active Scene", GUILayout.Width(100)))
-                    {
-                        var activeScenePath = SceneManager.GetActiveScene().path;
-                        PublishConfig.Scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(activeScenePath);
-                    }
+                if (GUILayout.Button("Active Scene", GUILayout.Width(100)))
+                {
+                    var activeScenePath = SceneManager.GetActiveScene().path;
+                    PublishConfig.Scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(activeScenePath);
                 }
             }
 
+            // 썸네일
             using (new GUILayout.HorizontalScope())
             {
                 EditorGUILayout.LabelField("Thumbnail", PublishConfig.ThumbnailPath, EditorStyles.textField);
                 if (GUILayout.Button("Select", GUILayout.Width(100)))
                 {
                     PublishConfig.ThumbnailPath = EditorUtility.OpenFilePanel("Witch Creator Toolkit", "", "jpg");
-                    
                 }
             } 
             
-            using (var check = new EditorGUI.ChangeCheckScope())
-            {
-                var blockTheme = (BundleTheme)EditorGUILayout.EnumPopup("Theme", PublishConfig.Theme);
-
-                if (check.changed)
-                    PublishConfig.Theme = blockTheme;
-            } 
+            // 테마
+            var blockTheme = (BlockType)EditorGUILayout.EnumPopup("Block Type", PublishConfig.BlockType);
+            PublishConfig.BlockType = blockTheme;
             
             // 게임 블록 난이도
-            if (PublishConfig.Theme == BundleTheme.Game)
+            if (PublishConfig.BlockType == BlockType.Game)
             {
-                using var check = new EditorGUI.ChangeCheckScope();
                 var blockLevel = (GameLevel)EditorGUILayout.EnumPopup("Level", PublishConfig.Level);
-            
-                if (check.changed)
-                    PublishConfig.Level = blockLevel;
-            }
-            
-            using (var check = new EditorGUI.ChangeCheckScope())
-            {
-                var capacity = EditorGUILayout.IntField("Capacity (Max 20)", PublishConfig.Capacity);
-    
-                if (check.changed)
-                    PublishConfig.Capacity = capacity <= 20 ? capacity : 20;
+                PublishConfig.Level = blockLevel;
             }
 
-            using (var check = new EditorGUI.ChangeCheckScope())
+            // 가격 
+            using (new EditorGUILayout.HorizontalScope())
             {
-                var official = EditorGUILayout.Toggle("Official", PublishConfig.Official);
-                if (check.changed)
-                    PublishConfig.Official = official;
+                PublishConfig.Capacity = EditorGUILayout.IntField("Capacity ", PublishConfig.Capacity);
+                if (PublishConfig.Capacity < 1) PublishConfig.Capacity = 1;
+                if (PublishConfig.Capacity > 20) PublishConfig.Capacity = 20;
+
+                GUILayout.Label("1~20", CustomWindow.LabelTextStyle);
             }
             
-            // using (var check = new EditorGUI.ChangeCheckScope())
+            // 공식 여부
+            PublishConfig.Official = EditorGUILayout.Toggle("Official", PublishConfig.Official);
+            
+            // // 컬렉션
+            // PublishConfig.Collection = (CollectionType)EditorGUILayout.EnumPopup("Collection", PublishConfig.Collection);
+            //
+            // // 가격 
+            // using (new EditorGUILayout.HorizontalScope())
             // {
-            //     var hide = EditorGUILayout.Toggle("Hide", PublishConfig.Hide);
-            //     if (check.changed)
-            //         PublishConfig.Hide = hide;
+            //     PublishConfig.Price = EditorGUILayout.IntField("Price ", PublishConfig.Price);
+            //     if (PublishConfig.Price < 0) PublishConfig.Price = 0;
+            //     if (PublishConfig.Price > 100000000) PublishConfig.Price = 100000000;
+            //
+            //     GUILayout.Label("0~100,000,000", CustomWindow.LabelTextStyle);
+            // }
+            //
+            // // 수량
+            // using (new EditorGUILayout.HorizontalScope())
+            // {
+            //     PublishConfig.Quantity = EditorGUILayout.IntField("Quantity", PublishConfig.Quantity);
+            //     if (PublishConfig.Quantity < 1) PublishConfig.Quantity = 1;
+            //     if (PublishConfig.Quantity > 10000) PublishConfig.Quantity = 10000;
+            //
+            //     GUILayout.Label("1~10,000",CustomWindow.LabelTextStyle);
             // }
 
+            //
+            // // 이름(ko)
+            // PublishConfig.NameKo = EditorGUILayout.TextField("Name (ko)", PublishConfig.NameKo);
+            // // 이름(en)
+            // PublishConfig.NameEn = EditorGUILayout.TextField("Name (en)", PublishConfig.NameEn);    
+            // // 설명 (ko)
+            // PublishConfig.DescriptionKo = EditorGUILayout.TextField("Description (ko)", PublishConfig.DescriptionKo);
+            // // 설명 (en)
+            // PublishConfig.DescriptionEn = EditorGUILayout.TextField("Description (en)", PublishConfig.DescriptionEn);
+            
             EditorGUILayout.EndVertical();
         }
 
         private static async UniTaskVoid OnClickPublish()
-        {
+        { 
             // 업로드 권한 확인
             var permission = await WitchAPI.CheckPermission();
                 
@@ -141,6 +155,7 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 EditorUtility.DisplayDialog("Witch Creator Toolkit", permissionMsg, "OK");
                 return;
             }
+
             // 썸네일 확인
             if (string.IsNullOrEmpty(PublishConfig.ThumbnailPath))
             {
@@ -188,7 +203,8 @@ namespace WitchCompany.Toolkit.Editor.GUI
                 }
                 bundleInfos.Add(bundleInfo);
             }
-            
+
+            Debug.Log(JsonConvert.SerializeObject(bundleInfos, Formatting.Indented));
             
             var response = await WitchAPI.UploadBundle(option, bundleInfos, rankingKey);
             
@@ -202,14 +218,14 @@ namespace WitchCompany.Toolkit.Editor.GUI
             return new BlockPublishOption
             {
                 targetScene = PublishConfig.Scene,
-                theme = PublishConfig.Theme,
+                type = PublishConfig.BlockType,
             };
         }
 
         private static JRankingKey GetRankingKey()
         {
             // 테마가 게임이 아닐 경우
-            if (PublishConfig.Theme != BundleTheme.Game) return null;
+            if (PublishConfig.BlockType != BlockType.Game) return null;
             
             // 랭킹 키값 설정
             var dataManager = GameObject.FindObjectOfType<WitchDataManager>(true);

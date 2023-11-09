@@ -77,15 +77,19 @@ namespace WitchCompany.Toolkit.Editor.Validation
         
         private static ValidationReport ValidateWitchBehaviours(Scene scene)
         {
-            // 리포트 생성
-            var report = new ValidationReport();
+            // 최상위 오브젝트에 BlockManager가 없다면 종료 
+            if (!scene.GetRootGameObjects()[0].TryGetComponent<WitchBlockManager>(out var manager))
+            {
+                return null;
+            }
             
             // 블록 매니저를 찾고, WitchBehaviours 찾아서 저장
-            if (!scene.GetRootGameObjects()[0].TryGetComponent<WitchBlockManager>(out var manager)) return report;
-            
+            // 리포트 생성
+            // var manager = scene.GetRootGameObjects()[0].GetComponent<WitchBlockManager>();
             manager.FindWitchBehaviours(ToolkitConfig.UnityVersion, ToolkitConfig.WitchToolkitVersion);
             EditorSceneManager.SaveOpenScenes();
             
+            var report = new ValidationReport();
             
             // 블록매니저 중복 검증
             foreach (var behaviour in manager.Behaviours)
