@@ -147,10 +147,15 @@ namespace WitchCompany.Toolkit.Editor.API
             var standaloneBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Standalone, option.BundleKey);
             var webglBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Webgl, option.BundleKey);
             var webglMobileBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.WebglMobile, option.BundleKey);
+            var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
+            var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
+            
             
             var standaloneBundleData = await GetByte(standaloneBundlePath);
             var webglBundleData = await GetByte(webglBundlePath);
             var webglMobileBundleData = await GetByte(webglMobileBundlePath);
+            var androidBundleData = await GetByte(androidBundlePath);
+            var iosBundleData = await GetByte(iosBundlePath);
             
             var form = new List<IMultipartFormSection>
             {
@@ -158,27 +163,17 @@ namespace WitchCompany.Toolkit.Editor.API
                 new MultipartFormFileSection("image", thumbnailData, option.ThumbnailKey, "image/jpg"),
                 new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundleData, option.BundleKey, ""),
                 new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundleData, option.BundleKey, ""),
-                new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, "")
+                new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundleData, option.BundleKey, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, "")
             };
 
-            #region Android, Ios, Vr 주석
-
-            // var androidBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Android, option.BundleKey);
-            // var iosBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Ios, option.BundleKey);
-            // var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
+            #region Vr 주석
             
-            // var androidBundleData = await GetByte(androidBundlePath);
-            // form.Add(new MultipartFormFileSection(AssetBundleConfig.Android, androidBundleData, option.BundleKey, ""));
-            // Debug.Log("Android 번들 업로드");
-            //
-            // var iosBundleData = await GetByte(iosBundlePath);
-            // form.Add(new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundleData, option.BundleKey, ""));
-            // Debug.Log("iOS 번들 업로드");
-            //
+            // var vrBundlePath = Path.Combine(AssetBundleConfig.BundleExportPath, AssetBundleConfig.Vr, option.BundleKey);
             // var vrBundleData = await GetByte(vrBundlePath);
             // form.Add(new MultipartFormFileSection(AssetBundleConfig.Vr, vrBundleData, option.BundleKey, ""));
             
-
             #endregion
             
             var response = await Request<JBundle>(new RequestHelper
@@ -417,6 +412,8 @@ namespace WitchCompany.Toolkit.Editor.API
             var standaloneBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Standalone);
             var webglBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Webgl);
             var webglMobileBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.WebglMobile);
+            var androidBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Android);
+            var iosBundle = await GetBundleData(itemData.name, bundleFolderPath, AssetBundleConfig.Ios);
    
             // gltf
             var gltfName = modelPath.Split("/")[^1];
@@ -429,6 +426,8 @@ namespace WitchCompany.Toolkit.Editor.API
                 new MultipartFormFileSection(AssetBundleConfig.Standalone, standaloneBundle.data, standaloneBundle.key, ""),
                 new MultipartFormFileSection(AssetBundleConfig.Webgl, webglBundle.data, webglBundle.key, ""),
                 new MultipartFormFileSection(AssetBundleConfig.WebglMobile, webglMobileBundle.data, webglMobileBundle.key, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Android, androidBundle.data, androidBundle.key, ""),
+                new MultipartFormFileSection(AssetBundleConfig.Ios, iosBundle.data, iosBundle.key, ""),
             };
             
             var response = await Request<JBlockStatus>(new RequestHelper
@@ -557,6 +556,8 @@ namespace WitchCompany.Toolkit.Editor.API
             {
                 LogErr($"{helper.Method} Response ({helper.Uri})\n" + $"Failed: {request.error}");
 
+                Log(JsonConvert.DeserializeObject<JResponse<T>>(request.downloadHandler.text).message);
+                
                 return new JResponse<T>
                 {
                     message = request.error,
